@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<registry>
+    <records interface="interaktiv.gdpr.registry.deletion_log.IGDPRSettingsSchema" />
+    <records interface="interaktiv.gdpr.registry.deletion_log.IDeletionLogSchema" />
+</registry>

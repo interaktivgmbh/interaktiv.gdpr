@@ -1,0 +1,44 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml">
+
+    <include package="plone.restapi" file="meta.zcml" />
+
+    <plone:service
+        method="POST"
+        factory=".withdraw.WithdrawDeletion"
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        permission="cmf.ManagePortal"
+        name="@gdpr-withdraw-deletion"
+        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
+    <plone:service
+        method="GET"
+        factory=".withdraw.DeletionLogGet"
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        permission="cmf.ManagePortal"
+        name="@gdpr-deletion-log"
+        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
+    <plone:service
+        method="GET"
+        factory=".withdraw.GDPRSettingsGet"
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        permission="cmf.ManagePortal"
+        name="@gdpr-settings"
+        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
+    <plone:service
+        method="PATCH"
+        factory=".withdraw.GDPRSettingsSet"
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        permission="cmf.ManagePortal"
+        name="@gdpr-settings"
+        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
+</configure>

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-11-27 11:04+0000\n"
+"POT-Creation-Date: 2025-11-27 12:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,50 +17,34 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: interaktiv.gdpr\n"
 
-#: ../behaviors/configure.zcml:13
-msgid "Adds Deletion Info Behavior"
-msgstr ""
-
-#: ../profiles/default/types/MarkedForDeletion.xml
+#: ../profiles/default/types/MarkedDeletionContainer.xml
 msgid "Container for objects marked for deletion"
 msgstr ""
 
-#: ../behaviors/deletion_info.py:15
-msgid "Deletion Date"
-msgstr ""
-
-#: ../behaviors/deletion_info.py:20
-msgid "Deletion Info"
-msgstr ""
-
-#: ../behaviors/configure.zcml:13
-msgid "Deletion Info Behavior"
-msgstr ""
-
-#: ../profiles/default/types/MarkedForDeletion.xml
+#: ../profiles/default/types/MarkedDeletionContainer.xml
 msgid "Edit"
 msgstr ""
 
-#: ../configure.zcml:19
+#: ../configure.zcml:21
 msgid "Installs the interaktiv.gdpr package."
 msgstr ""
 
-#: ../configure.zcml:19
+#: ../configure.zcml:21
 msgid "Interaktiv GDPR"
 msgstr ""
 
-#: ../controlpanels/templates/deletion_info_dashboard.pt:12
+#: ../controlpanels/templates/deletion_info_dashboard.pt:13
 msgid "Interaktiv GDPR: Deletion Info"
 msgstr ""
 
-#: ../profiles/default/types/MarkedForDeletion.xml
-msgid "Marked For Deletion"
+#: ../profiles/default/types/MarkedDeletionContainer.xml
+msgid "Marked Deletion Container"
 msgstr ""
 
-#: ../configure.zcml:27
+#: ../configure.zcml:29
 msgid "Uninstalls the interaktiv.gdpr package."
 msgstr ""
 
-#: ../profiles/default/types/MarkedForDeletion.xml
+#: ../profiles/default/types/MarkedDeletionContainer.xml
 msgid "View"
 msgstr ""

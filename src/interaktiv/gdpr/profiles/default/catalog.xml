@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<object name="portal_catalog" meta_type="Plone Catalog Tool">
-    <column value="is_marked_for_deletion"/>
-    <index name="is_marked_for_deletion" meta_type="BooleanIndex">
-        <indexed_attr value="is_marked_for_deletion"/>
-    </index>
-</object>

@@ -6,18 +6,32 @@ from plone.dexterity.content import DexterityContent
 from zope.globalrequest import getRequest
 
 from interaktiv.gdpr import logger
+from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
+from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
 
 # Store original method
 _original_manage_delObjects = ObjectManager.manage_delObjects
 
 
+def is_feature_enabled() -> bool:
+    """Check if the marked deletion feature is enabled in registry."""
+    try:
+        return api.portal.get_registry_record(
+            name='marked_deletion_enabled',
+            interface=IGDPRSettingsSchema
+        )
+    except (KeyError, api.exc.InvalidParameterError):
+        # Default to True if registry record doesn't exist yet
+        return True
+
+
 def get_marked_deletion_container() -> Optional[DexterityContent]:
     try:
         portal = api.portal.get()
-        container_id = 'marked-for-deletion'
 
-        if container_id in portal:
-            return portal[container_id]
+        if MARKED_FOR_DELETION_CONTAINER_ID in portal:
+            return portal[MARKED_FOR_DELETION_CONTAINER_ID]
     except Exception as e:
         logger.error(f"Error getting marked deletion container: {e}")
 
@@ -41,7 +55,13 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
     By default, objects are deleted normally (original behavior).
     To move objects to MarkedDeletionContainer instead, set
     'mark_for_deletion' parameter to True in the request.
+
+    The feature must also be enabled in the registry.
     """
+    # Check if feature is enabled
+    if not is_feature_enabled():
+        return _original_manage_delObjects(self, ids, REQUEST)
+
     # Default behavior: use original deletion
     if not should_move_to_container():
         return _original_manage_delObjects(self, ids, REQUEST)
@@ -67,6 +87,9 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
             try:
                 obj = self[obj_id]
                 obj_title = obj.title_or_id()
+
+                # Add entry to deletion log BEFORE moving (to capture original path)
+                DeletionLogHelper.add_entry(obj, status='pending')
 
                 # Cut the object
                 cookie = self.manage_cutObjects([obj_id])
