@@ -1,23 +1,15 @@
 <configure
         xmlns="http://namespaces.zope.org/zope"
         xmlns:browser="http://namespaces.zope.org/browser"
-        i18n_domain="bsbw.policy">
+        i18n_domain="interaktiv.gdpr">
 
-    <include package="Products.CMFCore" file="permissions.zcml" />
+    <include package="Products.CMFCore" file="permissions.zcml"/>
 
-    <!-- Controlpanel: BSBW Settings -->
+    <!-- Controlpanel: GDPR Dashboard -->
     <browser:page
-            name="bsbw-einstellungen"
+            name="gdpr-dashboard"
             for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class="bsbw.policy.controlpanels.settings.BSBWSettingsView"
-            permission="cmf.ManagePortal"
-    />
-
-    <!-- Controlpanel: BSBW Reindex -->
-    <browser:page
-            name="bsbw-reindex"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class="bsbw.policy.controlpanels.reindex.BSBWReindexView"
+            class="interaktiv.gdpr.controlpanels.dashboard.DashboardView"
             permission="cmf.ManagePortal"
     />
 

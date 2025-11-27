@@ -1,39 +1,40 @@
 from datetime import datetime, timedelta
-from typing import List, Optional
 
 from plone import api
 from plone.dexterity.content import DexterityContent
 
 from interaktiv.gdpr import logger
-from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
+from interaktiv.gdpr.config import (
+    DASHBOARD_DISPLAY_DAYS,
+    MARKED_FOR_DELETION_CONTAINER_ID,
+)
 from interaktiv.gdpr.registry.deletion_log import IDeletionLogSchema, TDeletionLogEntry
-
-# Number of days to display entries on the dashboard
-DASHBOARD_DISPLAY_DAYS = 90
 
 
 class DeletionLogHelper:
     """Helper class for managing the deletion log in the registry."""
 
     @staticmethod
-    def get_deletion_log() -> List[TDeletionLogEntry]:
+    def get_deletion_log() -> list[TDeletionLogEntry]:
         """Get the complete deletion log from registry."""
-        return api.portal.get_registry_record(
-            name='deletion_log',
-            interface=IDeletionLogSchema
-        ) or []
+        return (
+            api.portal.get_registry_record(
+                name="deletion_log", interface=IDeletionLogSchema
+            )
+            or []
+        )
 
     @staticmethod
-    def set_deletion_log(log: List[TDeletionLogEntry]) -> None:
+    def set_deletion_log(log: list[TDeletionLogEntry]) -> None:
         """Set the deletion log in registry."""
         api.portal.set_registry_record(
-            name='deletion_log',
-            interface=IDeletionLogSchema,
-            value=log
+            name="deletion_log", interface=IDeletionLogSchema, value=log
         )
 
     @classmethod
-    def get_deletion_log_for_display(cls, days: int = DASHBOARD_DISPLAY_DAYS) -> List[TDeletionLogEntry]:
+    def get_deletion_log_for_display(
+        cls, days: int = DASHBOARD_DISPLAY_DAYS
+    ) -> list[TDeletionLogEntry]:
         """Get deletion log entries from the last N days for dashboard display."""
         log = cls.get_deletion_log()
         cutoff_date = datetime.now() - timedelta(days=days)
@@ -42,7 +43,7 @@ class DeletionLogHelper:
         for entry in log:
             try:
                 # Parse the datetime string
-                entry_date = datetime.fromisoformat(entry.get('datetime', ''))
+                entry_date = datetime.fromisoformat(entry.get("datetime", ""))
                 if entry_date >= cutoff_date:
                     filtered_entries.append(entry)
             except (ValueError, TypeError):
@@ -52,37 +53,39 @@ class DeletionLogHelper:
         return filtered_entries
 
     @classmethod
-    def add_entry(cls, obj: DexterityContent, status: str = 'pending') -> TDeletionLogEntry:
+    def add_entry(
+        cls, obj: DexterityContent, status: str = "pending"
+    ) -> TDeletionLogEntry:
         """Add a new entry to the deletion log."""
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
         current_user = api.user.get_current()
-        user_id = current_user.getId() if current_user else 'system'
+        user_id = current_user.getId() if current_user else "system"
 
         # Get review state
         try:
             review_state = api.content.get_state(obj)
         except Exception:
-            review_state = ''
+            review_state = ""
 
         # Count subobjects
         try:
-            subobject_count = len(obj.objectIds()) if hasattr(obj, 'objectIds') else 0
+            subobject_count = len(obj.objectIds()) if hasattr(obj, "objectIds") else 0
         except Exception:
             subobject_count = 0
 
         entry: TDeletionLogEntry = {
-            'uid': obj.UID(),
-            'datetime': now,
-            'title': obj.title_or_id(),
-            'portal_type': obj.portal_type,
-            'original_path': '/'.join(obj.getPhysicalPath()),
-            'user_id': user_id,
-            'subobject_count': subobject_count,
-            'review_state': review_state,
-            'status': status,
-            'status_changed': now,
-            'status_changed_by': user_id
+            "uid": obj.UID(),
+            "datetime": now,
+            "title": obj.title_or_id(),
+            "portal_type": obj.portal_type,
+            "original_path": "/".join(obj.getPhysicalPath()),
+            "user_id": user_id,
+            "subobject_count": subobject_count,
+            "review_state": review_state,
+            "status": status,
+            "status_changed": now,
+            "status_changed_by": user_id,
         }
 
         log.append(entry)
@@ -103,19 +106,19 @@ class DeletionLogHelper:
         return entry
 
     @classmethod
-    def update_entry_status(cls, uid: str, new_status: str) -> Optional[TDeletionLogEntry]:
+    def update_entry_status(cls, uid: str, new_status: str) -> TDeletionLogEntry | None:
         """Update the status of an existing log entry."""
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
         current_user = api.user.get_current()
-        user_id = current_user.getId() if current_user else 'system'
+        user_id = current_user.getId() if current_user else "system"
 
         for entry in log:
-            if entry['uid'] == uid:
-                old_status = entry['status']
-                entry['status'] = new_status
-                entry['status_changed'] = now
-                entry['status_changed_by'] = user_id
+            if entry["uid"] == uid:
+                old_status = entry["status"]
+                entry["status"] = new_status
+                entry["status_changed"] = now
+                entry["status_changed_by"] = user_id
                 cls.set_deletion_log(log)
 
                 logger.info(
@@ -131,28 +134,28 @@ class DeletionLogHelper:
         return None
 
     @classmethod
-    def get_entry_by_uid(cls, uid: str) -> Optional[TDeletionLogEntry]:
+    def get_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
         """Get a specific log entry by UID."""
         log = cls.get_deletion_log()
         for entry in log:
-            if entry['uid'] == uid:
+            if entry["uid"] == uid:
                 return entry
         return None
 
     @classmethod
-    def get_entries_by_status(cls, status: str) -> List[TDeletionLogEntry]:
+    def get_entries_by_status(cls, status: str) -> list[TDeletionLogEntry]:
         """Get all log entries with a specific status."""
         log = cls.get_deletion_log()
-        return [entry for entry in log if entry['status'] == status]
+        return [entry for entry in log if entry["status"] == status]
 
     @classmethod
-    def get_pending_objects(cls) -> List[DexterityContent]:
+    def get_pending_objects(cls) -> list[DexterityContent]:
         """Get all objects that are pending deletion from the container."""
-        pending_entries = cls.get_entries_by_status('pending')
+        pending_entries = cls.get_entries_by_status("pending")
         objects = []
 
         for entry in pending_entries:
-            obj = api.content.get(UID=entry['uid'])
+            obj = api.content.get(UID=entry["uid"])
             if obj is not None:
                 objects.append(obj)
 
@@ -168,24 +171,26 @@ class DeletionLogHelper:
         container = portal.get(MARKED_FOR_DELETION_CONTAINER_ID)
 
         if not container:
-            logger.warning("MarkedDeletionContainer not found, cannot run scheduled deletion")
+            logger.warning(
+                "MarkedDeletionContainer not found, cannot run scheduled deletion"
+            )
             return
 
-        pending_entries = cls.get_entries_by_status('pending')
+        pending_entries = cls.get_entries_by_status("pending")
 
         for entry in pending_entries:
-            uid = entry['uid']
+            uid = entry["uid"]
             obj = api.content.get(UID=uid)
 
             if obj is None:
                 # Object no longer exists, mark as deleted
                 logger.warning(f"Object with UID {uid} not found, marking as deleted")
-                cls.update_entry_status(uid, 'deleted')
+                cls.update_entry_status(uid, "deleted")
                 continue
 
             # Check if object is in the deletion container
-            obj_path = '/'.join(obj.getPhysicalPath())
-            container_path = '/'.join(container.getPhysicalPath())
+            obj_path = "/".join(obj.getPhysicalPath())
+            container_path = "/".join(container.getPhysicalPath())
 
             if not obj_path.startswith(container_path):
                 logger.warning(f"Object {uid} is not in deletion container, skipping")
@@ -203,7 +208,7 @@ class DeletionLogHelper:
                     f"  Original Path: {entry['original_path']}"
                 )
 
-                cls.update_entry_status(uid, 'deleted')
+                cls.update_entry_status(uid, "deleted")
 
             except Exception as e:
                 logger.error(f"Error deleting object {uid}: {e}")
