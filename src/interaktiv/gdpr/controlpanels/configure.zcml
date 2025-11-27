@@ -1,0 +1,24 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        i18n_domain="bsbw.policy">
+
+    <include package="Products.CMFCore" file="permissions.zcml" />
+
+    <!-- Controlpanel: BSBW Settings -->
+    <browser:page
+            name="bsbw-einstellungen"
+            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            class="bsbw.policy.controlpanels.settings.BSBWSettingsView"
+            permission="cmf.ManagePortal"
+    />
+
+    <!-- Controlpanel: BSBW Reindex -->
+    <browser:page
+            name="bsbw-reindex"
+            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            class="bsbw.policy.controlpanels.reindex.BSBWReindexView"
+            permission="cmf.ManagePortal"
+    />
+
+</configure>

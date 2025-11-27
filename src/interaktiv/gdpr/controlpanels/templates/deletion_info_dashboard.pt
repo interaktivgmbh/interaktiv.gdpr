@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      lang="en"
+   metal:use-macro="context/main_template/macros/master"
+   i18n:domain="interaktiv.gdpr">
+<body>
+
+<metal:title fill-slot="content-title">
+  <a id="setup-link"
+     class="link-parent"
+     href="${portal_url}/@@overview-controlpanel" i18n:translate="" i18n:domain="zope">Configuration</a>
+  <h1 class="documentFirstHeading" i18n:translate="Interaktiv GDPR: Deletion Info">Interaktiv GDPR: Deletion Info</h1>
+</metal:title>
+
+<metal:content-core fill-slot="content-core">
+  <h1>Debug Test</h1>
+  <table class="pat-datatables listing table table-striped table-hover"
+         data-pat-datatables='{
+            "columnDefs": [{ "orderable": false, "targets": 0 }],
+            "pageLength": 10,
+            "order": [[ 2, "asc" ]],
+            "language": {
+                "processing": "Bitte warten...",
+                "lengthMenu": "_MENU_ Einträge anzeigen",
+                "zeroRecords": "Keine Einträge vorhanden.",
+                "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
+                "infoEmpty": "Keine Einträge",
+                "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
+                "infoPostFix": "",
+                "search": "Filtern",
+                "url": "",
+                "paginate": {
+                    "first":    "Erster",
+                    "previous": "Zurück",
+                    "next":     "Weiter",
+                    "last":     "Letzter"
+                 }}}'>
+    <thead>
+      <tr>
+        <th>UID</th>
+        <th>Titel</th>
+        <th>Portal Type</th>
+        <th>Pfad</th>
+        <th>Benutzer</th>
+        <th>Löschdatum</th>
+        <th>Anzahl Unterobjekte</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="item python: view.get_marked_objects_for_deletion()"
+          tal:define="obj python: item[0];
+                      info python: item[1]">
+        <td tal:content="obj/UID">UID</td>
+        <td tal:content="info/title">Titel</td>
+        <td tal:content="info/portal_type">Portal Type</td>
+        <td tal:content="info/path">Pfad</td>
+        <td tal:content="info/user_id">Benutzer ID</td>
+        <td tal:content="info/datetime">Datum</td>
+        <td tal:content="info/subobject_count">0</td>
+        <td tal:content="info/review_state">Status</td>
+      </tr>
+    </tbody>
+  </table>
+</metal:content-core>
+
+</body>
+</html>
