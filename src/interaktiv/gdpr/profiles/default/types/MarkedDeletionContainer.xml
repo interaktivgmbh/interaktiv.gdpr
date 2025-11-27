@@ -20,8 +20,8 @@
 
     <!-- Schema, class and security -->
     <property name="add_permission">interaktiv.gdpr: Add Marked Deletion Container</property>
-    <property name="klass">interaktiv.gdpr.contenttypes.marked_for_deletion.MarkedDeletionContainer</property>
-    <property name="schema">interaktiv.gdpr.contenttypes.marked_for_deletion.IMarkedDeletionContainer</property>
+    <property name="klass">interaktiv.gdpr.contenttypes.marked_deletion_container.MarkedDeletionContainer</property>
+    <property name="schema">interaktiv.gdpr.contenttypes.marked_deletion_container.IMarkedDeletionContainer</property>
     <property name="model_source"/>
     <property name="model_file"/>
 
