@@ -1,0 +1,4 @@
+graft src/interaktiv
+include *.md
+prune .idea
+global-exclude *.pyc

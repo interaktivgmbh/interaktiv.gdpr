@@ -1,0 +1,19 @@
+<configure xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+    <genericsetup:registerProfile
+            name="default"
+            title="Interaktiv GDPR"
+            description="Installs the interaktiv.gdpr package."
+            provides="Products.GenericSetup.interfaces.EXTENSION"
+            directory="profiles/default"
+            post_handler=".setuphandlers.post_install"
+    />
+
+    <genericsetup:registerProfile
+            name="uninstall"
+            title="Interaktiv GDPR"
+            directory="profiles/uninstall"
+            description="Uninstalls the interaktiv.gdpr package."
+            provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+
+</configure>

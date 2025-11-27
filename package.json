@@ -1,0 +1,15 @@
+{
+  "name": "interaktiv.gdpr",
+  "version": "1.1.0",
+  "repository": "https://code.interaktiv.de/interaktiv/interaktiv.gdpr",
+  "interaktiv_setup": {
+    "packages": [
+      "interaktiv.gdpr"
+    ]
+  },
+  "author": {
+    "name": "Interaktiv GmbH",
+    "email": "hello@interaktiv.de",
+    "url": "https://www.interaktiv.de"
+  }
+}

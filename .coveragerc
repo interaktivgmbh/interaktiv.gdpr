@@ -1,0 +1,9 @@
+[report]
+omit =
+    /home/*/.buildout/eggs/*
+    /usr/*
+    parts/*
+    eggs/*
+    */test*
+    share/*
+    lib/*
