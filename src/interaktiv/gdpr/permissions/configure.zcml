@@ -4,7 +4,7 @@
         i18n_domain="interaktiv.gdpr">
 
     <configure zcml:condition="installed AccessControl.security">
-        <permission id="interaktiv.gdpr.ViewDeletionInfo" title="interaktiv.gdpr: View Deletion Info" />
+        <permission id="interaktiv.gdpr.ViewGDPRDashboard" title="interaktiv.gdpr: View GDPR Dashboard" />
         <permission id="interaktiv.gdpr.AddMarkedDeletionContainer" title="interaktiv.gdpr: Add Marked Deletion Container" />
     </configure>
 

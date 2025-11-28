@@ -1,0 +1,32 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        i18n_domain="interaktiv.gdpr">
+
+    <!-- Override: Plone's delete_confirmation view -->
+    <browser:page
+            name="delete_confirmation"
+            for="*"
+            class=".delete_confirmation.GDPRDeleteConfirmationForm"
+            permission="zope2.DeleteObjects"
+            layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
+    <!-- Restrict traversal into MarkedDeletionContainer contents -->
+    <!-- Browser requests (classic Plone) -->
+    <adapter
+            for="interaktiv.gdpr.contenttypes.marked_deletion_container.IMarkedDeletionContainer
+                 zope.publisher.interfaces.browser.IBrowserRequest"
+            provides="zope.publisher.interfaces.IPublishTraverse"
+            factory=".traverser.MarkedDeletionContainerTraverser"
+    />
+
+    <!-- REST API requests -->
+    <adapter
+            for="plone.dexterity.interfaces.IDexterityContent
+                 plone.rest.interfaces.IAPIRequest"
+            provides="zope.publisher.interfaces.IPublishTraverse"
+            factory=".traverser.MarkedDeletionContainerRESTTraverser"
+    />
+
+</configure>

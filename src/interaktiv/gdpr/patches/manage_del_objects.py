@@ -1,12 +1,13 @@
-from typing import Optional
-
 from OFS.ObjectManager import ObjectManager
 from plone import api
 from plone.dexterity.content import DexterityContent
 from zope.globalrequest import getRequest
 
 from interaktiv.gdpr import logger
-from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
+from interaktiv.gdpr.config import (
+    MARKED_FOR_DELETION_CONTAINER_ID,
+    MARKED_FOR_DELETION_REQUEST_PARAM_NAME,
+)
 from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
 from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
 
@@ -18,15 +19,14 @@ def is_feature_enabled() -> bool:
     """Check if the marked deletion feature is enabled in registry."""
     try:
         return api.portal.get_registry_record(
-            name='marked_deletion_enabled',
-            interface=IGDPRSettingsSchema
+            name="marked_deletion_enabled", interface=IGDPRSettingsSchema
         )
     except (KeyError, api.exc.InvalidParameterError):
         # Default to True if registry record doesn't exist yet
         return True
 
 
-def get_marked_deletion_container() -> Optional[DexterityContent]:
+def get_marked_deletion_container() -> DexterityContent | None:
     try:
         portal = api.portal.get()
 
@@ -45,7 +45,21 @@ def should_move_to_container() -> bool:
         return False
 
     # Check for parameter that triggers move to container
-    return request.get('mark_for_deletion', False)
+    return request.get(MARKED_FOR_DELETION_REQUEST_PARAM_NAME, False)
+
+
+def _log_direct_deletion(container, ids):
+    """Log direct deletions to the deletion log."""
+    if isinstance(ids, str):
+        ids = [ids]
+
+    for obj_id in ids:
+        try:
+            if obj_id in container.objectIds():
+                obj = container[obj_id]
+                DeletionLogHelper.add_entry(obj, status="deleted")
+        except Exception as e:
+            logger.error(f"Error logging deletion for {obj_id}: {e}")
 
 
 def patched_manage_delObjects(self, ids=None, REQUEST=None):
@@ -57,13 +71,18 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
     'mark_for_deletion' parameter to True in the request.
 
     The feature must also be enabled in the registry.
+
+    When the feature is disabled, deletions are still logged to the deletion log.
     """
     # Check if feature is enabled
     if not is_feature_enabled():
+        # Log the deletion before actually deleting
+        _log_direct_deletion(self, ids)
         return _original_manage_delObjects(self, ids, REQUEST)
 
-    # Default behavior: use original deletion
+    # Default behavior: use original deletion (but still log it)
     if not should_move_to_container():
+        _log_direct_deletion(self, ids)
         return _original_manage_delObjects(self, ids, REQUEST)
 
     # Move to container was requested
@@ -89,7 +108,7 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
                 obj_title = obj.title_or_id()
 
                 # Add entry to deletion log BEFORE moving (to capture original path)
-                DeletionLogHelper.add_entry(obj, status='pending')
+                DeletionLogHelper.add_entry(obj, status="pending")
 
                 # Cut the object
                 cookie = self.manage_cutObjects([obj_id])
@@ -108,15 +127,13 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
         # Set status message
         if REQUEST is not None:
             if moved_titles:
-                message = f"Items moved to deletion container: {', '.join(moved_titles)}"
-                api.portal.show_message(
-                    message=message,
-                    request=REQUEST,
-                    type='info'
+                message = (
+                    f"Items moved to deletion container: {', '.join(moved_titles)}"
                 )
+                api.portal.show_message(message=message, request=REQUEST, type="info")
 
             # Redirect back
-            if hasattr(self, 'absolute_url'):
+            if hasattr(self, "absolute_url"):
                 REQUEST.RESPONSE.redirect(self.absolute_url())
 
         return moved_titles

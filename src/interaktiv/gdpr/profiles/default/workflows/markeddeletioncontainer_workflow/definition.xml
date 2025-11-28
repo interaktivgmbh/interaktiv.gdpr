@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<dc-workflow workflow_id="markeddeletioncontainer_workflow"
+             title="MarkedDeletionContainer Workflow"
+             description="Workflow for MarkedDeletionContainer Contenttype."
+             state_variable="review_state"
+             initial_state="published"
+             manager_bypass="False">
+
+    <!-- Permissions -->
+    <permission>View</permission>
+    <permission>Access contents information</permission>
+    <permission>Modify portal content</permission>
+    <permission>Add portal content</permission>
+    <permission>Delete objects</permission>
+    <permission>List folder contents</permission>
+    <permission>interaktiv.gdpr: Add Marked Deletion Container</permission>
+
+    <!-- Status: Published -->
+    <state state_id="published" title="Published">
+        <permission-map name="View" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+        <permission-map name="Access contents information" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+        <permission-map name="List folder contents" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+        <permission-map name="Modify portal content" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+        <permission-map name="Add portal content" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+        <permission-map name="interaktiv.gdpr: Add Marked Deletion Container" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+        <permission-map name="Delete objects" acquired="False">
+            <permission-role>Site Administrator</permission-role>
+            <permission-role>Manager</permission-role>
+        </permission-map>
+    </state>
+
+</dc-workflow>

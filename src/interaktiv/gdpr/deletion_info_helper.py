@@ -1,14 +1,39 @@
 from datetime import datetime, timedelta
 
+from AccessControl import getSecurityManager
 from plone import api
 from plone.dexterity.content import DexterityContent
+from zExceptions import Unauthorized
 
 from interaktiv.gdpr import logger
 from interaktiv.gdpr.config import (
-    DASHBOARD_DISPLAY_DAYS,
+    MARKED_FOR_DELETION_ALLOWED_ROLES,
     MARKED_FOR_DELETION_CONTAINER_ID,
 )
-from interaktiv.gdpr.registry.deletion_log import IDeletionLogSchema, TDeletionLogEntry
+from interaktiv.gdpr.registry.deletion_log import (
+    IDeletionLogSchema,
+    IGDPRSettingsSchema,
+    TDeletionLogEntry,
+)
+
+
+def is_inside_deletion_container(context: DexterityContent) -> bool:
+    portal_url = api.portal.get().absolute_url()
+    container_url = f"{portal_url}/{MARKED_FOR_DELETION_CONTAINER_ID}/"
+    return context.absolute_url().startswith(container_url)
+
+
+def check_access_allowed(context):
+    sm = getSecurityManager()
+    user = sm.getUser()
+
+    if user is None:
+        raise Unauthorized("Access to deleted content is restricted.")
+
+    user_roles = set(user.getRolesInContext(context))
+
+    if not user_roles & MARKED_FOR_DELETION_ALLOWED_ROLES:
+        raise Unauthorized("Access to deleted content is restricted.")
 
 
 class DeletionLogHelper:
@@ -31,11 +56,33 @@ class DeletionLogHelper:
             name="deletion_log", interface=IDeletionLogSchema, value=log
         )
 
+    @staticmethod
+    def get_dashboard_display_days() -> int:
+        """Get the dashboard display days from registry."""
+        try:
+            return api.portal.get_registry_record(
+                name="dashboard_display_days", interface=IGDPRSettingsSchema
+            )
+        except (KeyError, api.exc.InvalidParameterError):
+            return 90
+
+    @staticmethod
+    def get_retention_days() -> int:
+        """Get the retention days from registry."""
+        try:
+            return api.portal.get_registry_record(
+                name="retention_days", interface=IGDPRSettingsSchema
+            )
+        except (KeyError, api.exc.InvalidParameterError):
+            return 30
+
     @classmethod
     def get_deletion_log_for_display(
-        cls, days: int = DASHBOARD_DISPLAY_DAYS
+        cls, days: int | None = None
     ) -> list[TDeletionLogEntry]:
         """Get deletion log entries from the last N days for dashboard display."""
+        if days is None:
+            days = cls.get_dashboard_display_days()
         log = cls.get_deletion_log()
         cutoff_date = datetime.now() - timedelta(days=days)
 
@@ -55,8 +102,19 @@ class DeletionLogHelper:
     @classmethod
     def add_entry(
         cls, obj: DexterityContent, status: str = "pending"
-    ) -> TDeletionLogEntry:
-        """Add a new entry to the deletion log."""
+    ) -> TDeletionLogEntry | None:
+        """Add a new entry to the deletion log.
+
+        Returns None if an entry with the same UID already exists.
+        """
+        uid = obj.UID()
+
+        # Check if entry with this UID already exists
+        existing_entry = cls.get_entry_by_uid(uid)
+        if existing_entry:
+            logger.debug(f"Entry for UID {uid} already exists, skipping")
+            return None
+
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
         current_user = api.user.get_current()
@@ -75,7 +133,7 @@ class DeletionLogHelper:
             subobject_count = 0
 
         entry: TDeletionLogEntry = {
-            "uid": obj.UID(),
+            "uid": uid,
             "datetime": now,
             "title": obj.title_or_id(),
             "portal_type": obj.portal_type,
@@ -139,6 +197,15 @@ class DeletionLogHelper:
         log = cls.get_deletion_log()
         for entry in log:
             if entry["uid"] == uid:
+                return entry
+        return None
+
+    @classmethod
+    def get_pending_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
+        """Get the pending log entry for a UID."""
+        log = cls.get_deletion_log()
+        for entry in log:
+            if entry["uid"] == uid and entry["status"] == "pending":
                 return entry
         return None
 

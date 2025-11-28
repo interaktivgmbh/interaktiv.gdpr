@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+    <object name="markeddeletioncontainer_workflow" meta_type="Workflow"/>
+    <bindings>
+        <type type_id="MarkedDeletionContainer">
+            <bound-workflow workflow_id="markeddeletioncontainer_workflow"/>
+        </type>
+    </bindings>
+</object>

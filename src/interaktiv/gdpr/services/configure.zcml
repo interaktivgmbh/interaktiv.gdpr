@@ -5,6 +5,15 @@
 
     <include package="plone.restapi" file="meta.zcml" />
 
+    <!-- Override DELETE service for GDPR-aware content deletion -->
+    <plone:service
+        method="DELETE"
+        factory=".delete.GDPRContentDelete"
+        for="Products.CMFCore.interfaces.IContentish"
+        permission="zope2.DeleteObjects"
+        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
     <plone:service
         method="POST"
         factory=".withdraw.WithdrawDeletion"
@@ -38,6 +47,15 @@
         for="Products.CMFCore.interfaces.ISiteRoot"
         permission="cmf.ManagePortal"
         name="@gdpr-settings"
+        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
+    <plone:service
+        method="POST"
+        factory=".withdraw.PermanentDeletion"
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        permission="cmf.ManagePortal"
+        name="@gdpr-permanent-deletion"
         layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
     />
 

@@ -10,6 +10,7 @@
     <include package=".contenttypes"/>
     <include package=".controlpanels"/>
     <include package=".services"/>
+    <include package=".views"/>
 
     <genericsetup:registerProfile
             name="default"

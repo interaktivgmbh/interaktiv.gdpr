@@ -1,6 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
       lang="en"
    metal:use-macro="context/main_template/macros/master"
    i18n:domain="interaktiv.gdpr">
@@ -14,57 +13,254 @@
 </metal:title>
 
 <metal:content-core fill-slot="content-core"
-    tal:define="feature_enabled view/is_feature_enabled;
-                pending_count view/get_pending_count;
-                display_days view/get_display_days">
+   tal:define="feature_enabled view/is_feature_enabled;
+    pending_count view/get_pending_count;
+      display_days view/get_display_days">
 
   <style>
-    .gdpr-section { margin-bottom: 2rem; }
-    .gdpr-section h2 { margin-bottom: 1rem; border-bottom: 2px solid #ccc; padding-bottom: 0.5rem; }
-    .status-pending { color: #856404; background-color: #fff3cd; padding: 2px 8px; border-radius: 4px; }
-    .status-deleted { color: #721c24; background-color: #f8d7da; padding: 2px 8px; border-radius: 4px; }
-    .status-withdrawn { color: #155724; background-color: #d4edda; padding: 2px 8px; border-radius: 4px; }
-    .btn-withdraw { background-color: #ffc107; border-color: #ffc107; color: #212529; }
-    .btn-withdraw:hover { background-color: #e0a800; border-color: #d39e00; }
-    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
-    .modal-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 8px; z-index: 1001; max-width: 500px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-    .modal-dialog.active, .modal-backdrop.active { display: block; }
-    .modal-header { margin-bottom: 1rem; }
-    .modal-header h3 { margin: 0; color: #856404; }
-    .modal-body { margin-bottom: 1.5rem; }
-    .modal-footer { display: flex; gap: 1rem; justify-content: flex-end; }
-    .modal-error { background-color: #f8d7da; color: #721c24; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
-    .modal-success { background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
-    .modal-warning { background-color: #fff3cd; color: #856404; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
-    .settings-section { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #dee2e6; }
-    .settings-section h2 { margin-top: 0; border-bottom: none; }
-    .radio-group { display: flex; gap: 2rem; margin-top: 1rem; }
-    .radio-group label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; border: 2px solid transparent; }
-    .radio-group label:hover { background: #e9ecef; }
-    .radio-group label.selected { border-color: #007bff; background: #e7f1ff; }
-    .radio-group input[type="radio"] { width: 18px; height: 18px; }
-    .feature-status { display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: bold; margin-left: 1rem; }
-    .feature-status.enabled { background: #d4edda; color: #155724; }
-    .feature-status.disabled { background: #f8d7da; color: #721c24; }
-    .info-text { color: #6c757d; font-size: 0.9em; margin-top: 0.5rem; }
+    .gdpr-section {
+      margin-bottom: 2rem;
+    }
+
+    .gdpr-section h2 {
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 0.5rem;
+    }
+
+    .status-pending {
+      color: #856404;
+      background-color: #fff3cd;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .status-deleted {
+      color: #721c24;
+      background-color: #f8d7da;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .status-withdrawn {
+      color: #155724;
+      background-color: #d4edda;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .btn-withdraw {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #212529;
+    }
+
+    .btn-withdraw:hover {
+      background-color: #e0a800;
+      border-color: #d39e00;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+    }
+
+    .btn-delete:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      display: none;
+      pointer-events: none;
+    }
+
+    .modal-backdrop.active {
+      display: block;
+      pointer-events: auto;
+    }
+
+    .modal-dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      z-index: 10001;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: none;
+      pointer-events: none;
+    }
+
+    .modal-dialog.active {
+      display: block;
+      pointer-events: auto;
+    }
+
+    .modal-header {
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: #856404;
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+
+    .modal-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .modal-success {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .modal-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .settings-section {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .settings-section h2 {
+      margin-top: 0;
+      border-bottom: none;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      border: 2px solid transparent;
+    }
+
+    .radio-group label:hover {
+      background: #e9ecef;
+    }
+
+    .radio-group label.selected {
+      border-color: #007bff;
+      background: #e7f1ff;
+    }
+
+    .radio-group input[type="radio"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .feature-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 1rem;
+    }
+
+    .feature-status.enabled {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .feature-status.disabled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .info-text {
+      color: #6c757d;
+      font-size: 0.9em;
+      margin-top: 0.5rem;
+    }
   </style>
 
   <!-- Withdraw Confirmation Modal -->
   <div id="withdraw-modal-backdrop" class="modal-backdrop"></div>
   <div id="withdraw-modal" class="modal-dialog">
     <div class="modal-header">
-      <h3>Sind Sie sicher?</h3>
+      <h3 i18n:translate="modal_are_you_sure">Sind Sie sicher?</h3>
     </div>
     <div class="modal-body">
-      <p>Sind Sie sicher, dass Sie die Loeschung zurueckziehen moechten?</p>
-      <p><strong>Titel:</strong> <span id="modal-title"></span></p>
-      <p><strong>Urspruenglicher Pfad:</strong> <span id="modal-path"></span></p>
-      <p>Der Inhalt wird an den urspruenglichen Ort zurueckverschoben.</p>
+      <p i18n:translate="modal_withdraw_question">Sind Sie sicher, dass Sie die Löschung zurückziehen möchten?</p>
+      <p><strong i18n:translate="label_title">Titel:</strong> <span id="modal-title"></span></p>
+      <p><strong i18n:translate="label_original_path">Ursprünglicher Pfad:</strong> <span id="modal-path"></span></p>
+      <p i18n:translate="modal_withdraw_info">Der Inhalt wird an den ursprünglichen Ort zurückverschoben.</p>
     </div>
     <div id="modal-message"></div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" onclick="closeModal('withdraw')">Abbrechen</button>
-      <button type="button" class="btn btn-primary" id="modal-confirm-btn" onclick="confirmWithdraw()">Zurueckziehen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeModal('withdraw')" i18n:translate="button_cancel">Abbrechen</button>
+      <button type="button" class="btn btn-primary" id="modal-confirm-btn" onclick="confirmWithdraw()" i18n:translate="button_withdraw">Zurückziehen</button>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal-backdrop" class="modal-backdrop"></div>
+  <div id="delete-modal" class="modal-dialog">
+    <div class="modal-header">
+      <h3 style="color: #721c24;" i18n:translate="modal_delete_permanently">Endgültig löschen?</h3>
+    </div>
+    <div class="modal-body">
+      <div class="modal-error" style="margin-bottom: 1rem;">
+        <strong i18n:translate="label_warning">Achtung:</strong> <span i18n:translate="modal_delete_warning">Diese Aktion kann nicht rückgängig gemacht werden!</span>
+      </div>
+      <p><strong i18n:translate="label_title">Titel:</strong> <span id="delete-modal-title"></span></p>
+      <p><strong i18n:translate="label_original_path">Ursprünglicher Pfad:</strong> <span id="delete-modal-path"></span></p>
+    </div>
+    <div id="delete-modal-message"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('delete')" i18n:translate="button_cancel">Abbrechen</button>
+      <button type="button" class="btn btn-delete" id="delete-modal-confirm-btn" onclick="confirmDelete()" i18n:translate="button_delete_permanently">Endgültig löschen</button>
     </div>
   </div>
 
@@ -72,51 +268,51 @@
   <div id="toggle-modal-backdrop" class="modal-backdrop"></div>
   <div id="toggle-modal" class="modal-dialog">
     <div class="modal-header">
-      <h3>Feature kann nicht deaktiviert werden</h3>
+      <h3 i18n:translate="modal_cannot_disable">Feature kann nicht deaktiviert werden</h3>
     </div>
     <div class="modal-body">
       <div class="modal-warning">
-        <strong>Es sind noch ausstehende Loeschungen aktiv.</strong>
-        <p style="margin-bottom: 0; margin-top: 0.5rem;">Loesen Sie diese auf um das Feature zu deaktivieren.</p>
+        <strong i18n:translate="modal_pending_deletions_active">Es sind noch ausstehende Löschungen aktiv.</strong>
+        <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="modal_resolve_to_disable">Lösen Sie diese auf um das Feature zu deaktivieren.</p>
       </div>
-      <p>Anzahl ausstehender Loeschungen: <strong id="toggle-pending-count"></strong></p>
+      <p><span i18n:translate="label_pending_count">Anzahl ausstehender Löschungen:</span> <strong id="toggle-pending-count"></strong></p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" onclick="closeModal('toggle')">Verstanden</button>
+      <button type="button" class="btn btn-primary" onclick="closeModal('toggle')" i18n:translate="button_understood">Verstanden</button>
     </div>
   </div>
 
   <!-- Settings Section -->
   <div class="settings-section">
-    <h2>Feature-Einstellungen
-      <span tal:condition="feature_enabled" class="feature-status enabled">Aktiviert</span>
-      <span tal:condition="not: feature_enabled" class="feature-status disabled">Deaktiviert</span>
+    <h2><span i18n:translate="heading_feature_settings">Feature-Einstellungen</span>
+      <span tal:condition="feature_enabled" class="feature-status enabled" i18n:translate="status_enabled">Aktiviert</span>
+      <span tal:condition="not: feature_enabled" class="feature-status disabled" i18n:translate="status_disabled">Deaktiviert</span>
     </h2>
-    <p>Wenn aktiviert, werden geloeschte Inhalte in einen speziellen Container verschoben anstatt permanent geloescht zu werden.</p>
+    <p i18n:translate="feature_description">Wenn aktiviert, werden gelöschte Inhalte in einen speziellen Container verschoben anstatt permanent gelöscht zu werden.</p>
     <div class="radio-group">
       <label tal:attributes="class python: 'selected' if feature_enabled else ''">
         <input type="radio" name="feature_enabled" value="true"
-               tal:attributes="checked python: 'checked' if feature_enabled else None"
+           tal:attributes="checked python: 'checked' if feature_enabled else None"
                onchange="toggleFeature(true)" />
-        Aktiviert
+        <span i18n:translate="status_enabled">Aktiviert</span>
       </label>
       <label tal:attributes="class python: 'selected' if not feature_enabled else ''">
         <input type="radio" name="feature_enabled" value="false"
-               tal:attributes="checked python: 'checked' if not feature_enabled else None"
+           tal:attributes="checked python: 'checked' if not feature_enabled else None"
                onchange="toggleFeature(false)" />
-        Deaktiviert
+        <span i18n:translate="status_disabled">Deaktiviert</span>
       </label>
     </div>
   </div>
 
   <!-- Pending Deletions Section -->
   <div class="gdpr-section" tal:condition="feature_enabled">
-    <h2>Aktuelle Loeschanfragen (Pending)</h2>
+    <h2 i18n:translate="heading_pending_deletions">Aktuelle Löschanfragen (Pending)</h2>
     <table class="pat-datatables listing table table-striped table-hover"
            data-pat-datatables='{
-              "columnDefs": [{ "orderable": false, "targets": [0, 8] }],
+              "columnDefs": [{ "orderable": false, "targets": [8] }],
               "pageLength": 10,
-              "order": [[ 5, "desc" ]],
+              "order": [[ 4, "desc" ]],
               "language": {
                   "processing": "Bitte warten...",
                   "lengthMenu": "_MENU_ Eintraege anzeigen",
@@ -135,33 +331,42 @@
                    }}}'>
       <thead>
         <tr>
-          <th>UID</th>
-          <th>Titel</th>
-          <th>Portal Type</th>
-          <th>Urspr. Pfad</th>
-          <th>Benutzer</th>
-          <th>Eingereicht am</th>
-          <th>Unterobjekte</th>
-          <th>Review State</th>
-          <th>Aktionen</th>
+          <th i18n:translate="table_header_title">Title</th>
+          <th i18n:translate="table_header_portal_type">Portal Type</th>
+          <th i18n:translate="table_header_original_path">Original Path</th>
+          <th i18n:translate="table_header_deleted_by">Deleted by</th>
+          <th i18n:translate="table_header_deleted_at">Deleted at</th>
+          <th i18n:translate="table_header_scheduled_deletion">Scheduled deletion</th>
+          <th i18n:translate="table_header_subobjects">Subobjects</th>
+          <th i18n:translate="table_header_review_state">Review State</th>
+          <th i18n:translate="table_header_actions">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr tal:repeat="entry python: view.get_pending_entries()">
-          <td tal:content="entry/uid">UID</td>
           <td tal:content="entry/title">Titel</td>
           <td tal:content="entry/portal_type">Portal Type</td>
           <td tal:content="entry/original_path">Pfad</td>
           <td tal:content="entry/user_id">Benutzer ID</td>
-          <td tal:content="entry/datetime">Datum</td>
+          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Datum</td>
+          <td tal:content="python: view.get_scheduled_deletion_date(entry.get('datetime'))">Geplant</td>
           <td tal:content="entry/subobject_count">0</td>
           <td tal:content="entry/review_state">Status</td>
           <td>
-            <button type="button"
-                    class="btn btn-sm btn-withdraw"
-                    tal:attributes="onclick string:showWithdrawModal('${entry/uid}', '${entry/title}', '${entry/original_path}')">
-              Zurueckziehen
-            </button>
+            <div class="action-buttons">
+              <button type="button"
+                      class="btn btn-sm btn-withdraw"
+                 tal:attributes="onclick string:showWithdrawModal('${entry/uid}', '${entry/title}', '${entry/original_path}')"
+                      i18n:translate="button_withdraw">
+                Withdraw
+              </button>
+              <button type="button"
+                      class="btn btn-sm btn-delete"
+                 tal:attributes="onclick string:showDeleteModal('${entry/uid}', '${entry/title}', '${entry/original_path}')"
+                      i18n:translate="button_delete">
+                Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -171,20 +376,19 @@
   <!-- Feature Disabled Notice -->
   <div class="gdpr-section" tal:condition="not: feature_enabled">
     <div class="modal-warning" style="margin: 0;">
-      <strong>Das Feature ist deaktiviert.</strong>
-      <p style="margin-bottom: 0; margin-top: 0.5rem;">Aktivieren Sie das Feature um Loeschanfragen zu verwalten.</p>
+      <strong i18n:translate="notice_feature_disabled">Das Feature ist deaktiviert.</strong>
+      <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="notice_enable_feature">Aktivieren Sie das Feature um Löschanfragen zu verwalten.</p>
     </div>
   </div>
 
   <!-- Deletion Log Section -->
   <div class="gdpr-section">
-    <h2>Loeschprotokoll (Log)</h2>
-    <p class="info-text" tal:content="string:Zeigt Eintraege der letzten ${display_days} Tage an. Aeltere Eintraege werden weiterhin in der Registry gespeichert."></p>
+    <h2 i18n:translate="heading_deletion_log">Löschprotokoll (Log)</h2>
+    <p class="info-text" i18n:translate="info_log_display_days">Zeigt Einträge der letzten <span i18n:name="days" tal:replace="display_days">90</span> Tage an. Ältere Einträge werden weiterhin in der Registry gespeichert.</p>
     <table class="pat-datatables listing table table-striped table-hover"
            data-pat-datatables='{
-              "columnDefs": [{ "orderable": false, "targets": 0 }],
               "pageLength": 25,
-              "order": [[ 5, "desc" ]],
+              "order": [[ 4, "desc" ]],
               "language": {
                   "processing": "Bitte warten...",
                   "lengthMenu": "_MENU_ Eintraege anzeigen",
@@ -203,42 +407,42 @@
                    }}}'>
       <thead>
         <tr>
-          <th>UID</th>
-          <th>Titel</th>
-          <th>Portal Type</th>
-          <th>Urspr. Pfad</th>
-          <th>Eingereicht von</th>
-          <th>Eingereicht am</th>
-          <th>Status geaendert</th>
-          <th>Geaendert von</th>
-          <th>Status</th>
+          <th i18n:translate="table_header_title">Title</th>
+          <th i18n:translate="table_header_portal_type">Portal Type</th>
+          <th i18n:translate="table_header_original_path">Original Path</th>
+          <th i18n:translate="table_header_deleted_by">Deleted by</th>
+          <th i18n:translate="table_header_deleted_at">Deleted at</th>
+          <th i18n:translate="table_header_status_changed">Status changed</th>
+          <th i18n:translate="table_header_changed_by">Changed by</th>
+          <th i18n:translate="table_header_status">Status</th>
         </tr>
       </thead>
       <tbody>
         <tr tal:repeat="entry python: view.get_deletion_log_for_display()">
-          <td tal:content="entry/uid">UID</td>
           <td tal:content="entry/title">Titel</td>
           <td tal:content="entry/portal_type">Portal Type</td>
           <td tal:content="entry/original_path">Pfad</td>
           <td tal:content="entry/user_id">Benutzer ID</td>
-          <td tal:content="entry/datetime">Eingereicht</td>
-          <td tal:content="entry/status_changed | nothing">Status geaendert</td>
+          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Eingereicht</td>
+          <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status geaendert</td>
           <td tal:content="entry/status_changed_by | nothing">Geaendert von</td>
           <td>
-            <span tal:condition="python: entry.get('status') == 'pending'" class="status-pending">Ausstehend</span>
-            <span tal:condition="python: entry.get('status') == 'deleted'" class="status-deleted">Geloescht</span>
-            <span tal:condition="python: entry.get('status') == 'withdrawn'" class="status-withdrawn">Zurueckgezogen</span>
+            <span tal:condition="python: entry.get('status') == 'pending'" class="status-pending" i18n:translate="status_pending">Pending</span>
+            <span tal:condition="python: entry.get('status') == 'deleted'" class="status-deleted" i18n:translate="status_deleted">Deleted</span>
+            <span tal:condition="python: entry.get('status') == 'withdrawn'" class="status-withdrawn" i18n:translate="status_withdrawn">Withdrawn</span>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <script tal:content="string:
+  <script>
     var currentUid = null;
+    var currentAction = null;
     var pendingCount = ${pending_count};
 
     function showWithdrawModal(uid, title, path) {
+      currentAction = 'withdraw';
       currentUid = uid;
       document.getElementById('modal-title').textContent = title;
       document.getElementById('modal-path').textContent = path;
@@ -249,11 +453,29 @@
       document.getElementById('withdraw-modal-backdrop').classList.add('active');
     }
 
+    function showDeleteModal(uid, title, path) {
+      currentAction = 'delete';
+      currentUid = uid;
+      document.getElementById('delete-modal-title').textContent = title;
+      document.getElementById('delete-modal-path').textContent = path;
+      document.getElementById('delete-modal-message').innerHTML = '';
+      document.getElementById('delete-modal-confirm-btn').disabled = false;
+      document.getElementById('delete-modal-confirm-btn').textContent = 'Endgueltig loeschen';
+      document.getElementById('delete-modal').classList.add('active');
+      document.getElementById('delete-modal-backdrop').classList.add('active');
+    }
+
     function closeModal(type) {
       if (type === 'withdraw') {
         document.getElementById('withdraw-modal').classList.remove('active');
         document.getElementById('withdraw-modal-backdrop').classList.remove('active');
         currentUid = null;
+        currentAction = null;
+      } else if (type === 'delete') {
+        document.getElementById('delete-modal').classList.remove('active');
+        document.getElementById('delete-modal-backdrop').classList.remove('active');
+        currentUid = null;
+        currentAction = null;
       } else if (type === 'toggle') {
         document.getElementById('toggle-modal').classList.remove('active');
         document.getElementById('toggle-modal-backdrop').classList.remove('active');
@@ -270,7 +492,7 @@
 
     function updateRadioLabels() {
       var labels = document.querySelectorAll('.radio-group label');
-      labels.forEach(function(label) {
+      labels.forEach(function (label) {
         var radio = label.querySelector('input[type=radio]');
         if (radio.checked) {
           label.classList.add('selected');
@@ -304,32 +526,35 @@
         credentials: 'same-origin',
         body: JSON.stringify({ marked_deletion_enabled: enable })
       })
-      .then(function(response) {
-        return response.json().then(function(data) {
-          return { status: response.status, data: data };
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return { status: response.status, data: data };
+          });
+        })
+        .then(function (result) {
+          if (result.status === 200) {
+            window.location.reload();
+          } else if (result.status === 409) {
+            // Show warning modal
+            document.getElementById(
+              'toggle-pending-count').textContent = result.data.error.pending_count || pendingCount;
+            document.getElementById('toggle-modal').classList.add('active');
+            document.getElementById('toggle-modal-backdrop').classList.add('active');
+          } else {
+            alert('Fehler: ' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler'));
+            window.location.reload();
+          }
+        })
+        .catch(function (error) {
+          alert('Fehler: ' + error.message);
+          window.location.reload();
         });
-      })
-      .then(function(result) {
-        if (result.status === 200) {
-          window.location.reload();
-        } else if (result.status === 409) {
-          // Show warning modal
-          document.getElementById('toggle-pending-count').textContent = result.data.error.pending_count || pendingCount;
-          document.getElementById('toggle-modal').classList.add('active');
-          document.getElementById('toggle-modal-backdrop').classList.add('active');
-        } else {
-          alert('Fehler: ' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler'));
-          window.location.reload();
-        }
-      })
-      .catch(function(error) {
-        alert('Fehler: ' + error.message);
-        window.location.reload();
-      });
     }
 
     function confirmWithdraw() {
-      if (!currentUid) return;
+      if (!currentUid) {
+        return;
+      }
 
       var confirmBtn = document.getElementById('modal-confirm-btn');
       confirmBtn.disabled = true;
@@ -346,58 +571,130 @@
         },
         credentials: 'same-origin'
       })
-      .then(function(response) {
-        return response.json().then(function(data) {
-          return { status: response.status, data: data };
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return { status: response.status, data: data };
+          });
+        })
+        .then(function (result) {
+          var messageDiv = document.getElementById('modal-message');
+
+          if (result.status === 200) {
+            messageDiv.innerHTML = '<div class=\"modal-success\">' +
+                                   '<strong>Erfolgreich!</strong> ' + result.data.message +
+                                   '<br>Wiederhergestellt unter: ' + result.data.restored_path +
+                                   '</div>';
+
+            setTimeout(function () {
+              window.location.reload();
+            }, 2000);
+          } else if (result.status === 409) {
+            messageDiv.innerHTML = '<div class=\"modal-error\">' +
+                                   '<strong>Namenskonflikt!</strong><br>' + result.data.error.message +
+                                   '</div>';
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Zurueckziehen';
+          } else {
+            messageDiv.innerHTML = '<div class=\"modal-error\">' +
+                                   '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
+                                   '</div>';
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Zurueckziehen';
+          }
+        })
+        .catch(function (error) {
+          document.getElementById('modal-message').innerHTML = '<div class=\"modal-error\">' +
+                                                               '<strong>Fehler!</strong><br>' + error.message +
+                                                               '</div>';
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Zurueckziehen';
         });
-      })
-      .then(function(result) {
-        var messageDiv = document.getElementById('modal-message');
+    }
 
-        if (result.status === 200) {
-          messageDiv.innerHTML = '<div class=\"modal-success\">' +
-            '<strong>Erfolgreich!</strong> ' + result.data.message +
-            '<br>Wiederhergestellt unter: ' + result.data.restored_path +
-            '</div>';
+    function confirmDelete() {
+      if (!currentUid) {
+        return;
+      }
 
-          setTimeout(function() {
-            window.location.reload();
-          }, 2000);
-        } else if (result.status === 409) {
-          messageDiv.innerHTML = '<div class=\"modal-error\">' +
-            '<strong>Namenskonflikt!</strong><br>' + result.data.error.message +
-            '</div>';
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Zurueckziehen';
-        } else {
-          messageDiv.innerHTML = '<div class=\"modal-error\">' +
-            '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
-            '</div>';
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Zurueckziehen';
-        }
+      var confirmBtn = document.getElementById('delete-modal-confirm-btn');
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Wird geloescht...';
+
+      var portalUrl = document.body.dataset.portalUrl || '';
+      var url = portalUrl + '/@gdpr-permanent-deletion/' + currentUid;
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
       })
-      .catch(function(error) {
-        document.getElementById('modal-message').innerHTML = '<div class=\"modal-error\">' +
-          '<strong>Fehler!</strong><br>' + error.message +
-          '</div>';
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = 'Zurueckziehen';
-      });
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return { status: response.status, data: data };
+          });
+        })
+        .then(function (result) {
+          var messageDiv = document.getElementById('delete-modal-message');
+
+          if (result.status === 200) {
+            messageDiv.innerHTML = '<div class=\"modal-success\">' +
+                                   '<strong>Erfolgreich!</strong> ' + result.data.message +
+                                   '</div>';
+
+            setTimeout(function () {
+              window.location.reload();
+            }, 2000);
+          } else {
+            messageDiv.innerHTML = '<div class=\"modal-error\">' +
+                                   '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
+                                   '</div>';
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Endgueltig loeschen';
+          }
+        })
+        .catch(function (error) {
+          document.getElementById('delete-modal-message').innerHTML = '<div class=\"modal-error\">' +
+                                                                       '<strong>Fehler!</strong><br>' + error.message +
+                                                                       '</div>';
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Endgueltig loeschen';
+        });
     }
 
     // Close modals on backdrop click
-    document.getElementById('withdraw-modal-backdrop').addEventListener('click', function() { closeModal('withdraw'); });
-    document.getElementById('toggle-modal-backdrop').addEventListener('click', function() { closeModal('toggle'); });
+    document.getElementById('withdraw-modal-backdrop').addEventListener('click', function () {
+      closeModal('withdraw');
+    });
+    document.getElementById('delete-modal-backdrop').addEventListener('click', function () {
+      closeModal('delete');
+    });
+    document.getElementById('toggle-modal-backdrop').addEventListener('click', function () {
+      closeModal('toggle');
+    });
+
+    // Prevent clicks inside modal dialogs from closing the modal
+    document.getElementById('withdraw-modal').addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+    document.getElementById('delete-modal').addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+    document.getElementById('toggle-modal').addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
 
     // Close modals on Escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         closeModal('withdraw');
+        closeModal('delete');
         closeModal('toggle');
       }
     });
-  "></script>
+  </script>
 
 </metal:content-core>
 

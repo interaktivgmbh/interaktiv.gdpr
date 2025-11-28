@@ -7,7 +7,7 @@
 
     <!-- Controlpanel: GDPR Dashboard -->
     <browser:page
-            name="gdpr-dashboard"
+            name="interaktiv-gdpr-dashboard"
             for="Products.CMFPlone.interfaces.IPloneSiteRoot"
             class="interaktiv.gdpr.controlpanels.dashboard.DashboardView"
             permission="cmf.ManagePortal"
