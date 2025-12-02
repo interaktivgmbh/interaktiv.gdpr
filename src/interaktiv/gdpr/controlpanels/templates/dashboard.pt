@@ -229,18 +229,18 @@
   <div id="withdraw-modal-backdrop" class="modal-backdrop"></div>
   <div id="withdraw-modal" class="modal-dialog">
     <div class="modal-header">
-      <h3 i18n:translate="modal_are_you_sure">Sind Sie sicher?</h3>
+      <h3 i18n:translate="modal_are_you_sure">Are you sure?</h3>
     </div>
     <div class="modal-body">
-      <p i18n:translate="modal_withdraw_question">Sind Sie sicher, dass Sie die Löschung zurückziehen möchten?</p>
-      <p><strong i18n:translate="label_title">Titel:</strong> <span id="modal-title"></span></p>
-      <p><strong i18n:translate="label_original_path">Ursprünglicher Pfad:</strong> <span id="modal-path"></span></p>
-      <p i18n:translate="modal_withdraw_info">Der Inhalt wird an den ursprünglichen Ort zurückverschoben.</p>
+      <p i18n:translate="modal_withdraw_question">Are you sure you want to withdraw the deletion?</p>
+      <p><strong i18n:translate="label_title">Title:</strong> <span id="modal-title"></span></p>
+      <p><strong i18n:translate="label_original_path">Original Path:</strong> <span id="modal-path"></span></p>
+      <p i18n:translate="modal_withdraw_info">The content will be moved back to its original location.</p>
     </div>
     <div id="modal-message"></div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" onclick="closeModal('withdraw')" i18n:translate="button_cancel">Abbrechen</button>
-      <button type="button" class="btn btn-primary" id="modal-confirm-btn" onclick="confirmWithdraw()" i18n:translate="button_withdraw">Zurückziehen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeModal('withdraw')" i18n:translate="button_cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="modal-confirm-btn" onclick="confirmWithdraw()" i18n:translate="button_withdraw">Withdraw</button>
     </div>
   </div>
 
@@ -248,19 +248,19 @@
   <div id="delete-modal-backdrop" class="modal-backdrop"></div>
   <div id="delete-modal" class="modal-dialog">
     <div class="modal-header">
-      <h3 style="color: #721c24;" i18n:translate="modal_delete_permanently">Endgültig löschen?</h3>
+      <h3 style="color: #721c24;" i18n:translate="modal_delete_permanently">Delete permanently?</h3>
     </div>
     <div class="modal-body">
       <div class="modal-error" style="margin-bottom: 1rem;">
-        <strong i18n:translate="label_warning">Achtung:</strong> <span i18n:translate="modal_delete_warning">Diese Aktion kann nicht rückgängig gemacht werden!</span>
+        <strong i18n:translate="label_warning">Warning:</strong> <span i18n:translate="modal_delete_warning">This action cannot be undone!</span>
       </div>
-      <p><strong i18n:translate="label_title">Titel:</strong> <span id="delete-modal-title"></span></p>
-      <p><strong i18n:translate="label_original_path">Ursprünglicher Pfad:</strong> <span id="delete-modal-path"></span></p>
+      <p><strong i18n:translate="label_title">Title:</strong> <span id="delete-modal-title"></span></p>
+      <p><strong i18n:translate="label_original_path">Original Path:</strong> <span id="delete-modal-path"></span></p>
     </div>
     <div id="delete-modal-message"></div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" onclick="closeModal('delete')" i18n:translate="button_cancel">Abbrechen</button>
-      <button type="button" class="btn btn-delete" id="delete-modal-confirm-btn" onclick="confirmDelete()" i18n:translate="button_delete_permanently">Endgültig löschen</button>
+      <button type="button" class="btn btn-secondary" onclick="closeModal('delete')" i18n:translate="button_cancel">Cancel</button>
+      <button type="button" class="btn btn-delete" id="delete-modal-confirm-btn" onclick="confirmDelete()" i18n:translate="button_delete_permanently">Delete permanently</button>
     </div>
   </div>
 
@@ -268,66 +268,51 @@
   <div id="toggle-modal-backdrop" class="modal-backdrop"></div>
   <div id="toggle-modal" class="modal-dialog">
     <div class="modal-header">
-      <h3 i18n:translate="modal_cannot_disable">Feature kann nicht deaktiviert werden</h3>
+      <h3 i18n:translate="modal_cannot_disable">Feature cannot be disabled</h3>
     </div>
     <div class="modal-body">
       <div class="modal-warning">
-        <strong i18n:translate="modal_pending_deletions_active">Es sind noch ausstehende Löschungen aktiv.</strong>
-        <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="modal_resolve_to_disable">Lösen Sie diese auf um das Feature zu deaktivieren.</p>
+        <strong i18n:translate="modal_pending_deletions_active">There are still pending deletions active.</strong>
+        <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="modal_resolve_to_disable">Resolve these to disable the feature.</p>
       </div>
-      <p><span i18n:translate="label_pending_count">Anzahl ausstehender Löschungen:</span> <strong id="toggle-pending-count"></strong></p>
+      <p><span i18n:translate="label_pending_count">Number of pending deletions:</span> <strong id="toggle-pending-count"></strong></p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" onclick="closeModal('toggle')" i18n:translate="button_understood">Verstanden</button>
+      <button type="button" class="btn btn-primary" onclick="closeModal('toggle')" i18n:translate="button_understood">Understood</button>
     </div>
   </div>
 
   <!-- Settings Section -->
   <div class="settings-section">
-    <h2><span i18n:translate="heading_feature_settings">Feature-Einstellungen</span>
-      <span tal:condition="feature_enabled" class="feature-status enabled" i18n:translate="status_enabled">Aktiviert</span>
-      <span tal:condition="not: feature_enabled" class="feature-status disabled" i18n:translate="status_disabled">Deaktiviert</span>
+    <h2><span i18n:translate="heading_feature_settings">Feature Settings</span>
+      <span tal:condition="feature_enabled" class="feature-status enabled" i18n:translate="status_enabled">Enabled</span>
+      <span tal:condition="not: feature_enabled" class="feature-status disabled" i18n:translate="status_disabled">Disabled</span>
     </h2>
-    <p i18n:translate="feature_description">Wenn aktiviert, werden gelöschte Inhalte in einen speziellen Container verschoben anstatt permanent gelöscht zu werden.</p>
+    <p i18n:translate="feature_description">When enabled, deleted content will be moved to a special container instead of being permanently deleted.</p>
     <div class="radio-group">
       <label tal:attributes="class python: 'selected' if feature_enabled else ''">
         <input type="radio" name="feature_enabled" value="true"
            tal:attributes="checked python: 'checked' if feature_enabled else None"
                onchange="toggleFeature(true)" />
-        <span i18n:translate="status_enabled">Aktiviert</span>
+        <span i18n:translate="status_enabled">Enabled</span>
       </label>
       <label tal:attributes="class python: 'selected' if not feature_enabled else ''">
         <input type="radio" name="feature_enabled" value="false"
            tal:attributes="checked python: 'checked' if not feature_enabled else None"
                onchange="toggleFeature(false)" />
-        <span i18n:translate="status_disabled">Deaktiviert</span>
+        <span i18n:translate="status_disabled">Disabled</span>
       </label>
     </div>
   </div>
 
   <!-- Pending Deletions Section -->
   <div class="gdpr-section" tal:condition="feature_enabled">
-    <h2 i18n:translate="heading_pending_deletions">Aktuelle Löschanfragen (Pending)</h2>
+    <h2 i18n:translate="heading_pending_deletions">Current Deletion Requests (Pending)</h2>
     <table class="pat-datatables listing table table-striped table-hover"
            data-pat-datatables='{
               "columnDefs": [{ "orderable": false, "targets": [8] }],
               "pageLength": 10,
-              "order": [[ 4, "desc" ]],
-              "language": {
-                  "processing": "Bitte warten...",
-                  "lengthMenu": "_MENU_ Einträge anzeigen",
-                  "zeroRecords": "Keine Einträge vorhanden.",
-                  "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
-                  "infoEmpty": "Keine Einträge",
-                  "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
-                  "infoPostFix": "",
-                  "search": "Suchen:",
-                  "paginate": {
-                      "first":    "Erste",
-                      "previous": "Zurück",
-                      "next":     "Weiter",
-                      "last":     "Letzte"
-                   }}}'>
+              "order": [[ 4, "desc" ]]}'>
       <thead>
         <tr>
           <th i18n:translate="table_header_title">Title</th>
@@ -343,12 +328,12 @@
       </thead>
       <tbody>
         <tr tal:repeat="entry python: view.get_pending_entries()">
-          <td tal:content="entry/title">Titel</td>
+          <td tal:content="entry/title">Title</td>
           <td tal:content="entry/portal_type">Portal Type</td>
-          <td tal:content="entry/original_path">Pfad</td>
-          <td tal:content="entry/user_id">Benutzer ID</td>
-          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Datum</td>
-          <td tal:content="python: view.get_scheduled_deletion_date(entry.get('datetime'))">Geplant</td>
+          <td tal:content="entry/original_path">Path</td>
+          <td tal:content="entry/user_id">User ID</td>
+          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Date</td>
+          <td tal:content="python: view.get_scheduled_deletion_date(entry.get('datetime'))">Scheduled</td>
           <td tal:content="entry/subobject_count">0</td>
           <td tal:content="entry/review_state">Status</td>
           <td>
@@ -375,34 +360,19 @@
   <!-- Feature Disabled Notice -->
   <div class="gdpr-section" tal:condition="not: feature_enabled">
     <div class="modal-warning" style="margin: 0;">
-      <strong i18n:translate="notice_feature_disabled">Das Feature ist deaktiviert.</strong>
-      <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="notice_enable_feature">Aktivieren Sie das Feature um Löschanfragen zu verwalten.</p>
+      <strong i18n:translate="notice_feature_disabled">The feature is disabled.</strong>
+      <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="notice_enable_feature">Enable the feature to manage deletion requests.</p>
     </div>
   </div>
 
   <!-- Deletion Log Section -->
   <div class="gdpr-section">
-    <h2 i18n:translate="heading_deletion_log">Löschprotokoll (Log)</h2>
-    <p class="info-text" i18n:translate="info_log_display_days">Zeigt Einträge der letzten <span i18n:name="days" tal:replace="display_days">90</span> Tage an. Ältere Einträge werden weiterhin in der Registry gespeichert.</p>
+    <h2 i18n:translate="heading_deletion_log">Deletion Log</h2>
+    <p class="info-text" i18n:translate="info_log_display_days">Shows entries from the last <span i18n:name="days" tal:replace="display_days">90</span> days. Older entries are still stored in the registry.</p>
     <table class="pat-datatables listing table table-striped table-hover"
            data-pat-datatables='{
               "pageLength": 25,
-              "order": [[ 4, "desc" ]],
-              "language": {
-                  "processing": "Bitte warten...",
-                  "lengthMenu": "_MENU_ Einträge anzeigen",
-                  "zeroRecords": "Keine Einträge vorhanden.",
-                  "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
-                  "infoEmpty": "Keine Einträge",
-                  "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
-                  "infoPostFix": "",
-                  "search": "Suchen:",
-                  "paginate": {
-                      "first":    "Erste",
-                      "previous": "Zurück",
-                      "next":     "Weiter",
-                      "last":     "Letzte"
-                   }}}'>
+              "order": [[ 4, "desc" ]]}'>
       <thead>
         <tr>
           <th i18n:translate="table_header_title">Title</th>
@@ -417,13 +387,13 @@
       </thead>
       <tbody>
         <tr tal:repeat="entry python: view.get_deletion_log_for_display()">
-          <td tal:content="entry/title">Titel</td>
+          <td tal:content="entry/title">Title</td>
           <td tal:content="entry/portal_type">Portal Type</td>
-          <td tal:content="entry/original_path">Pfad</td>
-          <td tal:content="entry/user_id">Benutzer ID</td>
-          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Eingereicht</td>
-          <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status geändert</td>
-          <td tal:content="entry/status_changed_by | nothing">Geändert von</td>
+          <td tal:content="entry/original_path">Path</td>
+          <td tal:content="entry/user_id">User ID</td>
+          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Submitted</td>
+          <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status changed</td>
+          <td tal:content="entry/status_changed_by | nothing">Changed by</td>
           <td>
             <span tal:condition="python: entry.get('status') == 'pending'" class="status-pending" i18n:translate="status_pending">Pending</span>
             <span tal:condition="python: entry.get('status') == 'deleted'" class="status-deleted" i18n:translate="status_deleted">Deleted</span>
@@ -446,7 +416,7 @@
       document.getElementById('modal-path').textContent = path;
       document.getElementById('modal-message').innerHTML = '';
       document.getElementById('modal-confirm-btn').disabled = false;
-      document.getElementById('modal-confirm-btn').textContent = 'Zurückziehen';
+      document.getElementById('modal-confirm-btn').textContent = 'Withdraw';
       document.getElementById('withdraw-modal').classList.add('active');
       document.getElementById('withdraw-modal-backdrop').classList.add('active');
     }
@@ -458,7 +428,7 @@
       document.getElementById('delete-modal-path').textContent = path;
       document.getElementById('delete-modal-message').innerHTML = '';
       document.getElementById('delete-modal-confirm-btn').disabled = false;
-      document.getElementById('delete-modal-confirm-btn').textContent = 'Endgültig löschen';
+      document.getElementById('delete-modal-confirm-btn').textContent = 'Delete permanently';
       document.getElementById('delete-modal').classList.add('active');
       document.getElementById('delete-modal-backdrop').classList.add('active');
     }
@@ -539,12 +509,12 @@
             document.getElementById('toggle-modal').classList.add('active');
             document.getElementById('toggle-modal-backdrop').classList.add('active');
           } else {
-            alert('Fehler: ' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler'));
+            alert('Error: ' + (result.data.error ? result.data.error.message : 'Unknown error'));
             window.location.reload();
           }
         })
         .catch(function (error) {
-          alert('Fehler: ' + error.message);
+          alert('Error: ' + error.message);
           window.location.reload();
         });
     }
@@ -556,7 +526,7 @@
 
       var confirmBtn = document.getElementById('modal-confirm-btn');
       confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Wird verarbeitet...';
+      confirmBtn.textContent = 'Processing...';
 
       var portalUrl = document.body.dataset.portalUrl || '';
       var url = portalUrl + '/@gdpr-withdraw-deletion/' + currentUid;
@@ -579,8 +549,8 @@
 
           if (result.status === 200) {
             messageDiv.innerHTML = '<div class=\"modal-success\">' +
-                                   '<strong>Erfolgreich!</strong> ' + result.data.message +
-                                   '<br>Wiederhergestellt unter: ' + result.data.restored_path +
+                                   '<strong>Success!</strong> ' + result.data.message +
+                                   '<br>Restored to: ' + result.data.restored_path +
                                    '</div>';
 
             setTimeout(function () {
@@ -588,24 +558,24 @@
             }, 2000);
           } else if (result.status === 409) {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
-                                   '<strong>Namenskonflikt!</strong><br>' + result.data.error.message +
+                                   '<strong>Name conflict!</strong><br>' + result.data.error.message +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Zurückziehen';
+            confirmBtn.textContent = 'Withdraw';
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
-                                   '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
+                                   '<strong>Error!</strong><br>' + (result.data.error ? result.data.error.message : 'Unknown error') +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Zurückziehen';
+            confirmBtn.textContent = 'Withdraw';
           }
         })
         .catch(function (error) {
           document.getElementById('modal-message').innerHTML = '<div class=\"modal-error\">' +
-                                                               '<strong>Fehler!</strong><br>' + error.message +
+                                                               '<strong>Error!</strong><br>' + error.message +
                                                                '</div>';
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Zurückziehen';
+          confirmBtn.textContent = 'Withdraw';
         });
     }
 
@@ -616,7 +586,7 @@
 
       var confirmBtn = document.getElementById('delete-modal-confirm-btn');
       confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Wird gelöscht...';
+      confirmBtn.textContent = 'Deleting...';
 
       var portalUrl = document.body.dataset.portalUrl || '';
       var url = portalUrl + '/@gdpr-permanent-deletion/' + currentUid;
@@ -639,7 +609,7 @@
 
           if (result.status === 200) {
             messageDiv.innerHTML = '<div class=\"modal-success\">' +
-                                   '<strong>Erfolgreich!</strong> ' + result.data.message +
+                                   '<strong>Success!</strong> ' + result.data.message +
                                    '</div>';
 
             setTimeout(function () {
@@ -647,18 +617,18 @@
             }, 2000);
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
-                                   '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
+                                   '<strong>Error!</strong><br>' + (result.data.error ? result.data.error.message : 'Unknown error') +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Endgültig löschen';
+            confirmBtn.textContent = 'Delete permanently';
           }
         })
         .catch(function (error) {
           document.getElementById('delete-modal-message').innerHTML = '<div class=\"modal-error\">' +
-                                                                       '<strong>Fehler!</strong><br>' + error.message +
+                                                                       '<strong>Error!</strong><br>' + error.message +
                                                                        '</div>';
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Endgültig löschen';
+          confirmBtn.textContent = 'Delete permanently';
         });
     }
 
