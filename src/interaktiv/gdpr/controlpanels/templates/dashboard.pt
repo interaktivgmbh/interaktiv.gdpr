@@ -422,8 +422,8 @@
           <td tal:content="entry/original_path">Pfad</td>
           <td tal:content="entry/user_id">Benutzer ID</td>
           <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Eingereicht</td>
-          <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status geaendert</td>
-          <td tal:content="entry/status_changed_by | nothing">Geaendert von</td>
+          <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status geändert</td>
+          <td tal:content="entry/status_changed_by | nothing">Geändert von</td>
           <td>
             <span tal:condition="python: entry.get('status') == 'pending'" class="status-pending" i18n:translate="status_pending">Pending</span>
             <span tal:condition="python: entry.get('status') == 'deleted'" class="status-deleted" i18n:translate="status_deleted">Deleted</span>
@@ -446,7 +446,7 @@
       document.getElementById('modal-path').textContent = path;
       document.getElementById('modal-message').innerHTML = '';
       document.getElementById('modal-confirm-btn').disabled = false;
-      document.getElementById('modal-confirm-btn').textContent = 'Zurueckziehen';
+      document.getElementById('modal-confirm-btn').textContent = 'Zurückziehen';
       document.getElementById('withdraw-modal').classList.add('active');
       document.getElementById('withdraw-modal-backdrop').classList.add('active');
     }
@@ -458,7 +458,7 @@
       document.getElementById('delete-modal-path').textContent = path;
       document.getElementById('delete-modal-message').innerHTML = '';
       document.getElementById('delete-modal-confirm-btn').disabled = false;
-      document.getElementById('delete-modal-confirm-btn').textContent = 'Endgueltig loeschen';
+      document.getElementById('delete-modal-confirm-btn').textContent = 'Endgültig löschen';
       document.getElementById('delete-modal').classList.add('active');
       document.getElementById('delete-modal-backdrop').classList.add('active');
     }
@@ -591,13 +591,13 @@
                                    '<strong>Namenskonflikt!</strong><br>' + result.data.error.message +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Zurueckziehen';
+            confirmBtn.textContent = 'Zurückziehen';
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
                                    '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Zurueckziehen';
+            confirmBtn.textContent = 'Zurückziehen';
           }
         })
         .catch(function (error) {
@@ -605,7 +605,7 @@
                                                                '<strong>Fehler!</strong><br>' + error.message +
                                                                '</div>';
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Zurueckziehen';
+          confirmBtn.textContent = 'Zurückziehen';
         });
     }
 
@@ -616,7 +616,7 @@
 
       var confirmBtn = document.getElementById('delete-modal-confirm-btn');
       confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Wird geloescht...';
+      confirmBtn.textContent = 'Wird gelöscht...';
 
       var portalUrl = document.body.dataset.portalUrl || '';
       var url = portalUrl + '/@gdpr-permanent-deletion/' + currentUid;
@@ -650,7 +650,7 @@
                                    '<strong>Fehler!</strong><br>' + (result.data.error ? result.data.error.message : 'Unbekannter Fehler') +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Endgueltig loeschen';
+            confirmBtn.textContent = 'Endgültig löschen';
           }
         })
         .catch(function (error) {
@@ -658,7 +658,7 @@
                                                                        '<strong>Fehler!</strong><br>' + error.message +
                                                                        '</div>';
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Endgueltig loeschen';
+          confirmBtn.textContent = 'Endgültig löschen';
         });
     }
 

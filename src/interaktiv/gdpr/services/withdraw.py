@@ -303,8 +303,8 @@ class GDPRSettingsSet(Service):
                 return {
                     "error": {
                         "type": "Conflict",
-                        "message": "Es sind noch ausstehende Loeschungen aktiv. "
-                        "Loesen Sie diese auf um das Feature zu deaktivieren.",
+                        "message": "Es sind noch ausstehende Löschungen aktiv. "
+                        "Lösen Sie diese auf, um das Feature zu deaktivieren.",
                         "pending_count": len(pending_entries),
                     }
                 }

@@ -210,7 +210,7 @@ msgstr "Es sind noch ausstehende Löschungen aktiv."
 #. Default: "Resolve these to disable the feature."
 #: ../controlpanels/templates/dashboard.pt:276
 msgid "modal_resolve_to_disable"
-msgstr "Lösen Sie diese auf um das Feature zu deaktivieren."
+msgstr "Lösen Sie diese auf, um das Feature zu deaktivieren."
 
 #. Default: "Number of pending deletions:"
 #: ../controlpanels/templates/dashboard.pt:278
