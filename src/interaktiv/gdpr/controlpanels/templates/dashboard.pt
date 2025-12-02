@@ -315,19 +315,18 @@
               "order": [[ 4, "desc" ]],
               "language": {
                   "processing": "Bitte warten...",
-                  "lengthMenu": "_MENU_ Eintraege anzeigen",
-                  "zeroRecords": "Keine Eintraege vorhanden.",
-                  "info": "_START_ bis _END_ von _TOTAL_ Eintraegen",
-                  "infoEmpty": "Keine Eintraege",
-                  "infoFiltered": "(gefiltert von _MAX_ Eintraegen)",
+                  "lengthMenu": "_MENU_ Einträge anzeigen",
+                  "zeroRecords": "Keine Einträge vorhanden.",
+                  "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
+                  "infoEmpty": "Keine Einträge",
+                  "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
                   "infoPostFix": "",
-                  "search": "Filtern",
-                  "url": "",
+                  "search": "Suchen:",
                   "paginate": {
-                      "first":    "Erster",
-                      "previous": "Zurueck",
+                      "first":    "Erste",
+                      "previous": "Zurück",
                       "next":     "Weiter",
-                      "last":     "Letzter"
+                      "last":     "Letzte"
                    }}}'>
       <thead>
         <tr>
@@ -391,19 +390,18 @@
               "order": [[ 4, "desc" ]],
               "language": {
                   "processing": "Bitte warten...",
-                  "lengthMenu": "_MENU_ Eintraege anzeigen",
-                  "zeroRecords": "Keine Eintraege vorhanden.",
-                  "info": "_START_ bis _END_ von _TOTAL_ Eintraegen",
-                  "infoEmpty": "Keine Eintraege",
-                  "infoFiltered": "(gefiltert von _MAX_ Eintraegen)",
+                  "lengthMenu": "_MENU_ Einträge anzeigen",
+                  "zeroRecords": "Keine Einträge vorhanden.",
+                  "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
+                  "infoEmpty": "Keine Einträge",
+                  "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
                   "infoPostFix": "",
-                  "search": "Filtern",
-                  "url": "",
+                  "search": "Suchen:",
                   "paginate": {
-                      "first":    "Erster",
-                      "previous": "Zurueck",
+                      "first":    "Erste",
+                      "previous": "Zurück",
                       "next":     "Weiter",
-                      "last":     "Letzter"
+                      "last":     "Letzte"
                    }}}'>
       <thead>
         <tr>
