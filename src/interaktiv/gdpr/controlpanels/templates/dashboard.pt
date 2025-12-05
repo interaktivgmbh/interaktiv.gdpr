@@ -9,13 +9,14 @@
   <a id="setup-link"
      class="link-parent"
      href="${portal_url}/@@overview-controlpanel" i18n:translate="" i18n:domain="zope">Configuration</a>
-  <h1 class="documentFirstHeading" i18n:translate="Interaktiv GDPR: Deletion Info">Interaktiv GDPR: Deletion Info</h1>
+  <h1 class="documentFirstHeading" i18n:translate="heading_gdpr_dashboard">Interaktiv GDPR Dashboard</h1>
 </metal:title>
 
 <metal:content-core fill-slot="content-core"
    tal:define="feature_enabled view/is_feature_enabled;
     pending_count view/get_pending_count;
-      display_days view/get_display_days">
+      display_days view/get_display_days;
+      active_tab python: request.get('tab', 'general')">
 
   <style>
     .gdpr-section {
@@ -157,17 +158,25 @@
       margin-bottom: 1rem;
     }
 
-    .settings-section {
+    .feature-card {
       background: #f8f9fa;
       padding: 1.5rem;
       border-radius: 8px;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       border: 1px solid #dee2e6;
     }
 
-    .settings-section h2 {
+    .feature-card h3 {
       margin-top: 0;
-      border-bottom: none;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .feature-card p {
+      margin-bottom: 1rem;
+      color: #6c757d;
     }
 
     .radio-group {
@@ -205,7 +214,6 @@
       padding: 4px 12px;
       border-radius: 4px;
       font-weight: bold;
-      margin-left: 1rem;
     }
 
     .feature-status.enabled {
@@ -222,6 +230,47 @@
       color: #6c757d;
       font-size: 0.9em;
       margin-top: 0.5rem;
+    }
+
+    /* Tab styling */
+    .gdpr-tabs {
+      margin-bottom: 2rem;
+    }
+
+    .gdpr-tabs .nav-tabs {
+      border-bottom: 2px solid #dee2e6;
+    }
+
+    .gdpr-tabs .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: #495057;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+    }
+
+    .gdpr-tabs .nav-link:hover {
+      border-bottom-color: #adb5bd;
+      color: #212529;
+    }
+
+    .gdpr-tabs .nav-link.active {
+      border-bottom-color: #007bff;
+      color: #007bff;
+      background: transparent;
+    }
+
+    .tab-content {
+      padding-top: 1.5rem;
+    }
+
+    .pending-badge {
+      background: #dc3545;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      margin-left: 0.5rem;
     }
   </style>
 
@@ -282,126 +331,181 @@
     </div>
   </div>
 
-  <!-- Settings Section -->
-  <div class="settings-section">
-    <h2><span i18n:translate="heading_feature_settings">Feature Settings</span>
-      <span tal:condition="feature_enabled" class="feature-status enabled" i18n:translate="status_enabled">Enabled</span>
-      <span tal:condition="not: feature_enabled" class="feature-status disabled" i18n:translate="status_disabled">Disabled</span>
-    </h2>
-    <p i18n:translate="feature_description">When enabled, deleted content will be moved to a special container instead of being permanently deleted.</p>
-    <div class="radio-group">
-      <label tal:attributes="class python: 'selected' if feature_enabled else ''">
-        <input type="radio" name="feature_enabled" value="true"
-           tal:attributes="checked python: 'checked' if feature_enabled else None"
-               onchange="toggleFeature(true)" />
-        <span i18n:translate="status_enabled">Enabled</span>
-      </label>
-      <label tal:attributes="class python: 'selected' if not feature_enabled else ''">
-        <input type="radio" name="feature_enabled" value="false"
-           tal:attributes="checked python: 'checked' if not feature_enabled else None"
-               onchange="toggleFeature(false)" />
-        <span i18n:translate="status_disabled">Disabled</span>
-      </label>
+  <!-- Tab Navigation -->
+  <div class="gdpr-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="${python: 'nav-link active' if active_tab == 'general' else 'nav-link'}"
+                id="general-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#general-pane"
+                type="button"
+                role="tab"
+                aria-controls="general-pane"
+                aria-selected="${python: 'true' if active_tab == 'general' else 'false'}"
+                i18n:translate="tab_general">General</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="${python: 'nav-link active' if active_tab == 'deletion' else 'nav-link'}"
+                id="deletion-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#deletion-pane"
+                type="button"
+                role="tab"
+                aria-controls="deletion-pane"
+                aria-selected="${python: 'true' if active_tab == 'deletion' else 'false'}"
+                i18n:translate="tab_deletion_info">Deletion Info
+          <span tal:condition="python: pending_count > 0" class="pending-badge">${pending_count}</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+
+    <!-- General Tab -->
+    <div class="${python: 'tab-pane fade show active' if active_tab == 'general' else 'tab-pane fade'}"
+         id="general-pane"
+         role="tabpanel"
+         aria-labelledby="general-tab">
+
+      <h2 i18n:translate="heading_feature_management">Feature Management</h2>
+      <p class="info-text" i18n:translate="info_feature_management">Enable or disable GDPR features for this site.</p>
+
+      <!-- Marked Deletion Feature Card -->
+      <div class="feature-card">
+        <h3>
+          <span i18n:translate="feature_marked_deletion">Marked Deletion</span>
+          <span tal:condition="feature_enabled" class="feature-status enabled" i18n:translate="status_enabled">Enabled</span>
+          <span tal:condition="not: feature_enabled" class="feature-status disabled" i18n:translate="status_disabled">Disabled</span>
+        </h3>
+        <p i18n:translate="feature_marked_deletion_description">When enabled, deleted content will be moved to a special container instead of being permanently deleted. This allows content to be recovered before final deletion.</p>
+        <div class="radio-group">
+          <label tal:attributes="class python: 'selected' if feature_enabled else ''">
+            <input type="radio" name="feature_marked_deletion" value="true"
+               tal:attributes="checked python: 'checked' if feature_enabled else None"
+                   onchange="toggleFeature('marked_deletion', true)" />
+            <span i18n:translate="status_enabled">Enabled</span>
+          </label>
+          <label tal:attributes="class python: 'selected' if not feature_enabled else ''">
+            <input type="radio" name="feature_marked_deletion" value="false"
+               tal:attributes="checked python: 'checked' if not feature_enabled else None"
+                   onchange="toggleFeature('marked_deletion', false)" />
+            <span i18n:translate="status_disabled">Disabled</span>
+          </label>
+        </div>
+      </div>
+
     </div>
-  </div>
 
-  <!-- Pending Deletions Section -->
-  <div class="gdpr-section" tal:condition="feature_enabled">
-    <h2 i18n:translate="heading_pending_deletions">Current Deletion Requests (Pending)</h2>
-    <table class="pat-datatables listing table table-striped table-hover"
-           data-pat-datatables='{
-              "columnDefs": [{ "orderable": false, "targets": [8] }],
-              "pageLength": 10,
-              "order": [[ 4, "desc" ]]}'>
-      <thead>
-        <tr>
-          <th i18n:translate="table_header_title">Title</th>
-          <th i18n:translate="table_header_portal_type">Portal Type</th>
-          <th i18n:translate="table_header_original_path">Original Path</th>
-          <th i18n:translate="table_header_deleted_by">Deleted by</th>
-          <th i18n:translate="table_header_deleted_at">Deleted at</th>
-          <th i18n:translate="table_header_scheduled_deletion">Scheduled deletion</th>
-          <th i18n:translate="table_header_subobjects">Subobjects</th>
-          <th i18n:translate="table_header_review_state">Review State</th>
-          <th i18n:translate="table_header_actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr tal:repeat="entry python: view.get_pending_entries()">
-          <td tal:content="entry/title">Title</td>
-          <td tal:content="entry/portal_type">Portal Type</td>
-          <td tal:content="entry/original_path">Path</td>
-          <td tal:content="entry/user_id">User ID</td>
-          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Date</td>
-          <td tal:content="python: view.get_scheduled_deletion_date(entry.get('datetime'))">Scheduled</td>
-          <td tal:content="entry/subobject_count">0</td>
-          <td tal:content="entry/review_state">Status</td>
-          <td>
-            <div class="action-buttons">
-              <button type="button"
-                      class="btn btn-sm btn-withdraw"
-                 tal:attributes="onclick string:showWithdrawModal('${entry/uid}', '${entry/title}', '${entry/original_path}')"
-                      i18n:translate="button_withdraw">
-                Withdraw
-              </button>
-              <button type="button"
-                      class="btn btn-sm btn-delete"
-                 tal:attributes="onclick string:showDeleteModal('${entry/uid}', '${entry/title}', '${entry/original_path}')"
-                      i18n:translate="button_delete">
-                Delete
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- Deletion Info Tab -->
+    <div class="${python: 'tab-pane fade show active' if active_tab == 'deletion' else 'tab-pane fade'}"
+         id="deletion-pane"
+         role="tabpanel"
+         aria-labelledby="deletion-tab">
 
-  <!-- Feature Disabled Notice -->
-  <div class="gdpr-section" tal:condition="not: feature_enabled">
-    <div class="modal-warning" style="margin: 0;">
-      <strong i18n:translate="notice_feature_disabled">The feature is disabled.</strong>
-      <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="notice_enable_feature">Enable the feature to manage deletion requests.</p>
+      <!-- Feature Disabled Notice -->
+      <div class="gdpr-section" tal:condition="not: feature_enabled">
+        <div class="modal-warning" style="margin: 0;">
+          <strong i18n:translate="notice_feature_disabled">The Marked Deletion feature is disabled.</strong>
+          <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="notice_enable_feature">Enable the feature on the General tab to manage deletion requests.</p>
+        </div>
+      </div>
+
+      <!-- Pending Deletions Section -->
+      <div class="gdpr-section" tal:condition="feature_enabled">
+        <h2 i18n:translate="heading_pending_deletions">Current Deletion Requests (Pending)</h2>
+        <table class="pat-datatables listing table table-striped table-hover"
+               data-pat-datatables='{
+                  "columnDefs": [{ "orderable": false, "targets": [8] }],
+                  "pageLength": 10,
+                  "order": [[ 4, "desc" ]]}'>
+          <thead>
+            <tr>
+              <th i18n:translate="table_header_title">Title</th>
+              <th i18n:translate="table_header_portal_type">Portal Type</th>
+              <th i18n:translate="table_header_original_path">Original Path</th>
+              <th i18n:translate="table_header_deleted_by">Deleted by</th>
+              <th i18n:translate="table_header_deleted_at">Deleted at</th>
+              <th i18n:translate="table_header_scheduled_deletion">Scheduled deletion</th>
+              <th i18n:translate="table_header_subobjects">Subobjects</th>
+              <th i18n:translate="table_header_review_state">Review State</th>
+              <th i18n:translate="table_header_actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr tal:repeat="entry python: view.get_pending_entries()">
+              <td tal:content="entry/title">Title</td>
+              <td tal:content="entry/portal_type">Portal Type</td>
+              <td tal:content="entry/original_path">Path</td>
+              <td tal:content="entry/user_id">User ID</td>
+              <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Date</td>
+              <td tal:content="python: view.get_scheduled_deletion_date(entry.get('datetime'))">Scheduled</td>
+              <td tal:content="entry/subobject_count">0</td>
+              <td tal:content="entry/review_state">Status</td>
+              <td>
+                <div class="action-buttons">
+                  <button type="button"
+                          class="btn btn-sm btn-withdraw"
+                     tal:attributes="onclick string:showWithdrawModal('${entry/uid}', '${entry/title}', '${entry/original_path}')"
+                          i18n:translate="button_withdraw">
+                    Withdraw
+                  </button>
+                  <button type="button"
+                          class="btn btn-sm btn-delete"
+                     tal:attributes="onclick string:showDeleteModal('${entry/uid}', '${entry/title}', '${entry/original_path}')"
+                          i18n:translate="button_delete">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Deletion Log Section -->
+      <div class="gdpr-section">
+        <h2 i18n:translate="heading_deletion_log">Deletion Log</h2>
+        <p class="info-text" i18n:translate="info_log_display_days">Shows entries from the last <span i18n:name="days" tal:replace="display_days">90</span> days. Older entries are still stored in the registry.</p>
+        <table class="pat-datatables listing table table-striped table-hover"
+               data-pat-datatables='{
+                  "pageLength": 25,
+                  "order": [[ 4, "desc" ]]}'>
+          <thead>
+            <tr>
+              <th i18n:translate="table_header_title">Title</th>
+              <th i18n:translate="table_header_portal_type">Portal Type</th>
+              <th i18n:translate="table_header_original_path">Original Path</th>
+              <th i18n:translate="table_header_deleted_by">Deleted by</th>
+              <th i18n:translate="table_header_deleted_at">Deleted at</th>
+              <th i18n:translate="table_header_status_changed">Status changed</th>
+              <th i18n:translate="table_header_changed_by">Changed by</th>
+              <th i18n:translate="table_header_status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr tal:repeat="entry python: view.get_deletion_log_for_display()">
+              <td tal:content="entry/title">Title</td>
+              <td tal:content="entry/portal_type">Portal Type</td>
+              <td tal:content="entry/original_path">Path</td>
+              <td tal:content="entry/user_id">User ID</td>
+              <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Submitted</td>
+              <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status changed</td>
+              <td tal:content="entry/status_changed_by | nothing">Changed by</td>
+              <td>
+                <span tal:condition="python: entry.get('status') == 'pending'" class="status-pending" i18n:translate="status_pending">Pending</span>
+                <span tal:condition="python: entry.get('status') == 'deleted'" class="status-deleted" i18n:translate="status_deleted">Deleted</span>
+                <span tal:condition="python: entry.get('status') == 'withdrawn'" class="status-withdrawn" i18n:translate="status_withdrawn">Withdrawn</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
-  </div>
 
-  <!-- Deletion Log Section -->
-  <div class="gdpr-section">
-    <h2 i18n:translate="heading_deletion_log">Deletion Log</h2>
-    <p class="info-text" i18n:translate="info_log_display_days">Shows entries from the last <span i18n:name="days" tal:replace="display_days">90</span> days. Older entries are still stored in the registry.</p>
-    <table class="pat-datatables listing table table-striped table-hover"
-           data-pat-datatables='{
-              "pageLength": 25,
-              "order": [[ 4, "desc" ]]}'>
-      <thead>
-        <tr>
-          <th i18n:translate="table_header_title">Title</th>
-          <th i18n:translate="table_header_portal_type">Portal Type</th>
-          <th i18n:translate="table_header_original_path">Original Path</th>
-          <th i18n:translate="table_header_deleted_by">Deleted by</th>
-          <th i18n:translate="table_header_deleted_at">Deleted at</th>
-          <th i18n:translate="table_header_status_changed">Status changed</th>
-          <th i18n:translate="table_header_changed_by">Changed by</th>
-          <th i18n:translate="table_header_status">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr tal:repeat="entry python: view.get_deletion_log_for_display()">
-          <td tal:content="entry/title">Title</td>
-          <td tal:content="entry/portal_type">Portal Type</td>
-          <td tal:content="entry/original_path">Path</td>
-          <td tal:content="entry/user_id">User ID</td>
-          <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Submitted</td>
-          <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status changed</td>
-          <td tal:content="entry/status_changed_by | nothing">Changed by</td>
-          <td>
-            <span tal:condition="python: entry.get('status') == 'pending'" class="status-pending" i18n:translate="status_pending">Pending</span>
-            <span tal:condition="python: entry.get('status') == 'deleted'" class="status-deleted" i18n:translate="status_deleted">Deleted</span>
-            <span tal:condition="python: entry.get('status') == 'withdrawn'" class="status-withdrawn" i18n:translate="status_withdrawn">Withdrawn</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
   <script>
@@ -448,20 +552,29 @@
         document.getElementById('toggle-modal').classList.remove('active');
         document.getElementById('toggle-modal-backdrop').classList.remove('active');
         // Reset radio buttons to current state
-        var enabledRadio = document.querySelector('input[name=feature_enabled][value=true]');
-        var disabledRadio = document.querySelector('input[name=feature_enabled][value=false]');
-        if (pendingCount > 0) {
-          enabledRadio.checked = true;
-          disabledRadio.checked = false;
-          updateRadioLabels();
-        }
+        resetFeatureRadios();
       }
     }
 
-    function updateRadioLabels() {
-      var labels = document.querySelectorAll('.radio-group label');
-      labels.forEach(function (label) {
-        var radio = label.querySelector('input[type=radio]');
+    function resetFeatureRadios() {
+      // Find all radio groups and reset them based on their current state
+      var markedDeletionRadios = document.querySelectorAll('input[name="feature_marked_deletion"]');
+      markedDeletionRadios.forEach(function(radio) {
+        var label = radio.closest('label');
+        if (radio.value === 'true' && pendingCount > 0) {
+          radio.checked = true;
+          label.classList.add('selected');
+        } else if (radio.value === 'false' && pendingCount > 0) {
+          radio.checked = false;
+          label.classList.remove('selected');
+        }
+      });
+    }
+
+    function updateRadioLabels(groupName) {
+      var labels = document.querySelectorAll('input[name="' + groupName + '"]');
+      labels.forEach(function (radio) {
+        var label = radio.closest('label');
         if (radio.checked) {
           label.classList.add('selected');
         } else {
@@ -470,53 +583,55 @@
       });
     }
 
-    function toggleFeature(enable) {
-      updateRadioLabels();
+    function toggleFeature(feature, enable) {
+      updateRadioLabels('feature_' + feature);
 
-      // If trying to disable and there are pending deletions, show warning modal
-      if (!enable && pendingCount > 0) {
-        document.getElementById('toggle-pending-count').textContent = pendingCount;
-        document.getElementById('toggle-modal').classList.add('active');
-        document.getElementById('toggle-modal-backdrop').classList.add('active');
-        return;
-      }
+      if (feature === 'marked_deletion') {
+        // If trying to disable and there are pending deletions, show warning modal
+        if (!enable && pendingCount > 0) {
+          document.getElementById('toggle-pending-count').textContent = pendingCount;
+          document.getElementById('toggle-modal').classList.add('active');
+          document.getElementById('toggle-modal-backdrop').classList.add('active');
+          return;
+        }
 
-      // Make API call to toggle feature
-      var portalUrl = document.body.dataset.portalUrl || '';
-      var url = portalUrl + '/@gdpr-settings';
+        // Make API call to toggle feature
+        var portalUrl = document.body.dataset.portalUrl || '';
+        var url = portalUrl + '/@gdpr-settings';
 
-      fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify({ marked_deletion_enabled: enable })
-      })
-        .then(function (response) {
-          return response.json().then(function (data) {
-            return { status: response.status, data: data };
+        fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ marked_deletion_enabled: enable })
+        })
+          .then(function (response) {
+            return response.json().then(function (data) {
+              return { status: response.status, data: data };
+            });
+          })
+          .then(function (result) {
+            if (result.status === 200) {
+              window.location.reload();
+            } else if (result.status === 409) {
+              // Show warning modal
+              document.getElementById(
+                'toggle-pending-count').textContent = result.data.error.pending_count || pendingCount;
+              document.getElementById('toggle-modal').classList.add('active');
+              document.getElementById('toggle-modal-backdrop').classList.add('active');
+            } else {
+              alert('Error: ' + (result.data.error ? result.data.error.message : 'Unknown error'));
+              window.location.reload();
+            }
+          })
+          .catch(function (error) {
+            alert('Error: ' + error.message);
+            window.location.reload();
           });
-        })
-        .then(function (result) {
-          if (result.status === 200) {
-            window.location.reload();
-          } else if (result.status === 409) {
-            // Show warning modal
-            document.getElementById(
-              'toggle-pending-count').textContent = result.data.error.pending_count || pendingCount;
-            document.getElementById('toggle-modal').classList.add('active');
-            document.getElementById('toggle-modal-backdrop').classList.add('active');
-          } else {
-            alert('Error: ' + (result.data.error ? result.data.error.message : 'Unknown error'));
-            window.location.reload();
-          }
-        })
-        .catch(function (error) {
-          alert('Error: ' + error.message);
-          window.location.reload();
-        });
+      }
     }
 
     function confirmWithdraw() {
@@ -554,7 +669,7 @@
                                    '</div>';
 
             setTimeout(function () {
-              window.location.reload();
+              window.location.href = window.location.pathname + '?tab=deletion';
             }, 2000);
           } else if (result.status === 409) {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
@@ -613,7 +728,7 @@
                                    '</div>';
 
             setTimeout(function () {
-              window.location.reload();
+              window.location.href = window.location.pathname + '?tab=deletion';
             }, 2000);
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
@@ -662,9 +777,30 @@
         closeModal('toggle');
       }
     });
+
+    // Handle URL parameter for tab selection
+    document.addEventListener('DOMContentLoaded', function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var tab = urlParams.get('tab');
+      if (tab) {
+        var tabButton = document.getElementById(tab + '-tab');
+        if (tabButton) {
+          var bsTab = new bootstrap.Tab(tabButton);
+          bsTab.show();
+        }
+      }
+
+      // Update URL when tab changes
+      var tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+      tabEls.forEach(function(tabEl) {
+        tabEl.addEventListener('shown.bs.tab', function (event) {
+          var tabId = event.target.id.replace('-tab', '');
+          var newUrl = window.location.pathname + '?tab=' + tabId;
+          history.replaceState(null, '', newUrl);
+        });
+      });
+    });
   </script>
-
 </metal:content-core>
-
 </body>
 </html>

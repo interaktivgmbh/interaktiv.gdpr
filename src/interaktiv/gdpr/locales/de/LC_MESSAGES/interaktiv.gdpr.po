@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-02 14:26+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"POT-Creation-Date: 2025-12-05 10:52+0000\n"
+"PO-Revision-Date: 2025-12-05 11:00+0000\n"
 "Last-Translator: Interaktiv <hello@interaktiv.de>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,11 +30,11 @@ msgstr "Löschen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: ../configure.zcml:22
+#: ../configure.zcml:25
 msgid "Installs the interaktiv.gdpr package."
 msgstr "Installiert das interaktiv.gdpr Produkt."
 
-#: ../configure.zcml:22
+#: ../configure.zcml:25
 msgid "Interaktiv GDPR"
 msgstr "Interaktiv DSGVO"
 
@@ -42,15 +42,11 @@ msgstr "Interaktiv DSGVO"
 msgid "Interaktiv GDPR Dashboard"
 msgstr "Interaktiv DSGVO Dashboard"
 
-#: ../controlpanels/templates/dashboard.pt:12
-msgid "Interaktiv GDPR: Deletion Info"
-msgstr "Interaktiv DSGVO: Löschinformationen"
-
 #: ../profiles/default/types/MarkedDeletionContainer.xml
 msgid "Marked Deletion Container"
 msgstr "Löschordner"
 
-#: ../configure.zcml:30
+#: ../configure.zcml:33
 msgid "Uninstalls the interaktiv.gdpr package."
 msgstr "Deinstalliert das interaktiv.gdpr Produkt."
 
@@ -63,206 +59,232 @@ msgid "\"${title}\" has already been deleted"
 msgstr "\"${title}\" wurde bereits gelöscht"
 
 #. Default: "Cancel"
-#: ../controlpanels/templates/dashboard.pt:242
+#: ../controlpanels/templates/dashboard.pt:291
 msgid "button_cancel"
 msgstr "Abbrechen"
 
 #. Default: "Delete"
-#: ../controlpanels/templates/dashboard.pt:347
+#: ../controlpanels/templates/dashboard.pt:455
 msgid "button_delete"
 msgstr "Löschen"
 
 #. Default: "Delete permanently"
-#: ../controlpanels/templates/dashboard.pt:263
+#: ../controlpanels/templates/dashboard.pt:312
 msgid "button_delete_permanently"
 msgstr "Endgültig löschen"
 
 #. Default: "Understood"
-#: ../controlpanels/templates/dashboard.pt:281
+#: ../controlpanels/templates/dashboard.pt:330
 msgid "button_understood"
 msgstr "Verstanden"
 
 #. Default: "Withdraw"
-#: ../controlpanels/templates/dashboard.pt:243
+#: ../controlpanels/templates/dashboard.pt:292
 msgid "button_withdraw"
 msgstr "Zurückziehen"
 
-#. Default: "When enabled, deleted content will be moved to a special container instead of being permanently deleted."
-#: ../controlpanels/templates/dashboard.pt:291
-msgid "feature_description"
-msgstr "Wenn aktiviert, werden gelöschte Inhalte in einen speziellen Container verschoben anstatt permanent gelöscht zu werden."
+#. Default: "Marked Deletion"
+#: ../controlpanels/templates/dashboard.pt:379
+msgid "feature_marked_deletion"
+msgstr "Löschmarkierung"
+
+#. Default: "When enabled, deleted content will be moved to a special container instead of being permanently deleted. This allows content to be recovered before final deletion."
+#: ../controlpanels/templates/dashboard.pt:383
+msgid "feature_marked_deletion_description"
+msgstr "Wenn aktiviert, werden gelöschte Inhalte in einen speziellen Ordner verschoben, anstatt endgültig gelöscht zu werden. Dies ermöglicht eine Wiederherstellung vor der endgültigen Löschung."
 
 #. Default: "Deletion Log"
-#: ../controlpanels/templates/dashboard.pt:370
+#: ../controlpanels/templates/dashboard.pt:470
 msgid "heading_deletion_log"
-msgstr "Löschprotokoll (Log)"
+msgstr "Löschprotokoll"
 
-#. Default: "Feature Settings"
-#: ../controlpanels/templates/dashboard.pt:287
-msgid "heading_feature_settings"
-msgstr "Feature-Einstellungen"
+#. Default: "Feature Management"
+#: ../controlpanels/templates/dashboard.pt:373
+msgid "heading_feature_management"
+msgstr "Funktionsverwaltung"
+
+#. Default: "Interaktiv GDPR Dashboard"
+#: ../controlpanels/templates/dashboard.pt:12
+msgid "heading_gdpr_dashboard"
+msgstr "Interaktiv DSGVO Dashboard"
 
 #. Default: "Current Deletion Requests (Pending)"
-#: ../controlpanels/templates/dashboard.pt:310
+#: ../controlpanels/templates/dashboard.pt:418
 msgid "heading_pending_deletions"
-msgstr "Aktuelle Löschanfragen (Pending)"
+msgstr "Aktuelle Löschanfragen (ausstehend)"
+
+#. Default: "Enable or disable GDPR features for this site."
+#: ../controlpanels/templates/dashboard.pt:374
+msgid "info_feature_management"
+msgstr "DSGVO-Funktionen für diese Website aktivieren oder deaktivieren."
 
 #. Default: "Shows entries from the last ${days} days. Older entries are still stored in the registry."
-#: ../controlpanels/templates/dashboard.pt:371
+#: ../controlpanels/templates/dashboard.pt:471
 msgid "info_log_display_days"
-msgstr "Zeigt Einträge der letzten ${days} Tage an. Ältere Einträge werden weiterhin in der Registry gespeichert."
+msgstr "Zeigt Einträge der letzten ${days} Tage. Ältere Einträge sind weiterhin in der Registry gespeichert."
 
 #. Default: "Original Path:"
-#: ../controlpanels/templates/dashboard.pt:237
+#: ../controlpanels/templates/dashboard.pt:286
 msgid "label_original_path"
 msgstr "Ursprünglicher Pfad:"
 
 #. Default: "Number of pending deletions:"
-#: ../controlpanels/templates/dashboard.pt:278
+#: ../controlpanels/templates/dashboard.pt:327
 msgid "label_pending_count"
 msgstr "Anzahl ausstehender Löschungen:"
 
 #. Default: "Title:"
-#: ../controlpanels/templates/dashboard.pt:236
+#: ../controlpanels/templates/dashboard.pt:285
 msgid "label_title"
 msgstr "Titel:"
 
 #. Default: "Warning:"
-#: ../controlpanels/templates/dashboard.pt:255
+#: ../controlpanels/templates/dashboard.pt:304
 msgid "label_warning"
-msgstr "Achtung:"
+msgstr "Warnung:"
 
 #. Default: "Are you sure?"
-#: ../controlpanels/templates/dashboard.pt:232
+#: ../controlpanels/templates/dashboard.pt:281
 msgid "modal_are_you_sure"
 msgstr "Sind Sie sicher?"
 
 #. Default: "Feature cannot be disabled"
-#: ../controlpanels/templates/dashboard.pt:271
+#: ../controlpanels/templates/dashboard.pt:320
 msgid "modal_cannot_disable"
-msgstr "Feature kann nicht deaktiviert werden"
+msgstr "Funktion kann nicht deaktiviert werden"
 
 #. Default: "Delete permanently?"
-#: ../controlpanels/templates/dashboard.pt:251
+#: ../controlpanels/templates/dashboard.pt:300
 msgid "modal_delete_permanently"
 msgstr "Endgültig löschen?"
 
 #. Default: "This action cannot be undone!"
-#: ../controlpanels/templates/dashboard.pt:255
+#: ../controlpanels/templates/dashboard.pt:304
 msgid "modal_delete_warning"
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden!"
 
 #. Default: "There are still pending deletions active."
-#: ../controlpanels/templates/dashboard.pt:275
+#: ../controlpanels/templates/dashboard.pt:324
 msgid "modal_pending_deletions_active"
-msgstr "Es sind noch ausstehende Löschungen aktiv."
+msgstr "Es gibt noch ausstehende Löschungen."
 
 #. Default: "Resolve these to disable the feature."
-#: ../controlpanels/templates/dashboard.pt:276
+#: ../controlpanels/templates/dashboard.pt:325
 msgid "modal_resolve_to_disable"
-msgstr "Lösen Sie diese auf, um das Feature zu deaktivieren."
+msgstr "Lösen Sie diese auf, um die Funktion zu deaktivieren."
 
 #. Default: "The content will be moved back to its original location."
-#: ../controlpanels/templates/dashboard.pt:238
+#: ../controlpanels/templates/dashboard.pt:287
 msgid "modal_withdraw_info"
-msgstr "Der Inhalt wird an den ursprünglichen Ort zurückverschoben."
+msgstr "Der Inhalt wird an seinen ursprünglichen Speicherort zurückverschoben."
 
 #. Default: "Are you sure you want to withdraw the deletion?"
-#: ../controlpanels/templates/dashboard.pt:235
+#: ../controlpanels/templates/dashboard.pt:284
 msgid "modal_withdraw_question"
 msgstr "Sind Sie sicher, dass Sie die Löschung zurückziehen möchten?"
 
-#. Default: "Enable the feature to manage deletion requests."
-#: ../controlpanels/templates/dashboard.pt:364
+#. Default: "Enable the feature on the General tab to manage deletion requests."
+#: ../controlpanels/templates/dashboard.pt:412
 msgid "notice_enable_feature"
-msgstr "Aktivieren Sie das Feature um Löschanfragen zu verwalten."
+msgstr "Aktivieren Sie die Funktion auf dem Tab Allgemein, um Löschanfragen zu verwalten."
 
-#. Default: "The feature is disabled."
-#: ../controlpanels/templates/dashboard.pt:363
+#. Default: "The Marked Deletion feature is disabled."
+#: ../controlpanels/templates/dashboard.pt:411
 msgid "notice_feature_disabled"
-msgstr "Das Feature ist deaktiviert."
+msgstr "Die Löschmarkierungs-Funktion ist deaktiviert."
 
 #. Default: "Deleted"
-#: ../controlpanels/templates/dashboard.pt:399
+#: ../controlpanels/templates/dashboard.pt:499
 msgid "status_deleted"
 msgstr "Gelöscht"
 
 #. Default: "Disabled"
-#: ../controlpanels/templates/dashboard.pt:289
+#: ../controlpanels/templates/dashboard.pt:381
 msgid "status_disabled"
 msgstr "Deaktiviert"
 
 #. Default: "Enabled"
-#: ../controlpanels/templates/dashboard.pt:288
+#: ../controlpanels/templates/dashboard.pt:380
 msgid "status_enabled"
 msgstr "Aktiviert"
 
 #. Default: "Pending"
-#: ../controlpanels/templates/dashboard.pt:398
+#: ../controlpanels/templates/dashboard.pt:498
 msgid "status_pending"
 msgstr "Ausstehend"
 
 #. Default: "Withdrawn"
-#: ../controlpanels/templates/dashboard.pt:400
+#: ../controlpanels/templates/dashboard.pt:500
 msgid "status_withdrawn"
 msgstr "Zurückgezogen"
 
+#. Default: "Deletion Info <span class=\"pending-badge\">${pending_count}</span>"
+#: ../controlpanels/templates/dashboard.pt:358
+#, fuzzy
+msgid "tab_deletion_info"
+msgstr "Löschinformationen"
+
+#. Default: "General"
+#: ../controlpanels/templates/dashboard.pt:338
+msgid "tab_general"
+msgstr "Allgemein"
+
 #. Default: "Actions"
-#: ../controlpanels/templates/dashboard.pt:326
+#: ../controlpanels/templates/dashboard.pt:434
 msgid "table_header_actions"
 msgstr "Aktionen"
 
 #. Default: "Changed by"
-#: ../controlpanels/templates/dashboard.pt:384
+#: ../controlpanels/templates/dashboard.pt:484
 msgid "table_header_changed_by"
 msgstr "Geändert von"
 
 #. Default: "Deleted at"
-#: ../controlpanels/templates/dashboard.pt:322
+#: ../controlpanels/templates/dashboard.pt:430
 msgid "table_header_deleted_at"
 msgstr "Gelöscht am"
 
 #. Default: "Deleted by"
-#: ../controlpanels/templates/dashboard.pt:321
+#: ../controlpanels/templates/dashboard.pt:429
 msgid "table_header_deleted_by"
 msgstr "Gelöscht von"
 
 #. Default: "Original Path"
-#: ../controlpanels/templates/dashboard.pt:320
+#: ../controlpanels/templates/dashboard.pt:428
 msgid "table_header_original_path"
 msgstr "Ursprünglicher Pfad"
 
 #. Default: "Portal Type"
-#: ../controlpanels/templates/dashboard.pt:319
+#: ../controlpanels/templates/dashboard.pt:427
 msgid "table_header_portal_type"
 msgstr "Inhaltstyp"
 
 #. Default: "Review State"
-#: ../controlpanels/templates/dashboard.pt:325
+#: ../controlpanels/templates/dashboard.pt:433
 msgid "table_header_review_state"
-msgstr "Review Status"
+msgstr "Status"
 
 #. Default: "Scheduled deletion"
-#: ../controlpanels/templates/dashboard.pt:323
+#: ../controlpanels/templates/dashboard.pt:431
 msgid "table_header_scheduled_deletion"
-msgstr "Wird gelöscht am"
+msgstr "Geplante Löschung"
 
 #. Default: "Status"
-#: ../controlpanels/templates/dashboard.pt:385
+#: ../controlpanels/templates/dashboard.pt:485
 msgid "table_header_status"
 msgstr "Status"
 
 #. Default: "Status changed"
-#: ../controlpanels/templates/dashboard.pt:383
+#: ../controlpanels/templates/dashboard.pt:483
 msgid "table_header_status_changed"
 msgstr "Status geändert"
 
 #. Default: "Subobjects"
-#: ../controlpanels/templates/dashboard.pt:324
+#: ../controlpanels/templates/dashboard.pt:432
 msgid "table_header_subobjects"
 msgstr "Unterobjekte"
 
 #. Default: "Title"
-#: ../controlpanels/templates/dashboard.pt:318
+#: ../controlpanels/templates/dashboard.pt:426
 msgid "table_header_title"
 msgstr "Titel"
