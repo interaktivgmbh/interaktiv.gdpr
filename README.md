@@ -4,7 +4,9 @@ A general-purpose GDPR (General Data Protection Regulation) compliance package f
 
 ## Overview
 
-`interaktiv.gdpr` provides tools and features to help manage GDPR-compliant data handling in Plone sites. The package implements various mechanisms to support data protection requirements, including controlled deletion workflows and audit logging.
+`interaktiv.gdpr` provides tools and features to help manage GDPR-compliant data handling in Plone sites.
+The package implements various mechanisms to support data protection requirements,
+including controlled deletion workflows and audit logging.
 
 ## Features
 
@@ -18,20 +20,17 @@ Instead of immediately deleting content, this feature allows marking content for
 
 ## Installation
 
-1. Add `interaktiv.gdpr` to your buildout or in your mxdev.ini:
+1. Add `interaktiv.gdpr` and dependencies to your buildout or in your mxdev.ini:
 
+e.g. mxdev.ini
 ```ini
-[buildout]
-eggs =
-    interaktiv.gdpr
-```
+[interaktiv.framework]
+url = https://code.interaktiv.de/interaktiv/interaktiv.framework.git
+rev = v14.0.2
+extras = test
 
-or
-
-```ini
-[buildout]
 [interaktiv.gdpr]
-url = https://github.com/interaktiv/interaktiv.gdpr.git
+url = https://github.com/interaktivgmbh/interaktiv.gdpr.git
 rev = [CURRENT_VERSION]
 extras = test
 ```
@@ -40,7 +39,7 @@ extras = test
 
 ## License
 
-ToDo
+GPL version 2
 
 ## Support
 
