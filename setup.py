@@ -5,32 +5,30 @@ from pkg_resources import Requirement, parse_version
 from setuptools import find_packages, setup
 
 # Package metadata
-NAME = 'interaktiv.gdpr'
-DESCRIPTION = ''
-URL = 'https://code.interaktiv.de/interaktiv/interaktiv.gdpr'
-EMAIL = 'info@interaktiv.de'
-AUTHOR = 'Interaktiv GmbH'
-REQUIRES_PYTHON = '~=3.11'
-VERSION = '1.0.0'
-REQUIRES_PLONE_VERSION = '6.0.13'
+NAME = "interaktiv.gdpr"
+DESCRIPTION = ""
+URL = "https://code.interaktiv.de/interaktiv/interaktiv.gdpr"
+EMAIL = "info@interaktiv.de"
+AUTHOR = "Interaktiv GmbH"
+REQUIRES_PYTHON = "~=3.11"
+VERSION = "0.0.1"
+REQUIRES_PLONE_VERSION = "6.0.13"
 
 # Additional package requires
 REQUIRED = [
-    'setuptools >= 20.8.1',
-    'Products.CMFPlone>=' + REQUIRES_PLONE_VERSION,
-    'plone.testing',
-    'plone.app.testing',
-    'interaktiv.framework'
+    "setuptools >= 20.8.1",
+    "Products.CMFPlone>=" + REQUIRES_PLONE_VERSION,
+    "plone.testing",
+    "plone.app.testing",
+    "interaktiv.framework",
 ]
-EXTRAS = {
-    'test': ['plone.app.testing']
-}
+EXTRAS = {"test": ["plone.app.testing"]}
 
 this_directory = path.abspath(path.dirname(__file__))
 
 # Load long description from README.md
 try:
-    with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
         LONG_DESCRIPTION = f.read()
 except FileNotFoundError:
     LONG_DESCRIPTION = DESCRIPTION
@@ -38,10 +36,12 @@ except FileNotFoundError:
 
 # Check required python version
 def check_python_version():
-    required_python = Requirement.parse('python' + REQUIRES_PYTHON)
+    required_python = Requirement.parse("python" + REQUIRES_PYTHON)
     current_version = parse_version(".".join(map(str, sys.version_info[:3])))
     if current_version not in required_python:
-        sys.exit(f"'{NAME}' requires Python {REQUIRES_PYTHON} but the current Python is {current_version}")
+        sys.exit(
+            f"'{NAME}' requires Python {REQUIRES_PYTHON} but the current Python is {current_version}"
+        )
 
 
 setup(
@@ -49,7 +49,7 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
@@ -58,14 +58,16 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    keywords='',
+    keywords="",
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
-    license='proprietary',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    namespace_packages=['interaktiv', ],
+    license="proprietary",
+    packages=find_packages("src"),
+    package_dir={"": "src"},
+    namespace_packages=[
+        "interaktiv",
+    ],
     include_package_data=True,
     zip_safe=False,
     python_requires=check_python_version(),
@@ -75,5 +77,5 @@ setup(
     # -*- Entry points: -*-
     [z3c.autoinclude.plugin]
     target = plone
-    """
+    """,
 )
