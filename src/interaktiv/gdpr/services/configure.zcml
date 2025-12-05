@@ -1,62 +1,7 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:plone="http://namespaces.plone.org/plone"
-    xmlns:zcml="http://namespaces.zope.org/zcml">
+<configure xmlns="http://namespaces.zope.org/zope">
+    <include package="plone.restapi" file="meta.zcml"/>
 
-    <include package="plone.restapi" file="meta.zcml" />
-
-    <!-- Override DELETE service for GDPR-aware content deletion -->
-    <plone:service
-        method="DELETE"
-        factory=".delete.GDPRContentDelete"
-        for="Products.CMFCore.interfaces.IContentish"
-        permission="zope2.DeleteObjects"
-        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
-    />
-
-    <plone:service
-        method="POST"
-        factory=".withdraw.WithdrawDeletion"
-        for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-withdraw-deletion"
-        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
-    />
-
-    <plone:service
-        method="GET"
-        factory=".withdraw.DeletionLogGet"
-        for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-deletion-log"
-        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
-    />
-
-    <plone:service
-        method="GET"
-        factory=".withdraw.GDPRSettingsGet"
-        for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-settings"
-        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
-    />
-
-    <plone:service
-        method="PATCH"
-        factory=".withdraw.GDPRSettingsSet"
-        for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-settings"
-        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
-    />
-
-    <plone:service
-        method="POST"
-        factory=".withdraw.PermanentDeletion"
-        for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-permanent-deletion"
-        layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
-    />
-
+    <include package=".actions"/>
+    <include package=".settings"/>
+    <include package=".log"/>
 </configure>

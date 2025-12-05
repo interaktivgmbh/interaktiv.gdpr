@@ -10,6 +10,10 @@ class GDPRContentDelete(ContentDelete):
     moves content to the deletion container instead of permanently deleting it.
     """
 
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
     def reply(self):
         self.request.set(MARKED_FOR_DELETION_REQUEST_PARAM_NAME, True)
         return super().reply()

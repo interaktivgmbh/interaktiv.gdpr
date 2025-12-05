@@ -2,6 +2,7 @@ from OFS.ObjectManager import ObjectManager
 from plone import api
 from plone.dexterity.content import DexterityContent
 from zope.globalrequest import getRequest
+from zope.interface.interfaces import ComponentLookupError
 
 from interaktiv.gdpr import logger
 from interaktiv.gdpr.config import (
@@ -16,13 +17,14 @@ _original_manage_delObjects = ObjectManager.manage_delObjects
 
 
 def is_feature_enabled() -> bool:
-    """Check if the marked deletion feature is enabled in registry."""
     try:
         return api.portal.get_registry_record(
             name="marked_deletion_enabled", interface=IGDPRSettingsSchema
         )
     except (KeyError, api.exc.InvalidParameterError):
         # Default to True if registry record doesn't exist yet
+        return True
+    except ComponentLookupError:
         return True
 
 
