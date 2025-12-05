@@ -1,11 +1,13 @@
 import plone.api as api
-from interaktiv.framework.test import TestCase
 
 from interaktiv.gdpr.services.actions.delete import GDPRContentDelete
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestGDPRContentDelete(TestCase):
+class TestGDPRContentDelete(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_reply__sets_mark_for_deletion_param(self):

@@ -1,18 +1,15 @@
 import plone.api as api
-from interaktiv.framework.test import TestCase
 from zExceptions import Unauthorized
 
-from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 from interaktiv.gdpr.views import check_access_allowed, is_inside_deletion_container
 
 
-class TestIsInsideDeletionContainer(TestCase):
+class TestIsInsideDeletionContainer(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
-
-    def setUp(self):
-        super().setUp()
-        self.container = self.portal[MARKED_FOR_DELETION_CONTAINER_ID]
 
     def test_is_inside_deletion_container__inside(self):
         # setup
@@ -42,12 +39,8 @@ class TestIsInsideDeletionContainer(TestCase):
         self.assertFalse(result)
 
 
-class TestCheckAccessAllowed(TestCase):
+class TestCheckAccessAllowed(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
-
-    def setUp(self):
-        super().setUp()
-        self.container = self.portal[MARKED_FOR_DELETION_CONTAINER_ID]
 
     def test_check_access_allowed__as_manager(self):
         # setup

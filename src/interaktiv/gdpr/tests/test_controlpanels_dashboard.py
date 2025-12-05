@@ -1,14 +1,16 @@
 from datetime import datetime
 
 import plone.api as api
-from interaktiv.framework.test import TestCase
 
 from interaktiv.gdpr.controlpanels.dashboard import DashboardView
 from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestDashboardView(TestCase):
+class TestDashboardView(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def setUp(self):

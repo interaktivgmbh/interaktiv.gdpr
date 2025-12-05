@@ -1,19 +1,17 @@
 import plone.api as api
-from interaktiv.framework.test import TestCase
 
 from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
 from interaktiv.gdpr.contenttypes.marked_deletion_container import (
     IMarkedDeletionContainer,
 )
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestMarkedDeletionContainer(TestCase):
+class TestMarkedDeletionContainer(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
-
-    def setUp(self):
-        super().setUp()
-        self.container = self.portal[MARKED_FOR_DELETION_CONTAINER_ID]
 
     def test_container_exists(self):
         # postcondition

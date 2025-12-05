@@ -24,4 +24,6 @@ class GDPRSettingsGet(Service):
         return {
             "marked_deletion_enabled": enabled,
             "pending_deletions_count": pending_count,
+            "retention_days": DeletionLogHelper.get_retention_days(),
+            "dashboard_display_days": DeletionLogHelper.get_dashboard_display_days(),
         }

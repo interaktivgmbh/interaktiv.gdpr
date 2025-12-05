@@ -403,7 +403,8 @@
     <div class="${python: 'tab-pane fade show active' if active_tab == 'deletion' else 'tab-pane fade'}"
          id="deletion-pane"
          role="tabpanel"
-         aria-labelledby="deletion-tab">
+         aria-labelledby="deletion-tab"
+         tal:define="retention_days view/get_retention_days">
 
       <!-- Feature Disabled Notice -->
       <div class="gdpr-section" tal:condition="not: feature_enabled">
@@ -502,6 +503,54 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="gdpr-section" tal:condition="feature_enabled">
+        <h2 i18n:translate="heading_deletion_settings">Settings</h2>
+        <p class="info-text" i18n:translate="info_deletion_settings">Configure the retention and display settings for the deletion feature.</p>
+
+        <div class="feature-card">
+          <div class="row" style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <!-- Retention Days Setting -->
+            <div class="setting-group" style="flex: 1; min-width: 250px;">
+              <h4 style="margin-top: 0; margin-bottom: 0.5rem;" i18n:translate="setting_retention_days">Retention Days</h4>
+              <p class="info-text" style="margin-top: 0;" i18n:translate="setting_retention_days_description">Number of days before pending deletions are automatically permanently deleted.</p>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="number"
+                       id="retention-days-input"
+                       class="form-control"
+                       style="width: 100px;"
+                       min="1"
+                       tal:attributes="value retention_days" />
+                <span i18n:translate="label_days">days</span>
+                <button type="button"
+                        class="btn btn-primary btn-sm"
+                        onclick="updateRetentionDays()"
+                        i18n:translate="button_save">Save</button>
+              </div>
+            </div>
+
+            <!-- Dashboard Display Days Setting -->
+            <div class="setting-group" style="flex: 1; min-width: 250px;">
+              <h4 style="margin-top: 0; margin-bottom: 0.5rem;" i18n:translate="setting_display_days">Dashboard Display Days</h4>
+              <p class="info-text" style="margin-top: 0;" i18n:translate="setting_display_days_description">Number of days to show entries in the deletion log above.</p>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="number"
+                       id="display-days-input"
+                       class="form-control"
+                       style="width: 100px;"
+                       min="1"
+                       tal:attributes="value display_days" />
+                <span i18n:translate="label_days">days</span>
+                <button type="button"
+                        class="btn btn-primary btn-sm"
+                        onclick="updateDisplayDays()"
+                        i18n:translate="button_save">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -800,6 +849,63 @@
         });
       });
     });
+
+    function updateRetentionDays() {
+      var input = document.getElementById('retention-days-input');
+      var value = parseInt(input.value, 10);
+
+      if (isNaN(value) || value < 1) {
+        alert('Please enter a valid number of days (minimum 1).');
+        return;
+      }
+
+      updateSetting('retention_days', value);
+    }
+
+    function updateDisplayDays() {
+      var input = document.getElementById('display-days-input');
+      var value = parseInt(input.value, 10);
+
+      if (isNaN(value) || value < 1) {
+        alert('Please enter a valid number of days (minimum 1).');
+        return;
+      }
+
+      updateSetting('dashboard_display_days', value);
+    }
+
+    function updateSetting(settingName, value) {
+      var portalUrl = document.body.dataset.portalUrl || '';
+      var url = portalUrl + '/@gdpr-settings';
+
+      var body = {};
+      body[settingName] = value;
+
+      fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(body)
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return { status: response.status, data: data };
+          });
+        })
+        .then(function (result) {
+          if (result.status === 200) {
+            window.location.href = window.location.pathname + '?tab=deletion';
+          } else {
+            alert('Error: ' + (result.data.error ? result.data.error.message : 'Unknown error'));
+          }
+        })
+        .catch(function (error) {
+          alert('Error: ' + error.message);
+        });
+    }
   </script>
 </metal:content-core>
 </body>

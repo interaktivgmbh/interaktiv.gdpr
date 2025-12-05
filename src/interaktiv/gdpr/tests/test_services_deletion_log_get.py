@@ -1,12 +1,14 @@
 import plone.api as api
-from interaktiv.framework.test import TestCase
 
 from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
 from interaktiv.gdpr.services.log.get import DeletionLogGet
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestDeletionLogGet(TestCase):
+class TestDeletionLogGet(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_reply__empty_log(self):

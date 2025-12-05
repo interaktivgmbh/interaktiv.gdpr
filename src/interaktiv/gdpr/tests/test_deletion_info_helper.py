@@ -1,21 +1,21 @@
 from datetime import datetime, timedelta
 
 import plone.api as api
-from interaktiv.framework.test import TestCase
 
-from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
 from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestDeletionLogHelper(TestCase):
+class TestDeletionLogHelper(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def setUp(self):
         super().setUp()
         # Clear the deletion log before each test
         DeletionLogHelper.set_deletion_log([])
-        self.container = self.portal[MARKED_FOR_DELETION_CONTAINER_ID]
 
     def test_get_deletion_log__empty(self):
         # do it

@@ -1,5 +1,3 @@
-from interaktiv.framework.test import TestCase
-
 from interaktiv.gdpr.registry.deletion_log import (
     DELETION_LOG_DEFAULT,
     DELETION_LOG_JSON_SCHEMA,
@@ -7,10 +5,13 @@ from interaktiv.gdpr.registry.deletion_log import (
     IGDPRSettingsSchema,
     TDeletionLogEntry,
 )
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestTDeletionLogEntry(TestCase):
+class TestTDeletionLogEntry(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_typeddict_fields(self):
@@ -35,7 +36,7 @@ class TestTDeletionLogEntry(TestCase):
         self.assertEqual(entry["portal_type"], "Document")
 
 
-class TestDeletionLogJsonSchema(TestCase):
+class TestDeletionLogJsonSchema(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_json_schema_is_valid_json(self):
@@ -64,7 +65,7 @@ class TestDeletionLogJsonSchema(TestCase):
         self.assertIn("status", required)
 
 
-class TestDeletionLogDefault(TestCase):
+class TestDeletionLogDefault(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_default_is_empty_list(self):
@@ -73,13 +74,13 @@ class TestDeletionLogDefault(TestCase):
         self.assertIsInstance(DELETION_LOG_DEFAULT, list)
 
 
-class TestIGDPRSettingsSchema(TestCase):
+class TestIGDPRSettingsSchema(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_marked_deletion_enabled_field(self):
         # postcondition
         field = IGDPRSettingsSchema["marked_deletion_enabled"]
-        self.assertEqual(field.default, True)
+        self.assertEqual(field.default, False)
 
     def test_retention_days_field(self):
         # postcondition
@@ -94,7 +95,7 @@ class TestIGDPRSettingsSchema(TestCase):
         self.assertEqual(field.min, 1)
 
 
-class TestIDeletionLogSchema(TestCase):
+class TestIDeletionLogSchema(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_deletion_log_field(self):

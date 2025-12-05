@@ -36,6 +36,18 @@ def check_access_allowed(context):
         raise Unauthorized("Access to deleted content is restricted.")
 
 
+def create_marked_deletion_container() -> None:
+    portal = api.portal.get()
+
+    if MARKED_FOR_DELETION_CONTAINER_ID not in portal:
+        api.content.create(
+            container=portal,
+            type="MarkedDeletionContainer",
+            id=MARKED_FOR_DELETION_CONTAINER_ID,
+            title="Marked Deletion Container",
+        )
+
+
 class DeletionLogHelper:
     """Helper class for managing the deletion log in the registry."""
 
@@ -229,10 +241,33 @@ class DeletionLogHelper:
         return objects
 
     @classmethod
-    def run_scheduled_deletion(cls) -> None:
+    def get_expired_pending_entries(cls) -> list[TDeletionLogEntry]:
+        """Get all pending entries that have exceeded the retention period."""
+        retention_days = cls.get_retention_days()
+        cutoff_date = datetime.now() - timedelta(days=retention_days)
+        pending_entries = cls.get_entries_by_status("pending")
+
+        expired_entries = []
+        for entry in pending_entries:
+            try:
+                entry_date = datetime.fromisoformat(entry.get("datetime", ""))
+                if entry_date < cutoff_date:
+                    expired_entries.append(entry)
+            except (ValueError, TypeError):
+                # If date parsing fails, skip this entry
+                logger.warning(f"Could not parse datetime for entry {entry.get('uid')}")
+
+        return expired_entries
+
+    @classmethod
+    def run_scheduled_deletion(cls) -> int:
         """
-        Run scheduled deletion for all pending items.
+        Run scheduled deletion for all pending items that have exceeded
+        the retention period.
+
         This should be called by a cron job or scheduled task.
+
+        Returns the number of successfully deleted items.
         """
         portal = api.portal.get()
         container = portal.get(MARKED_FOR_DELETION_CONTAINER_ID)
@@ -241,11 +276,26 @@ class DeletionLogHelper:
             logger.warning(
                 "MarkedDeletionContainer not found, cannot run scheduled deletion"
             )
-            return
+            return 0
 
-        pending_entries = cls.get_entries_by_status("pending")
+        expired_entries = cls.get_expired_pending_entries()
+        retention_days = cls.get_retention_days()
 
-        for entry in pending_entries:
+        if not expired_entries:
+            logger.info(
+                f"No expired pending deletions found "
+                f"(retention period: {retention_days} days)"
+            )
+            return 0
+
+        logger.info(
+            f"Found {len(expired_entries)} expired pending deletions "
+            f"(retention period: {retention_days} days)"
+        )
+
+        deleted_count = 0
+
+        for entry in expired_entries:
             uid = entry["uid"]
             obj = api.content.get(UID=uid)
 
@@ -253,6 +303,7 @@ class DeletionLogHelper:
                 # Object no longer exists, mark as deleted
                 logger.warning(f"Object with UID {uid} not found, marking as deleted")
                 cls.update_entry_status(uid, "deleted")
+                deleted_count += 1
                 continue
 
             # Check if object is in the deletion container
@@ -276,6 +327,10 @@ class DeletionLogHelper:
                 )
 
                 cls.update_entry_status(uid, "deleted")
+                deleted_count += 1
 
             except Exception as e:
                 logger.error(f"Error deleting object {uid}: {e}")
+
+        logger.info(f"Scheduled deletion completed: {deleted_count} items deleted")
+        return deleted_count

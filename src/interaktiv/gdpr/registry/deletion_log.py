@@ -62,7 +62,7 @@ class IGDPRSettingsSchema(Interface):
         title="Marked Deletion Feature Enabled",
         description="When enabled, deleted content is moved to a "
         "marked deletion container instead of being permanently deleted.",
-        default=True,
+        default=False,
         required=True,
     )
 

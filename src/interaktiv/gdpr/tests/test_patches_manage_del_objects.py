@@ -1,5 +1,4 @@
 import plone.api as api
-from interaktiv.framework.test import TestCase
 
 from interaktiv.gdpr.config import (
     MARKED_FOR_DELETION_CONTAINER_ID,
@@ -13,10 +12,13 @@ from interaktiv.gdpr.patches.manage_del_objects import (
     should_move_to_container,
 )
 from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
-from interaktiv.gdpr.testing import INTERAKTIV_GDPR_INTEGRATION_TESTING
+from interaktiv.gdpr.testing import (
+    INTERAKTIV_GDPR_INTEGRATION_TESTING,
+    InteraktivGDPRTestCase,
+)
 
 
-class TestIsFeatureEnabled(TestCase):
+class TestIsFeatureEnabled(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_is_feature_enabled__default_true(self):
@@ -24,7 +26,7 @@ class TestIsFeatureEnabled(TestCase):
         result = is_feature_enabled()
 
         # postcondition
-        self.assertTrue(result)
+        self.assertFalse(result)
 
     def test_is_feature_enabled__set_false(self):
         # setup
@@ -39,7 +41,7 @@ class TestIsFeatureEnabled(TestCase):
         self.assertFalse(result)
 
 
-class TestGetMarkedDeletionContainer(TestCase):
+class TestGetMarkedDeletionContainer(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_get_marked_deletion_container__exists(self):
@@ -61,7 +63,7 @@ class TestGetMarkedDeletionContainer(TestCase):
         self.assertIsNone(result)
 
 
-class TestShouldMoveToContainer(TestCase):
+class TestShouldMoveToContainer(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def test_should_move_to_container__false_by_default(self):
@@ -82,7 +84,7 @@ class TestShouldMoveToContainer(TestCase):
         self.assertTrue(result)
 
 
-class TestPatchedManageDelObjects(TestCase):
+class TestPatchedManageDelObjects(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def setUp(self):
@@ -116,6 +118,9 @@ class TestPatchedManageDelObjects(TestCase):
         self,
     ):
         # setup
+        api.portal.set_registry_record(
+            name="marked_deletion_enabled", value=True, interface=IGDPRSettingsSchema
+        )
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
@@ -159,6 +164,9 @@ class TestPatchedManageDelObjects(TestCase):
 
     def test_patched_manage_delObjects__single_string_id(self):
         # setup
+        api.portal.set_registry_record(
+            name="marked_deletion_enabled", value=True, interface=IGDPRSettingsSchema
+        )
         api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
@@ -176,6 +184,9 @@ class TestPatchedManageDelObjects(TestCase):
 
     def test_patched_manage_delObjects__multiple_objects(self):
         # setup
+        api.portal.set_registry_record(
+            name="marked_deletion_enabled", value=True, interface=IGDPRSettingsSchema
+        )
         api.content.create(
             container=self.portal,
             type="Document",
