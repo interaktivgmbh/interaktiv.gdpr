@@ -776,31 +776,24 @@
 
           if (result.status === 200) {
             messageDiv.innerHTML = '<div class=\"modal-success\">' +
-                                   '<strong>Success!</strong> ' + result.data.message +
-                                   '<br>Restored to: ' + result.data.restored_path +
-                                   '</div>';
+                                   result.data.message + ' (' + result.data.restored_path + ')' + '</div>';
 
             setTimeout(function () {
               window.location.href = window.location.pathname + '?tab=deletion';
             }, 2000);
           } else if (result.status === 409) {
-            messageDiv.innerHTML = '<div class=\"modal-error\">' +
-                                   '<strong>Name conflict!</strong><br>' + result.data.error.message +
-                                   '</div>';
+            messageDiv.innerHTML = '<div class=\"modal-error\">' + result.data.error.message + '</div>';
             confirmBtn.disabled = false;
             setButtonProcessing(confirmBtn, false);
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
-                                   '<strong>Error!</strong><br>' + (result.data.error ? result.data.error.message : 'Unknown error') +
-                                   '</div>';
+                                   (result.data.error ? result.data.error.message : 'Unknown error') + '</div>';
             confirmBtn.disabled = false;
             setButtonProcessing(confirmBtn, false);
           }
         })
         .catch(function (error) {
-          document.getElementById('modal-message').innerHTML = '<div class=\"modal-error\">' +
-                                                               '<strong>Error!</strong><br>' + error.message +
-                                                               '</div>';
+          document.getElementById('modal-message').innerHTML = '<div class=\"modal-error\">' + error.message + '</div>';
           confirmBtn.disabled = false;
           setButtonProcessing(confirmBtn, false);
         });
@@ -835,25 +828,21 @@
           var messageDiv = document.getElementById('delete-modal-message');
 
           if (result.status === 200) {
-            messageDiv.innerHTML = '<div class=\"modal-success\">' +
-                                   '<strong>Success!</strong> ' + result.data.message +
-                                   '</div>';
+            messageDiv.innerHTML = '<div class=\"modal-success\">' + result.data.message + '</div>';
 
             setTimeout(function () {
               window.location.href = window.location.pathname + '?tab=deletion';
             }, 2000);
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
-                                   '<strong>Error!</strong><br>' + (result.data.error ? result.data.error.message : 'Unknown error') +
-                                   '</div>';
+                                   (result.data.error ? result.data.error.message : 'Unknown error') + '</div>';
             confirmBtn.disabled = false;
             setButtonProcessing(confirmBtn, false);
           }
         })
         .catch(function (error) {
           document.getElementById('delete-modal-message').innerHTML = '<div class=\"modal-error\">' +
-                                                                       '<strong>Error!</strong><br>' + error.message +
-                                                                       '</div>';
+                                                                       error.message + '</div>';
           confirmBtn.disabled = false;
           setButtonProcessing(confirmBtn, false);
         });
