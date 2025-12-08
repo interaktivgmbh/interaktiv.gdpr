@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-08 12:29+0000\n"
+"POT-Creation-Date: 2025-12-08 13:37+0000\n"
 "PO-Revision-Date: 2025-12-05 11:00+0000\n"
 "Last-Translator: Interaktiv <hello@interaktiv.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -30,6 +30,14 @@ msgstr "Löschen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#: ../services/actions/permanent_delete.py:92
+msgid "Error deleting object: ${error}"
+msgstr "Fehler beim Löschen des Objekts: ${error}"
+
+#: ../services/actions/withdraw.py:180
+msgid "Error restoring object: ${error}"
+msgstr "Fehler beim Wiederherstellen des Objekts: ${error}"
+
 #: ../configure.zcml:24
 msgid "Installs the interaktiv.gdpr package."
 msgstr "Installiert das interaktiv.gdpr Produkt."
@@ -39,9 +47,48 @@ msgstr "Installiert das interaktiv.gdpr Produkt."
 msgid "Interaktiv GDPR"
 msgstr "Interaktiv DSGVO"
 
+#: ../services/actions/withdraw.py:84
+msgid "Invalid original path: ${path}"
+msgstr "Ungültiger ursprünglicher Pfad: ${path}"
+
 #: ../profiles/default/types/MarkedDeletionContainer.xml
 msgid "Marked Deletion Container"
 msgstr "Löschordner"
+
+#: ../services/actions/withdraw.py:56
+msgid "Marked deletion container not found"
+msgstr "Löschordner nicht gefunden"
+
+#: ../services/actions/withdraw.py:131
+msgid "Name conflict: An object with id \"${id}\" already exists at /${path}"
+msgstr "Namenskonflikt: Ein Objekt mit der ID \"${id}\" existiert bereits unter /${path}"
+
+#: ../services/actions/permanent_delete.py:40
+#: ../services/actions/withdraw.py:41
+msgid "No pending deletion log entry found for UID: ${uid}"
+msgstr "Kein ausstehender Löschprotokolleintrag für UID gefunden: ${uid}"
+
+#: ../services/actions/permanent_delete.py:79
+msgid "Object \"${title}\" has been permanently deleted"
+msgstr "Objekt \"${title}\" wurde endgültig gelöscht"
+
+#: ../services/actions/withdraw.py:165
+msgid "Object \"${title}\" has been restored to its original location"
+msgstr "Objekt \"${title}\" wurde an seinen ursprünglichen Speicherort wiederhergestellt"
+
+#: ../services/actions/permanent_delete.py:54
+#: ../services/actions/withdraw.py:68
+msgid "Object with UID ${uid} not found"
+msgstr "Objekt mit UID ${uid} nicht gefunden"
+
+#: ../services/actions/withdraw.py:118
+msgid "Original parent container not found: /${path}"
+msgstr "Ursprünglicher übergeordneter Ordner nicht gefunden: /${path}"
+
+#: ../services/actions/permanent_delete.py:30
+#: ../services/actions/withdraw.py:31
+msgid "UID is required"
+msgstr "UID ist erforderlich"
 
 #: ../configure.zcml:32
 msgid "Uninstalls the interaktiv.gdpr package."

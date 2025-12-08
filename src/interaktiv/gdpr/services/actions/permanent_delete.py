@@ -1,10 +1,11 @@
 import plone.protect.interfaces
 from plone import api
 from plone.restapi.services import Service
+from zope.i18n import translate
 from zope.interface import alsoProvides, implementer
 from zope.publisher.interfaces import IPublishTraverse
 
-from interaktiv.gdpr import logger
+from interaktiv.gdpr import _, logger
 from interaktiv.gdpr.deletion_log import DeletionLog
 
 
@@ -26,7 +27,7 @@ class PermanentDeletion(Service):
 
         if not self.uid:
             self.request.response.setStatus(400)
-            return {"error": {"type": "BadRequest", "message": "UID is required"}}
+            return {"error": {"type": "BadRequest", "message": translate(_("UID is required"), context=self.request)}}
 
         # Get the pending log entry
         log_entry = DeletionLog.get_pending_entry_by_uid(self.uid)
@@ -35,7 +36,10 @@ class PermanentDeletion(Service):
             return {
                 "error": {
                     "type": "NotFound",
-                    "message": f"No pending deletion log entry found for UID: {self.uid}",
+                    "message": translate(
+                        _("No pending deletion log entry found for UID: ${uid}", mapping={"uid": self.uid}),
+                        context=self.request,
+                    ),
                 }
             }
 
@@ -46,7 +50,10 @@ class PermanentDeletion(Service):
             return {
                 "error": {
                     "type": "NotFound",
-                    "message": f"Object with UID {self.uid} not found",
+                    "message": translate(
+                        _("Object with UID ${uid} not found", mapping={"uid": self.uid}),
+                        context=self.request,
+                    ),
                 }
             }
 
@@ -68,7 +75,10 @@ class PermanentDeletion(Service):
             self.request.response.setStatus(200)
             return {
                 "status": "success",
-                "message": f'Object "{title}" has been permanently deleted',
+                "message": translate(
+                    _('Object "${title}" has been permanently deleted', mapping={"title": title}),
+                    context=self.request,
+                ),
                 "uid": self.uid,
             }
 
@@ -78,6 +88,9 @@ class PermanentDeletion(Service):
             return {
                 "error": {
                     "type": "InternalError",
-                    "message": f"Error deleting object: {str(e)}",
+                    "message": translate(
+                        _("Error deleting object: ${error}", mapping={"error": str(e)}),
+                        context=self.request,
+                    ),
                 }
             }
