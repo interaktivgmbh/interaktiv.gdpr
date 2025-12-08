@@ -2,7 +2,7 @@ import json
 
 import plone.api as api
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
 from interaktiv.gdpr.services.settings.set import GDPRSettingsSet
 from interaktiv.gdpr.testing import (
@@ -43,7 +43,7 @@ class TestGDPRSettingsSet(InteraktivGDPRTestCase):
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         service = GDPRSettingsSet(self.portal, self.request)
         self.request["BODY"] = json.dumps({"marked_deletion_enabled": False}).encode()
@@ -72,20 +72,20 @@ class TestGDPRSettingsSet(InteraktivGDPRTestCase):
         )
         self.assertEqual(registry_value, 60)
 
-    def test_reply__sets_dashboard_display_days(self):
+    def test_reply__sets_display_days(self):
         # setup
         service = GDPRSettingsSet(self.portal, self.request)
-        self.request["BODY"] = json.dumps({"dashboard_display_days": 120}).encode()
+        self.request["BODY"] = json.dumps({"display_days": 120}).encode()
 
         # do it
         result = service.reply()
 
         # postcondition
         self.assertEqual(result["status"], "success")
-        self.assertEqual(result["dashboard_display_days"], 120)
+        self.assertEqual(result["display_days"], 120)
         # Verify registry was updated
         registry_value = api.portal.get_registry_record(
-            name="dashboard_display_days", interface=IGDPRSettingsSchema
+            name="display_days", interface=IGDPRSettingsSchema
         )
         self.assertEqual(registry_value, 120)
 
@@ -101,10 +101,10 @@ class TestGDPRSettingsSet(InteraktivGDPRTestCase):
         self.assertEqual(self.request.response.getStatus(), 400)
         self.assertEqual(result["error"]["type"], "BadRequest")
 
-    def test_reply__dashboard_display_days_invalid__returns_error(self):
+    def test_reply__display_days_invalid__returns_error(self):
         # setup
         service = GDPRSettingsSet(self.portal, self.request)
-        self.request["BODY"] = json.dumps({"dashboard_display_days": -5}).encode()
+        self.request["BODY"] = json.dumps({"display_days": -5}).encode()
 
         # do it
         result = service.reply()

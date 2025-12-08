@@ -2,24 +2,24 @@ from datetime import datetime, timedelta
 
 import plone.api as api
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.testing import (
     INTERAKTIV_GDPR_INTEGRATION_TESTING,
     InteraktivGDPRTestCase,
 )
 
 
-class TestDeletionLogHelper(InteraktivGDPRTestCase):
+class TestDeletionLog(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def setUp(self):
         super().setUp()
         # Clear the deletion log before each test
-        DeletionLogHelper.set_deletion_log([])
+        DeletionLog.set_deletion_log([])
 
     def test_get_deletion_log__empty(self):
         # do it
-        result = DeletionLogHelper.get_deletion_log()
+        result = DeletionLog.get_deletion_log()
 
         # postcondition
         self.assertEqual(result, [])
@@ -39,15 +39,15 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
         ]
 
         # do it
-        DeletionLogHelper.set_deletion_log(test_log)
+        DeletionLog.set_deletion_log(test_log)
 
         # postcondition
-        result = DeletionLogHelper.get_deletion_log()
+        result = DeletionLog.get_deletion_log()
         self.assertEqual(result, test_log)
 
-    def test_get_dashboard_display_days(self):
+    def test_get_display_days(self):
         # do it
-        result = DeletionLogHelper.get_dashboard_display_days()
+        result = DeletionLog.get_display_days()
 
         # postcondition
         self.assertIsInstance(result, int)
@@ -55,7 +55,7 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
 
     def test_get_retention_days(self):
         # do it
-        result = DeletionLogHelper.get_retention_days()
+        result = DeletionLog.get_retention_days()
 
         # postcondition
         self.assertIsInstance(result, int)
@@ -81,10 +81,10 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             "user_id": "admin",
             "status": "pending",
         }
-        DeletionLogHelper.set_deletion_log([old_entry, recent_entry])
+        DeletionLog.set_deletion_log([old_entry, recent_entry])
 
         # do it
-        result = DeletionLogHelper.get_deletion_log_for_display()
+        result = DeletionLog.get_deletion_log_for_display()
 
         # postcondition
         self.assertEqual(len(result), 1)
@@ -97,7 +97,7 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
         )
 
         # do it
-        result = DeletionLogHelper.add_entry(document, status="pending")
+        result = DeletionLog.add_entry(document, status="pending")
 
         # postcondition
         self.assertIsNotNone(result)
@@ -106,31 +106,16 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
         self.assertEqual(result["portal_type"], "Document")
         self.assertEqual(result["status"], "pending")
 
-    def test_add_entry__skips_duplicate_uid(self):
-        # setup
-        document = api.content.create(
-            container=self.portal, type="Document", id="test-doc", title="Test Document"
-        )
-        DeletionLogHelper.add_entry(document, status="pending")
-
-        # do it
-        result = DeletionLogHelper.add_entry(document, status="pending")
-
-        # postcondition
-        self.assertIsNone(result)
-        log = DeletionLogHelper.get_deletion_log()
-        self.assertEqual(len(log), 1)
-
     def test_update_entry_status(self):
         # setup
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
-        result = DeletionLogHelper.update_entry_status(doc_uid, "withdrawn")
+        result = DeletionLog.update_entry_status(doc_uid, "withdrawn")
 
         # postcondition
         self.assertIsNotNone(result)
@@ -138,7 +123,7 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
 
     def test_update_entry_status__non_existent(self):
         # do it
-        result = DeletionLogHelper.update_entry_status("non-existent-uid", "deleted")
+        result = DeletionLog.update_entry_status("non-existent-uid", "deleted")
 
         # postcondition
         self.assertIsNone(result)
@@ -149,10 +134,10 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
-        result = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        result = DeletionLog.get_entry_by_uid(doc_uid)
 
         # postcondition
         self.assertIsNotNone(result)
@@ -160,7 +145,7 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
 
     def test_get_entry_by_uid__not_found(self):
         # do it
-        result = DeletionLogHelper.get_entry_by_uid("non-existent-uid")
+        result = DeletionLog.get_entry_by_uid("non-existent-uid")
 
         # postcondition
         self.assertIsNone(result)
@@ -171,10 +156,10 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
-        result = DeletionLogHelper.get_pending_entry_by_uid(doc_uid)
+        result = DeletionLog.get_pending_entry_by_uid(doc_uid)
 
         # postcondition
         self.assertIsNotNone(result)
@@ -186,10 +171,10 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="deleted")
+        DeletionLog.add_entry(document, status="deleted")
 
         # do it
-        result = DeletionLogHelper.get_pending_entry_by_uid(doc_uid)
+        result = DeletionLog.get_pending_entry_by_uid(doc_uid)
 
         # postcondition
         self.assertIsNone(result)
@@ -208,11 +193,11 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             id="test-doc-2",
             title="Test Document 2",
         )
-        DeletionLogHelper.add_entry(doc1, status="pending")
-        DeletionLogHelper.add_entry(doc2, status="deleted")
+        DeletionLog.add_entry(doc1, status="pending")
+        DeletionLog.add_entry(doc2, status="deleted")
 
         # do it
-        result = DeletionLogHelper.get_entries_by_status("pending")
+        result = DeletionLog.get_entries_by_status("pending")
 
         # postcondition
         self.assertEqual(len(result), 1)
@@ -223,10 +208,10 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
-        result = DeletionLogHelper.get_pending_objects()
+        result = DeletionLog.get_pending_objects()
 
         # postcondition
         self.assertEqual(len(result), 1)
@@ -241,17 +226,17 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             title="Test Document",
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # precondition
         self.assertIn("test-doc", self.container.objectIds())
 
         # do it
-        DeletionLogHelper.run_scheduled_deletion()
+        DeletionLog.run_scheduled_deletion()
 
         # postcondition
         self.assertNotIn("test-doc", self.container.objectIds())
-        entry = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        entry = DeletionLog.get_entry_by_uid(doc_uid)
         self.assertEqual(entry["status"], "deleted")
 
     def test_run_scheduled_deletion__skips_objects_outside_container(self):
@@ -260,15 +245,15 @@ class TestDeletionLogHelper(InteraktivGDPRTestCase):
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # precondition
         self.assertIn("test-doc", self.portal.objectIds())
 
         # do it
-        DeletionLogHelper.run_scheduled_deletion()
+        DeletionLog.run_scheduled_deletion()
 
         # postcondition
         self.assertIn("test-doc", self.portal.objectIds())
-        entry = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        entry = DeletionLog.get_entry_by_uid(doc_uid)
         self.assertEqual(entry["status"], "pending")

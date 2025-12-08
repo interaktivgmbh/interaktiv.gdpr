@@ -5,12 +5,12 @@
 
     <include package="Products.CMFCore" file="permissions.zcml"/>
 
-    <!-- Controlpanel: GDPR Dashboard -->
+    <!-- Controlpanel: GDPR -->
     <browser:page
-            name="interaktiv-gdpr-dashboard"
+            name="interaktiv-gdpr-controlpanel"
             for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class="interaktiv.gdpr.controlpanels.dashboard.DashboardView"
-            permission="cmf.ManagePortal"
+            class="interaktiv.gdpr.controlpanels.controlpanel.ControlpanelView"
+            permission="interaktiv.gdpr.ViewControlpanel"
     />
 
 </configure>

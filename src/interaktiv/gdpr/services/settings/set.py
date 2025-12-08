@@ -5,11 +5,8 @@ from plone import api
 from plone.restapi.services import Service
 from zope.interface import alsoProvides
 
-from interaktiv.gdpr import logger
-from interaktiv.gdpr.deletion_info_helper import (
-    DeletionLogHelper,
-    create_marked_deletion_container,
-)
+from interaktiv.gdpr import create_marked_deletion_container, logger
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
 
 
@@ -31,7 +28,7 @@ class GDPRSettingsSet(Service):
         valid_settings = [
             "marked_deletion_enabled",
             "retention_days",
-            "dashboard_display_days",
+            "display_days",
         ]
         if not any(setting in data for setting in valid_settings):
             self.request.response.setStatus(400)
@@ -39,7 +36,7 @@ class GDPRSettingsSet(Service):
                 "error": {
                     "type": "BadRequest",
                     "message": "At least one setting is required: "
-                    "marked_deletion_enabled, retention_days, or dashboard_display_days",
+                    "marked_deletion_enabled, retention_days, or display_days",
                 }
             }
 
@@ -51,7 +48,7 @@ class GDPRSettingsSet(Service):
 
             # If trying to disable, check for pending deletions
             if not new_value:
-                pending_entries = DeletionLogHelper.get_entries_by_status("pending")
+                pending_entries = DeletionLog.get_entries_by_status("pending")
                 if pending_entries:
                     self.request.response.setStatus(409)
                     return {
@@ -102,27 +99,26 @@ class GDPRSettingsSet(Service):
             logger.info(f"GDPR retention_days set to {retention_days}")
             result["retention_days"] = retention_days
 
-        # Handle dashboard_display_days
-        if "dashboard_display_days" in data:
+        # Handle display_days
+        if "display_days" in data:
             try:
-                display_days = int(data["dashboard_display_days"])
+                display_days = int(data["display_days"])
                 if display_days < 1:
                     raise ValueError("Must be at least 1")
+
             except (ValueError, TypeError):
                 self.request.response.setStatus(400)
                 return {
                     "error": {
                         "type": "BadRequest",
-                        "message": "dashboard_display_days must be a positive integer (minimum 1)",
+                        "message": "display_days must be a positive integer (minimum 1)",
                     }
                 }
 
             api.portal.set_registry_record(
-                name="dashboard_display_days",
-                interface=IGDPRSettingsSchema,
-                value=display_days,
+                name="display_days", interface=IGDPRSettingsSchema, value=display_days
             )
-            logger.info(f"GDPR dashboard_display_days set to {display_days}")
-            result["dashboard_display_days"] = display_days
+            logger.info(f"GDPR display_days set to {display_days}")
+            result["display_days"] = display_days
 
         return result

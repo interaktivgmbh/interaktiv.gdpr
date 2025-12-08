@@ -6,7 +6,7 @@ from zope.publisher.interfaces import IPublishTraverse
 
 from interaktiv.gdpr import logger
 from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 
 
 @implementer(IPublishTraverse)
@@ -30,7 +30,7 @@ class WithdrawDeletion(Service):
             return {"error": {"type": "BadRequest", "message": "UID is required"}}
 
         # Get the pending log entry
-        log_entry = DeletionLogHelper.get_pending_entry_by_uid(self.uid)
+        log_entry = DeletionLog.get_pending_entry_by_uid(self.uid)
         if not log_entry:
             self.request.response.setStatus(404)
             return {
@@ -133,7 +133,7 @@ class WithdrawDeletion(Service):
                 api.content.rename(obj=pasted_obj, new_id=original_id)
 
             # Update log entry status
-            DeletionLogHelper.update_entry_status(self.uid, "withdrawn")
+            DeletionLog.update_entry_status(self.uid, "withdrawn")
 
             logger.info(
                 f"Withdrawal successful:\n"

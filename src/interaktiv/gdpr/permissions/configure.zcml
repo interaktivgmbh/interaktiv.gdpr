@@ -1,11 +1,7 @@
-<configure
-        xmlns="http://namespaces.zope.org/zope"
-        xmlns:zcml="http://namespaces.zope.org/zcml"
-        i18n_domain="interaktiv.gdpr">
-
+<configure xmlns="http://namespaces.zope.org/zope" xmlns:zcml="http://namespaces.zope.org/zcml" i18n_domain="interaktiv.gdpr">
     <configure zcml:condition="installed AccessControl.security">
-        <permission id="interaktiv.gdpr.ViewGDPRDashboard" title="interaktiv.gdpr: View GDPR Dashboard" />
+        <permission id="interaktiv.gdpr.ViewControlpanel" title="interaktiv.gdpr: View Controlpanel" />
+        <permission id="interaktiv.gdpr.ViewDeletionInfoSettings" title="interaktiv.gdpr: View Deletion Info Settings" />
         <permission id="interaktiv.gdpr.AddMarkedDeletionContainer" title="interaktiv.gdpr: Add Marked Deletion Container" />
     </configure>
-
 </configure>

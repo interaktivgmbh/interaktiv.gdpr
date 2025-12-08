@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
 <rolemap>
     <permissions>
-        <permission name="interaktiv.gdpr: View GDPR Dashboard" acquire="False">
+        <permission name="interaktiv.gdpr: View Controlpanel" acquire="False">
+            <role name="Manager"/>
+            <role name="Site Administrator"/>
+        </permission>
+        <permission name="interaktiv.gdpr: View Deletion Info Settings" acquire="False">
             <role name="Manager"/>
             <role name="Site Administrator"/>
         </permission>

@@ -1,17 +1,14 @@
 <?xml version="1.0"?>
-<object name="portal_controlpanel"
-        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-        i18n:domain="interaktiv.gdpr"
-        purge="False">
+<object name="portal_controlpanel" xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="interaktiv.gdpr" purge="False">
     <configlet
-        title="Interaktiv GDPR Dashboard"
-        action_id="interaktiv_gdpr_controlpanels_dashboard"
+        title="Interaktiv GDPR"
+        action_id="interaktiv_gdpr_controlpanel"
         appId="interaktiv.gdpr"
         category="Products"
         condition_expr=""
-        url_expr="string:${portal_url}/@@interaktiv-gdpr-dashboard"
+        url_expr="string:${portal_url}/@@interaktiv-gdpr-controlpanel"
         visible="True"
         i18n:attributes="title">
-        <permission>interaktiv.gdpr: View GDPR Dashboard</permission>
+        <permission>interaktiv.gdpr: View Controlpanel</permission>
     </configlet>
 </object>

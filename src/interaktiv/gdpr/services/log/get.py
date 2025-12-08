@@ -1,7 +1,7 @@
 from plone import api
 from plone.restapi.services import Service
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 
 
 class DeletionLogGet(Service):
@@ -10,7 +10,7 @@ class DeletionLogGet(Service):
         self.request = request
 
     def reply(self):
-        log = DeletionLogHelper.get_deletion_log()
+        log = DeletionLog.get_deletion_log()
 
         enriched_log = []
         for entry in log:

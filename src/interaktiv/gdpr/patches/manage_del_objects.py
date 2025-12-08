@@ -9,7 +9,7 @@ from interaktiv.gdpr.config import (
     MARKED_FOR_DELETION_CONTAINER_ID,
     MARKED_FOR_DELETION_REQUEST_PARAM_NAME,
 )
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
 
 # Store original method
@@ -59,7 +59,7 @@ def _log_direct_deletion(container, ids):
         try:
             if obj_id in container.objectIds():
                 obj = container[obj_id]
-                DeletionLogHelper.add_entry(obj, status="deleted")
+                DeletionLog.add_entry(obj, status="deleted")
         except Exception as e:
             logger.error(f"Error logging deletion for {obj_id}: {e}")
 
@@ -110,7 +110,7 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
                 obj_title = obj.title_or_id()
 
                 # Add entry to deletion log BEFORE moving (to capture original path)
-                DeletionLogHelper.add_entry(obj, status="pending")
+                DeletionLog.add_entry(obj, status="pending")
 
                 # Cut the object
                 cookie = self.manage_cutObjects([obj_id])

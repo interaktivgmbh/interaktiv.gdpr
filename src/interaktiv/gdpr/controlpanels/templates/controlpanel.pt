@@ -9,7 +9,7 @@
   <a id="setup-link"
      class="link-parent"
      href="${portal_url}/@@overview-controlpanel" i18n:translate="" i18n:domain="zope">Configuration</a>
-  <h1 class="documentFirstHeading" i18n:translate="heading_gdpr_dashboard">Interaktiv GDPR Dashboard</h1>
+  <h1 class="documentFirstHeading" i18n:translate="heading_gdpr_controlpanel">Interaktiv GDPR</h1>
 </metal:title>
 
 <metal:content-core fill-slot="content-core"
@@ -289,7 +289,10 @@
     <div id="modal-message"></div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" onclick="closeModal('withdraw')" i18n:translate="button_cancel">Cancel</button>
-      <button type="button" class="btn btn-primary" id="modal-confirm-btn" onclick="confirmWithdraw()" i18n:translate="button_withdraw">Withdraw</button>
+      <button type="button" class="btn btn-primary" id="modal-confirm-btn" onclick="confirmWithdraw()">
+        <span class="btn-text-default" i18n:translate="button_withdraw">Withdraw</span>
+        <span class="btn-text-processing" style="display: none;" i18n:translate="button_processing">Processing...</span>
+      </button>
     </div>
   </div>
 
@@ -309,7 +312,10 @@
     <div id="delete-modal-message"></div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" onclick="closeModal('delete')" i18n:translate="button_cancel">Cancel</button>
-      <button type="button" class="btn btn-delete" id="delete-modal-confirm-btn" onclick="confirmDelete()" i18n:translate="button_delete_permanently">Delete permanently</button>
+      <button type="button" class="btn btn-delete" id="delete-modal-confirm-btn" onclick="confirmDelete()">
+        <span class="btn-text-default" i18n:translate="button_delete_permanently">Delete permanently</span>
+        <span class="btn-text-processing" style="display: none;" i18n:translate="button_deleting">Deleting...</span>
+      </button>
     </div>
   </div>
 
@@ -354,8 +360,7 @@
                 role="tab"
                 aria-controls="deletion-pane"
                 aria-selected="${python: 'true' if active_tab == 'deletion' else 'false'}"
-                i18n:translate="tab_deletion_info">Deletion Info
-          <span tal:condition="python: pending_count > 0" class="pending-badge">${pending_count}</span>
+                i18n:translate="deletion_info">Deletion Info
         </button>
       </li>
     </ul>
@@ -421,7 +426,11 @@
                data-pat-datatables='{
                   "columnDefs": [{ "orderable": false, "targets": [8] }],
                   "pageLength": 10,
-                  "order": [[ 4, "desc" ]]}'>
+                  "order": [[ 4, "desc" ]],
+                  "language": {
+                    "url": "${python: view.get_datatables_language_url()}"
+                  }
+               }'>
           <thead>
             <tr>
               <th i18n:translate="table_header_title">Title</th>
@@ -472,8 +481,13 @@
         <p class="info-text" i18n:translate="info_log_display_days">Shows entries from the last <span i18n:name="days" tal:replace="display_days">90</span> days. Older entries are still stored in the registry.</p>
         <table class="pat-datatables listing table table-striped table-hover"
                data-pat-datatables='{
-                  "pageLength": 25,
-                  "order": [[ 4, "desc" ]]}'>
+                  "columnDefs": [{ "orderable": false, "targets": [8] }],
+                  "pageLength": 10,
+                  "order": [[ 4, "desc" ]],
+                  "language": {
+                    "url": "${python: view.get_datatables_language_url()}"
+                  }
+               }'>
           <thead>
             <tr>
               <th i18n:translate="table_header_title">Title</th>
@@ -506,7 +520,7 @@
       </div>
 
       <!-- Settings Section -->
-      <div class="gdpr-section" tal:condition="feature_enabled">
+      <div class="gdpr-section" tal:condition="python: feature_enabled and view.can_view_deletion_info_settings()">
         <h2 i18n:translate="heading_deletion_settings">Settings</h2>
         <p class="info-text" i18n:translate="info_deletion_settings">Configure the retention and display settings for the deletion feature.</p>
 
@@ -531,10 +545,10 @@
               </div>
             </div>
 
-            <!-- Dashboard Display Days Setting -->
+            <!-- Display Days Setting -->
             <div class="setting-group" style="flex: 1; min-width: 250px;">
-              <h4 style="margin-top: 0; margin-bottom: 0.5rem;" i18n:translate="setting_display_days">Dashboard Display Days</h4>
-              <p class="info-text" style="margin-top: 0;" i18n:translate="setting_display_days_description">Number of days to show entries in the deletion log above.</p>
+              <h4 style="margin-top: 0; margin-bottom: 0.5rem;" i18n:translate="display_days">Display Days</h4>
+              <p class="info-text" style="margin-top: 0;" i18n:translate="display_days_description">Number of days to show entries in the deletion log above.</p>
               <div style="display: flex; align-items: center; gap: 0.5rem;">
                 <input type="number"
                        id="display-days-input"
@@ -568,8 +582,10 @@
       document.getElementById('modal-title').textContent = title;
       document.getElementById('modal-path').textContent = path;
       document.getElementById('modal-message').innerHTML = '';
-      document.getElementById('modal-confirm-btn').disabled = false;
-      document.getElementById('modal-confirm-btn').textContent = 'Withdraw';
+      var confirmBtn = document.getElementById('modal-confirm-btn');
+      confirmBtn.disabled = false;
+      confirmBtn.querySelector('.btn-text-default').style.display = '';
+      confirmBtn.querySelector('.btn-text-processing').style.display = 'none';
       document.getElementById('withdraw-modal').classList.add('active');
       document.getElementById('withdraw-modal-backdrop').classList.add('active');
     }
@@ -580,8 +596,10 @@
       document.getElementById('delete-modal-title').textContent = title;
       document.getElementById('delete-modal-path').textContent = path;
       document.getElementById('delete-modal-message').innerHTML = '';
-      document.getElementById('delete-modal-confirm-btn').disabled = false;
-      document.getElementById('delete-modal-confirm-btn').textContent = 'Delete permanently';
+      var confirmBtn = document.getElementById('delete-modal-confirm-btn');
+      confirmBtn.disabled = false;
+      confirmBtn.querySelector('.btn-text-default').style.display = '';
+      confirmBtn.querySelector('.btn-text-processing').style.display = 'none';
       document.getElementById('delete-modal').classList.add('active');
       document.getElementById('delete-modal-backdrop').classList.add('active');
     }
@@ -683,6 +701,11 @@
       }
     }
 
+    function setButtonProcessing(btn, isProcessing) {
+      btn.querySelector('.btn-text-default').style.display = isProcessing ? 'none' : '';
+      btn.querySelector('.btn-text-processing').style.display = isProcessing ? '' : 'none';
+    }
+
     function confirmWithdraw() {
       if (!currentUid) {
         return;
@@ -690,7 +713,7 @@
 
       var confirmBtn = document.getElementById('modal-confirm-btn');
       confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Processing...';
+      setButtonProcessing(confirmBtn, true);
 
       var portalUrl = document.body.dataset.portalUrl || '';
       var url = portalUrl + '/@gdpr-withdraw-deletion/' + currentUid;
@@ -725,13 +748,13 @@
                                    '<strong>Name conflict!</strong><br>' + result.data.error.message +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Withdraw';
+            setButtonProcessing(confirmBtn, false);
           } else {
             messageDiv.innerHTML = '<div class=\"modal-error\">' +
                                    '<strong>Error!</strong><br>' + (result.data.error ? result.data.error.message : 'Unknown error') +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Withdraw';
+            setButtonProcessing(confirmBtn, false);
           }
         })
         .catch(function (error) {
@@ -739,7 +762,7 @@
                                                                '<strong>Error!</strong><br>' + error.message +
                                                                '</div>';
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Withdraw';
+          setButtonProcessing(confirmBtn, false);
         });
     }
 
@@ -750,7 +773,7 @@
 
       var confirmBtn = document.getElementById('delete-modal-confirm-btn');
       confirmBtn.disabled = true;
-      confirmBtn.textContent = 'Deleting...';
+      setButtonProcessing(confirmBtn, true);
 
       var portalUrl = document.body.dataset.portalUrl || '';
       var url = portalUrl + '/@gdpr-permanent-deletion/' + currentUid;
@@ -784,7 +807,7 @@
                                    '<strong>Error!</strong><br>' + (result.data.error ? result.data.error.message : 'Unknown error') +
                                    '</div>';
             confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Delete permanently';
+            setButtonProcessing(confirmBtn, false);
           }
         })
         .catch(function (error) {
@@ -792,7 +815,7 @@
                                                                        '<strong>Error!</strong><br>' + error.message +
                                                                        '</div>';
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Delete permanently';
+          setButtonProcessing(confirmBtn, false);
         });
     }
 
@@ -871,7 +894,7 @@
         return;
       }
 
-      updateSetting('dashboard_display_days', value);
+      updateSetting('display_days', value);
     }
 
     function updateSetting(settingName, value) {

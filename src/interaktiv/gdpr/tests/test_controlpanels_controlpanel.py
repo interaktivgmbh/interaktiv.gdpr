@@ -2,20 +2,20 @@ from datetime import datetime
 
 import plone.api as api
 
-from interaktiv.gdpr.controlpanels.dashboard import DashboardView
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.controlpanels.controlpanel import ControlpanelView
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.testing import (
     INTERAKTIV_GDPR_INTEGRATION_TESTING,
     InteraktivGDPRTestCase,
 )
 
 
-class TestDashboardView(InteraktivGDPRTestCase):
+class TestControlpanelView(InteraktivGDPRTestCase):
     layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
 
     def setUp(self):
         super().setUp()
-        self.view = DashboardView(self.portal, self.request)
+        self.view = ControlpanelView(self.portal, self.request)
 
     def test_call(self):
         # do it
@@ -118,7 +118,7 @@ class TestDashboardView(InteraktivGDPRTestCase):
 
     def test_get_pending_entries__empty(self):
         # setup
-        DeletionLogHelper.set_deletion_log([])
+        DeletionLog.set_deletion_log([])
 
         # do it
         result = self.view.get_pending_entries()
@@ -131,7 +131,7 @@ class TestDashboardView(InteraktivGDPRTestCase):
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
         result = self.view.get_pending_entries()
@@ -145,7 +145,7 @@ class TestDashboardView(InteraktivGDPRTestCase):
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
         result = self.view.get_deletion_log_for_display()
@@ -155,11 +155,11 @@ class TestDashboardView(InteraktivGDPRTestCase):
 
     def test_get_pending_count(self):
         # setup
-        DeletionLogHelper.set_deletion_log([])
+        DeletionLog.set_deletion_log([])
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # do it
         result = self.view.get_pending_count()

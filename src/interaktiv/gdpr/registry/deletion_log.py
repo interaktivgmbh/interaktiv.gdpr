@@ -74,8 +74,8 @@ class IGDPRSettingsSchema(Interface):
         min=1,
     )
 
-    dashboard_display_days = schema.Int(
-        title="Dashboard Display Days",
+    display_days = schema.Int(
+        title="Display Days",
         description="Number of days to show entries in the dashboard deletion log.",
         default=90,
         required=True,

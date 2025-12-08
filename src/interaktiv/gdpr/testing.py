@@ -3,8 +3,8 @@ from plone.app.testing import FunctionalTesting, IntegrationTesting
 from plone.testing.zope import WSGI_SERVER_FIXTURE
 from zope.configuration import xmlconfig
 
+from interaktiv.gdpr import create_marked_deletion_container
 from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
-from interaktiv.gdpr.deletion_info_helper import create_marked_deletion_container
 
 
 class InteraktivGDPRLayer(TestLayer):

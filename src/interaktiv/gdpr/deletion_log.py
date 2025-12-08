@@ -1,15 +1,10 @@
 from datetime import datetime, timedelta
 
-from AccessControl import getSecurityManager
 from plone import api
 from plone.dexterity.content import DexterityContent
-from zExceptions import Unauthorized
 
 from interaktiv.gdpr import logger
-from interaktiv.gdpr.config import (
-    MARKED_FOR_DELETION_ALLOWED_ROLES,
-    MARKED_FOR_DELETION_CONTAINER_ID,
-)
+from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
 from interaktiv.gdpr.registry.deletion_log import (
     IDeletionLogSchema,
     IGDPRSettingsSchema,
@@ -17,40 +12,7 @@ from interaktiv.gdpr.registry.deletion_log import (
 )
 
 
-def is_inside_deletion_container(context: DexterityContent) -> bool:
-    portal_url = api.portal.get().absolute_url()
-    container_url = f"{portal_url}/{MARKED_FOR_DELETION_CONTAINER_ID}/"
-    return context.absolute_url().startswith(container_url)
-
-
-def check_access_allowed(context):
-    sm = getSecurityManager()
-    user = sm.getUser()
-
-    if user is None:
-        raise Unauthorized("Access to deleted content is restricted.")
-
-    user_roles = set(user.getRolesInContext(context))
-
-    if not user_roles & MARKED_FOR_DELETION_ALLOWED_ROLES:
-        raise Unauthorized("Access to deleted content is restricted.")
-
-
-def create_marked_deletion_container() -> None:
-    portal = api.portal.get()
-
-    if MARKED_FOR_DELETION_CONTAINER_ID not in portal:
-        api.content.create(
-            container=portal,
-            type="MarkedDeletionContainer",
-            id=MARKED_FOR_DELETION_CONTAINER_ID,
-            title="Marked Deletion Container",
-        )
-
-
-class DeletionLogHelper:
-    """Helper class for managing the deletion log in the registry."""
-
+class DeletionLog:
     @staticmethod
     def get_deletion_log() -> list[TDeletionLogEntry]:
         """Get the complete deletion log from registry."""
@@ -63,24 +25,23 @@ class DeletionLogHelper:
 
     @staticmethod
     def set_deletion_log(log: list[TDeletionLogEntry]) -> None:
-        """Set the deletion log in registry."""
         api.portal.set_registry_record(
             name="deletion_log", interface=IDeletionLogSchema, value=log
         )
 
     @staticmethod
-    def get_dashboard_display_days() -> int:
-        """Get the dashboard display days from registry."""
+    def get_display_days() -> int:
+        # noinspection PyUnresolvedReferences
         try:
             return api.portal.get_registry_record(
-                name="dashboard_display_days", interface=IGDPRSettingsSchema
+                name="display_days", interface=IGDPRSettingsSchema
             )
         except (KeyError, api.exc.InvalidParameterError):
             return 90
 
     @staticmethod
     def get_retention_days() -> int:
-        """Get the retention days from registry."""
+        # noinspection PyUnresolvedReferences
         try:
             return api.portal.get_registry_record(
                 name="retention_days", interface=IGDPRSettingsSchema
@@ -92,9 +53,9 @@ class DeletionLogHelper:
     def get_deletion_log_for_display(
         cls, days: int | None = None
     ) -> list[TDeletionLogEntry]:
-        """Get deletion log entries from the last N days for dashboard display."""
         if days is None:
-            days = cls.get_dashboard_display_days()
+            days = cls.get_display_days()
+
         log = cls.get_deletion_log()
         cutoff_date = datetime.now() - timedelta(days=days)
 
@@ -115,7 +76,6 @@ class DeletionLogHelper:
     def add_entry(
         cls, obj: DexterityContent, status: str = "pending"
     ) -> TDeletionLogEntry | None:
-        """Add a new entry to the deletion log."""
         uid = obj.UID()
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
@@ -272,25 +232,21 @@ class DeletionLogHelper:
         retention_days = cls.get_retention_days()
 
         if not expired_entries:
-            logger.info(
-                f"No expired pending deletions found "
-                f"(retention period: {retention_days} days)"
+            logger.debug(
+                f"No expired pending deletions found (retention period: {retention_days} days)"
             )
             return 0
 
         logger.info(
-            f"Found {len(expired_entries)} expired pending deletions "
-            f"(retention period: {retention_days} days)"
+            f"Found {len(expired_entries)} expired pending deletions (retention period: {retention_days} days)"
         )
 
         deleted_count = 0
-
         for entry in expired_entries:
             uid = entry["uid"]
             obj = api.content.get(UID=uid)
 
             if obj is None:
-                # Object no longer exists, mark as deleted
                 logger.warning(f"Object with UID {uid} not found, marking as deleted")
                 cls.update_entry_status(uid, "deleted")
                 deleted_count += 1

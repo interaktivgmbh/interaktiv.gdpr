@@ -88,9 +88,9 @@ class TestIGDPRSettingsSchema(InteraktivGDPRTestCase):
         self.assertEqual(field.default, 30)
         self.assertEqual(field.min, 1)
 
-    def test_dashboard_display_days_field(self):
+    def test_display_days_field(self):
         # postcondition
-        field = IGDPRSettingsSchema["dashboard_display_days"]
+        field = IGDPRSettingsSchema["display_days"]
         self.assertEqual(field.default, 90)
         self.assertEqual(field.min, 1)
 

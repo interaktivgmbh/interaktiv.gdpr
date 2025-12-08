@@ -1,6 +1,6 @@
 import plone.api as api
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.services.actions.withdraw import WithdrawDeletion
 from interaktiv.gdpr.testing import (
     INTERAKTIV_GDPR_INTEGRATION_TESTING,
@@ -58,7 +58,7 @@ class TestWithdrawDeletion(InteraktivGDPRTestCase):
         doc_uid = document.UID()
 
         # Add entry to deletion log
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         # Move document to deletion container
         cookie = self.portal.manage_cutObjects(["test-doc"])
@@ -80,5 +80,5 @@ class TestWithdrawDeletion(InteraktivGDPRTestCase):
         self.assertIn("test-doc", self.portal.objectIds())
 
         # Check log entry status updated
-        entry = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        entry = DeletionLog.get_entry_by_uid(doc_uid)
         self.assertEqual(entry["status"], "withdrawn")

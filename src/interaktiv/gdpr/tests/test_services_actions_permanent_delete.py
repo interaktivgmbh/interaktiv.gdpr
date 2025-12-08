@@ -1,6 +1,6 @@
 import plone.api as api
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.services.actions.permanent_delete import PermanentDeletion
 from interaktiv.gdpr.testing import (
     INTERAKTIV_GDPR_INTEGRATION_TESTING,
@@ -58,7 +58,7 @@ class TestPermanentDeletion(InteraktivGDPRTestCase):
             title="Test Document",
         )
         doc_uid = document.UID()
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         service = PermanentDeletion(self.portal, self.request)
         service.uid = doc_uid
@@ -75,5 +75,5 @@ class TestPermanentDeletion(InteraktivGDPRTestCase):
         self.assertNotIn("test-doc", self.container.objectIds())
 
         # Check log entry status updated
-        entry = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        entry = DeletionLog.get_entry_by_uid(doc_uid)
         self.assertEqual(entry["status"], "deleted")

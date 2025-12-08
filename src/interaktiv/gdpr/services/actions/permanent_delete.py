@@ -5,7 +5,7 @@ from zope.interface import alsoProvides, implementer
 from zope.publisher.interfaces import IPublishTraverse
 
 from interaktiv.gdpr import logger
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 
 
 @implementer(IPublishTraverse)
@@ -29,7 +29,7 @@ class PermanentDeletion(Service):
             return {"error": {"type": "BadRequest", "message": "UID is required"}}
 
         # Get the pending log entry
-        log_entry = DeletionLogHelper.get_pending_entry_by_uid(self.uid)
+        log_entry = DeletionLog.get_pending_entry_by_uid(self.uid)
         if not log_entry:
             self.request.response.setStatus(404)
             return {
@@ -57,7 +57,7 @@ class PermanentDeletion(Service):
             api.content.delete(obj=obj, check_linkintegrity=False)
 
             # Update log entry status
-            DeletionLogHelper.update_entry_status(self.uid, "deleted")
+            DeletionLog.update_entry_status(self.uid, "deleted")
 
             logger.info(
                 f"Permanent deletion successful:\n"

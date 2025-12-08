@@ -4,36 +4,33 @@ from plone import api
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema, TDeletionLogEntry
 
 
-class DashboardView(BrowserView):
-    template = ViewPageTemplateFile("templates/dashboard.pt")
+class ControlpanelView(BrowserView):
+    template = ViewPageTemplateFile("templates/controlpanel.pt")
 
     def __call__(self) -> str:
         return self.template(self)
 
     def format_datetime(self, iso_datetime: str | None) -> str:
-        """Format an ISO datetime string according to the current locale."""
         if not iso_datetime:
             return ""
 
         try:
             dt = datetime.fromisoformat(iso_datetime)
-            # Get current language
             lang = self.request.get("LANGUAGE", "de")
 
-            # Format based on locale
             if lang == "de":
                 return dt.strftime("%d.%m.%Y %H:%M")
             else:
                 return dt.strftime("%Y-%m-%d %H:%M")
+
         except (ValueError, TypeError):
             return iso_datetime
 
     def get_scheduled_deletion_date(self, iso_datetime: str | None) -> str:
-        """Calculate the scheduled deletion date based on the entry datetime and retention days."""
         if not iso_datetime:
             return ""
 
@@ -48,15 +45,17 @@ class DashboardView(BrowserView):
                 return scheduled_date.strftime("%d.%m.%Y")
             else:
                 return scheduled_date.strftime("%Y-%m-%d")
+
         except (ValueError, TypeError):
             return ""
 
     @staticmethod
     def get_retention_days() -> int:
-        return DeletionLogHelper.get_retention_days()
+        return DeletionLog.get_retention_days()
 
     @staticmethod
     def is_feature_enabled() -> bool:
+        # noinspection PyUnresolvedReferences
         try:
             return api.portal.get_registry_record(
                 name="marked_deletion_enabled", interface=IGDPRSettingsSchema
@@ -66,15 +65,29 @@ class DashboardView(BrowserView):
 
     @staticmethod
     def get_display_days() -> int:
-        return DeletionLogHelper.get_dashboard_display_days()
+        return DeletionLog.get_display_days()
 
     @staticmethod
     def get_pending_entries() -> list[TDeletionLogEntry]:
-        return DeletionLogHelper.get_entries_by_status("pending")
+        return DeletionLog.get_entries_by_status("pending")
 
     @staticmethod
     def get_deletion_log_for_display() -> list[TDeletionLogEntry]:
-        return DeletionLogHelper.get_deletion_log_for_display()
+        return DeletionLog.get_deletion_log_for_display()
 
     def get_pending_count(self) -> int:
         return len(self.get_pending_entries())
+
+    @staticmethod
+    def get_datatables_language_url() -> str:
+        current_language = api.portal.get_current_language()
+
+        if current_language == "de":
+            return "https://cdn.datatables.net/plug-ins/1.10.21/i18n/German.json"
+
+        return ""
+
+    def can_view_deletion_info_settings(self) -> bool:
+        return api.user.has_permission(
+            "interaktiv.gdpr: View Deletion Info Settings", obj=self.context
+        )

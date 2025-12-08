@@ -33,7 +33,7 @@ class TestGDPRSettingsGet(InteraktivGDPRTestCase):
         self.assertIsInstance(result["retention_days"], int)
         self.assertGreater(result["retention_days"], 0)
 
-    def test_reply__returns_dashboard_display_days(self):
+    def test_reply__returns_display_days(self):
         # setup
         service = GDPRSettingsGet(self.portal, self.request)
 
@@ -41,6 +41,6 @@ class TestGDPRSettingsGet(InteraktivGDPRTestCase):
         result = service.reply()
 
         # postcondition
-        self.assertIn("dashboard_display_days", result)
-        self.assertIsInstance(result["dashboard_display_days"], int)
-        self.assertGreater(result["dashboard_display_days"], 0)
+        self.assertIn("display_days", result)
+        self.assertIsInstance(result["display_days"], int)
+        self.assertGreater(result["display_days"], 0)

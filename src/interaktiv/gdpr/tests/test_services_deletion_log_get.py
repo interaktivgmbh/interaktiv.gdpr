@@ -1,6 +1,6 @@
 import plone.api as api
 
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.services.log.get import DeletionLogGet
 from interaktiv.gdpr.testing import (
     INTERAKTIV_GDPR_INTEGRATION_TESTING,
@@ -13,7 +13,7 @@ class TestDeletionLogGet(InteraktivGDPRTestCase):
 
     def test_reply__empty_log(self):
         # setup
-        DeletionLogHelper.set_deletion_log([])
+        DeletionLog.set_deletion_log([])
         service = DeletionLogGet(self.portal, self.request)
 
         # do it
@@ -28,7 +28,7 @@ class TestDeletionLogGet(InteraktivGDPRTestCase):
         document = api.content.create(
             container=self.portal, type="Document", id="test-doc", title="Test Document"
         )
-        DeletionLogHelper.add_entry(document, status="pending")
+        DeletionLog.add_entry(document, status="pending")
 
         service = DeletionLogGet(self.portal, self.request)
 

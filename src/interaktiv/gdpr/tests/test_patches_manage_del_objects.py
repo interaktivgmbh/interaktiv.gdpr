@@ -4,7 +4,7 @@ from interaktiv.gdpr.config import (
     MARKED_FOR_DELETION_CONTAINER_ID,
     MARKED_FOR_DELETION_REQUEST_PARAM_NAME,
 )
-from interaktiv.gdpr.deletion_info_helper import DeletionLogHelper
+from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.patches.manage_del_objects import (
     get_marked_deletion_container,
     is_feature_enabled,
@@ -89,7 +89,7 @@ class TestPatchedManageDelObjects(InteraktivGDPRTestCase):
 
     def setUp(self):
         super().setUp()
-        DeletionLogHelper.set_deletion_log([])
+        DeletionLog.set_deletion_log([])
         self.container = self.portal[MARKED_FOR_DELETION_CONTAINER_ID]
 
     def test_patched_manage_delObjects__without_mark_for_deletion__deletes_directly(
@@ -110,7 +110,7 @@ class TestPatchedManageDelObjects(InteraktivGDPRTestCase):
         # postcondition
         self.assertNotIn("test-doc", self.portal.objectIds())
         # Entry should be logged as deleted
-        entry = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        entry = DeletionLog.get_entry_by_uid(doc_uid)
         self.assertIsNotNone(entry)
         self.assertEqual(entry["status"], "deleted")
 
@@ -138,7 +138,7 @@ class TestPatchedManageDelObjects(InteraktivGDPRTestCase):
         self.assertNotIn("test-doc", self.portal.objectIds())
         self.assertIn("test-doc", self.container.objectIds())
         # Entry should be logged as pending
-        entry = DeletionLogHelper.get_entry_by_uid(doc_uid)
+        entry = DeletionLog.get_entry_by_uid(doc_uid)
         self.assertIsNotNone(entry)
         self.assertEqual(entry["status"], "pending")
 
