@@ -23,6 +23,7 @@ class GDPRSettingsGet(Service):
 
         return {
             "marked_deletion_enabled": enabled,
+            "deletion_log_enabled": DeletionLog.is_deletion_log_enabled(),
             "pending_deletions_count": pending_count,
             "retention_days": DeletionLog.get_retention_days(),
             "display_days": DeletionLog.get_display_days(),

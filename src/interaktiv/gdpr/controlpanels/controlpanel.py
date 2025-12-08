@@ -64,6 +64,10 @@ class ControlpanelView(BrowserView):
             return True
 
     @staticmethod
+    def is_deletion_log_enabled() -> bool:
+        return DeletionLog.is_deletion_log_enabled()
+
+    @staticmethod
     def get_display_days() -> int:
         return DeletionLog.get_display_days()
 

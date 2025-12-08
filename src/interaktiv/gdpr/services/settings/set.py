@@ -27,6 +27,7 @@ class GDPRSettingsSet(Service):
         # Check if at least one valid setting is provided
         valid_settings = [
             "marked_deletion_enabled",
+            "deletion_log_enabled",
             "retention_days",
             "display_days",
         ]
@@ -36,7 +37,7 @@ class GDPRSettingsSet(Service):
                 "error": {
                     "type": "BadRequest",
                     "message": "At least one setting is required: "
-                    "marked_deletion_enabled, retention_days, or display_days",
+                    "marked_deletion_enabled, deletion_log_enabled, retention_days, or display_days",
                 }
             }
 
@@ -75,6 +76,22 @@ class GDPRSettingsSet(Service):
                 f"GDPR marked deletion feature {'enabled' if new_value else 'disabled'}"
             )
             result["marked_deletion_enabled"] = new_value
+
+        # Handle deletion_log_enabled
+        if "deletion_log_enabled" in data:
+            new_value = bool(data["deletion_log_enabled"])
+
+            # Update registry
+            api.portal.set_registry_record(
+                name="deletion_log_enabled",
+                interface=IGDPRSettingsSchema,
+                value=new_value,
+            )
+
+            logger.info(
+                f"GDPR deletion log feature {'enabled' if new_value else 'disabled'}"
+            )
+            result["deletion_log_enabled"] = new_value
 
         # Handle retention_days
         if "retention_days" in data:

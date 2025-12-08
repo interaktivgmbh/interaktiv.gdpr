@@ -14,6 +14,7 @@
 
 <metal:content-core fill-slot="content-core"
    tal:define="feature_enabled view/is_feature_enabled;
+    deletion_log_enabled view/is_deletion_log_enabled;
     pending_count view/get_pending_count;
       display_days view/get_display_days;
       active_tab python: request.get('tab', 'general')">
@@ -402,6 +403,30 @@
         </div>
       </div>
 
+      <!-- Deletion Log Feature Card -->
+      <div class="feature-card">
+        <h3>
+          <span i18n:translate="feature_deletion_log">Deletion Log</span>
+          <span tal:condition="deletion_log_enabled" class="feature-status enabled" i18n:translate="status_enabled">Enabled</span>
+          <span tal:condition="not: deletion_log_enabled" class="feature-status disabled" i18n:translate="status_disabled">Disabled</span>
+        </h3>
+        <p i18n:translate="feature_deletion_log_description">When enabled, all deletion actions are logged and can be viewed in the Deletion Info tab. This helps track who deleted what and when.</p>
+        <div class="radio-group">
+          <label tal:attributes="class python: 'selected' if deletion_log_enabled else ''">
+            <input type="radio" name="feature_deletion_log" value="true"
+               tal:attributes="checked python: 'checked' if deletion_log_enabled else None"
+                   onchange="toggleFeature('deletion_log', true)" />
+            <span i18n:translate="status_enabled">Enabled</span>
+          </label>
+          <label tal:attributes="class python: 'selected' if not deletion_log_enabled else ''">
+            <input type="radio" name="feature_deletion_log" value="false"
+               tal:attributes="checked python: 'checked' if not deletion_log_enabled else None"
+                   onchange="toggleFeature('deletion_log', false)" />
+            <span i18n:translate="status_disabled">Disabled</span>
+          </label>
+        </div>
+      </div>
+
     </div>
 
     <!-- Deletion Info Tab -->
@@ -475,8 +500,17 @@
         </table>
       </div>
 
+      <!-- Deletion Log Disabled Notice -->
+      <div class="gdpr-section" tal:condition="not: deletion_log_enabled">
+        <h2 i18n:translate="heading_deletion_log">Deletion Log</h2>
+        <div class="modal-warning" style="margin: 0;">
+          <strong i18n:translate="notice_deletion_log_disabled">The Deletion Log feature is disabled.</strong>
+          <p style="margin-bottom: 0; margin-top: 0.5rem;" i18n:translate="notice_enable_deletion_log">Enable the feature on the General tab to log and view deletion actions.</p>
+        </div>
+      </div>
+
       <!-- Deletion Log Section -->
-      <div class="gdpr-section">
+      <div class="gdpr-section" tal:condition="deletion_log_enabled">
         <h2 i18n:translate="heading_deletion_log">Deletion Log</h2>
         <p class="info-text" i18n:translate="info_log_display_days">Shows entries from the last <span i18n:name="days" tal:replace="display_days">90</span> days. Older entries are still stored in the registry.</p>
         <table class="pat-datatables listing table table-striped table-hover"
@@ -653,6 +687,10 @@
     function toggleFeature(feature, enable) {
       updateRadioLabels('feature_' + feature);
 
+      var portalUrl = document.body.dataset.portalUrl || '';
+      var url = portalUrl + '/@gdpr-settings';
+      var body = {};
+
       if (feature === 'marked_deletion') {
         // If trying to disable and there are pending deletions, show warning modal
         if (!enable && pendingCount > 0) {
@@ -661,44 +699,46 @@
           document.getElementById('toggle-modal-backdrop').classList.add('active');
           return;
         }
-
-        // Make API call to toggle feature
-        var portalUrl = document.body.dataset.portalUrl || '';
-        var url = portalUrl + '/@gdpr-settings';
-
-        fetch(url, {
-          method: 'PATCH',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          credentials: 'same-origin',
-          body: JSON.stringify({ marked_deletion_enabled: enable })
-        })
-          .then(function (response) {
-            return response.json().then(function (data) {
-              return { status: response.status, data: data };
-            });
-          })
-          .then(function (result) {
-            if (result.status === 200) {
-              window.location.reload();
-            } else if (result.status === 409) {
-              // Show warning modal
-              document.getElementById(
-                'toggle-pending-count').textContent = result.data.error.pending_count || pendingCount;
-              document.getElementById('toggle-modal').classList.add('active');
-              document.getElementById('toggle-modal-backdrop').classList.add('active');
-            } else {
-              alert('Error: ' + (result.data.error ? result.data.error.message : 'Unknown error'));
-              window.location.reload();
-            }
-          })
-          .catch(function (error) {
-            alert('Error: ' + error.message);
-            window.location.reload();
-          });
+        body.marked_deletion_enabled = enable;
+      } else if (feature === 'deletion_log') {
+        body.deletion_log_enabled = enable;
+      } else {
+        return;
       }
+
+      // Make API call to toggle feature
+      fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(body)
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return { status: response.status, data: data };
+          });
+        })
+        .then(function (result) {
+          if (result.status === 200) {
+            window.location.reload();
+          } else if (result.status === 409) {
+            // Show warning modal (for marked_deletion)
+            document.getElementById(
+              'toggle-pending-count').textContent = result.data.error.pending_count || pendingCount;
+            document.getElementById('toggle-modal').classList.add('active');
+            document.getElementById('toggle-modal-backdrop').classList.add('active');
+          } else {
+            alert('Error: ' + (result.data.error ? result.data.error.message : 'Unknown error'));
+            window.location.reload();
+          }
+        })
+        .catch(function (error) {
+          alert('Error: ' + error.message);
+          window.location.reload();
+        });
     }
 
     function setButtonProcessing(btn, isProcessing) {

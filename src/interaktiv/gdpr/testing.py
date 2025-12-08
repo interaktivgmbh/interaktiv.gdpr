@@ -1,10 +1,12 @@
 from interaktiv.framework.test import TestCase, TestLayer
+from plone import api
 from plone.app.testing import FunctionalTesting, IntegrationTesting
 from plone.testing.zope import WSGI_SERVER_FIXTURE
 from zope.configuration import xmlconfig
 
 from interaktiv.gdpr import create_marked_deletion_container
 from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
+from interaktiv.gdpr.registry.deletion_log import IGDPRSettingsSchema
 
 
 class InteraktivGDPRLayer(TestLayer):
@@ -42,5 +44,10 @@ class InteraktivGDPRTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
+
         create_marked_deletion_container()
         self.container = self.portal[MARKED_FOR_DELETION_CONTAINER_ID]
+
+        api.portal.set_registry_record(
+            name="deletion_log_enabled", interface=IGDPRSettingsSchema, value=True
+        )

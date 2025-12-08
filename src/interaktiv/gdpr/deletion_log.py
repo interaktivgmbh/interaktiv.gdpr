@@ -30,6 +30,17 @@ class DeletionLog:
         )
 
     @staticmethod
+    def is_deletion_log_enabled() -> bool:
+        """Check if the deletion log feature is enabled."""
+        # noinspection PyUnresolvedReferences
+        try:
+            return api.portal.get_registry_record(
+                name="deletion_log_enabled", interface=IGDPRSettingsSchema
+            )
+        except (KeyError, api.exc.InvalidParameterError):
+            return False
+
+    @staticmethod
     def get_display_days() -> int:
         # noinspection PyUnresolvedReferences
         try:
@@ -76,6 +87,11 @@ class DeletionLog:
     def add_entry(
         cls, obj: DexterityContent, status: str = "pending"
     ) -> TDeletionLogEntry | None:
+        # Only log if deletion log feature is enabled
+        if not cls.is_deletion_log_enabled():
+            logger.debug("Deletion log feature is disabled, skipping log entry")
+            return None
+
         uid = obj.UID()
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
@@ -128,6 +144,11 @@ class DeletionLog:
     @classmethod
     def update_entry_status(cls, uid: str, new_status: str) -> TDeletionLogEntry | None:
         """Update the status of the most recent pending log entry."""
+        # Only update if deletion log feature is enabled
+        if not cls.is_deletion_log_enabled():
+            logger.debug("Deletion log feature is disabled, skipping status update")
+            return None
+
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
         current_user = api.user.get_current()

@@ -66,6 +66,14 @@ class IGDPRSettingsSchema(Interface):
         required=True,
     )
 
+    deletion_log_enabled = schema.Bool(
+        title="Deletion Log Feature Enabled",
+        description="When enabled, all deletion actions are logged "
+        "and can be viewed in the control panel.",
+        default=False,
+        required=True,
+    )
+
     retention_days = schema.Int(
         title="Retention Days",
         description="Number of days before pending deletions are permanently deleted.",

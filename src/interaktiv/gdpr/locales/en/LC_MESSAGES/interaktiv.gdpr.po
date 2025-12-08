@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-08 09:26+0000\n"
+"POT-Creation-Date: 2025-12-08 12:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Interaktiv <hello@interaktiv.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,82 +56,92 @@ msgid "\"${title}\" has already been deleted"
 msgstr ""
 
 #. Default: "Cancel"
-#: ../controlpanels/templates/controlpanel.pt:291
+#: ../controlpanels/templates/controlpanel.pt:292
 msgid "button_cancel"
 msgstr ""
 
 #. Default: "Delete"
-#: ../controlpanels/templates/controlpanel.pt:465
+#: ../controlpanels/templates/controlpanel.pt:490
 msgid "button_delete"
 msgstr ""
 
 #. Default: "Delete permanently"
-#: ../controlpanels/templates/controlpanel.pt:316
+#: ../controlpanels/templates/controlpanel.pt:317
 msgid "button_delete_permanently"
 msgstr ""
 
 #. Default: "Deleting..."
-#: ../controlpanels/templates/controlpanel.pt:317
+#: ../controlpanels/templates/controlpanel.pt:318
 msgid "button_deleting"
 msgstr ""
 
 #. Default: "Processing..."
-#: ../controlpanels/templates/controlpanel.pt:294
+#: ../controlpanels/templates/controlpanel.pt:295
 msgid "button_processing"
 msgstr ""
 
 #. Default: "Save"
-#: ../controlpanels/templates/controlpanel.pt:541
+#: ../controlpanels/templates/controlpanel.pt:575
 msgid "button_save"
 msgstr ""
 
 #. Default: "Understood"
-#: ../controlpanels/templates/controlpanel.pt:336
+#: ../controlpanels/templates/controlpanel.pt:337
 msgid "button_understood"
 msgstr ""
 
 #. Default: "Withdraw"
-#: ../controlpanels/templates/controlpanel.pt:293
+#: ../controlpanels/templates/controlpanel.pt:294
 msgid "button_withdraw"
 msgstr ""
 
 #. Default: "Deletion Info"
-#: ../controlpanels/templates/controlpanel.pt:355
+#: ../controlpanels/templates/controlpanel.pt:356
 msgid "deletion_info"
 msgstr ""
 
 #. Default: "Display Days"
-#: ../controlpanels/templates/controlpanel.pt:550
+#: ../controlpanels/templates/controlpanel.pt:584
 msgid "display_days"
 msgstr ""
 
 #. Default: "Number of days to show entries in the deletion log above."
-#: ../controlpanels/templates/controlpanel.pt:551
+#: ../controlpanels/templates/controlpanel.pt:585
 msgid "display_days_description"
 msgstr ""
 
+#. Default: "Deletion Log"
+#: ../controlpanels/templates/controlpanel.pt:409
+msgid "feature_deletion_log"
+msgstr ""
+
+#. Default: "When enabled, all deletion actions are logged and can be viewed in the Deletion Info tab. This helps track who deleted what and when."
+#: ../controlpanels/templates/controlpanel.pt:413
+msgid "feature_deletion_log_description"
+msgstr ""
+
 #. Default: "Marked Deletion"
-#: ../controlpanels/templates/controlpanel.pt:384
+#: ../controlpanels/templates/controlpanel.pt:385
 msgid "feature_marked_deletion"
 msgstr ""
 
 #. Default: "When enabled, deleted content will be moved to a special container instead of being permanently deleted. This allows content to be recovered before final deletion."
-#: ../controlpanels/templates/controlpanel.pt:388
+#: ../controlpanels/templates/controlpanel.pt:389
 msgid "feature_marked_deletion_description"
 msgstr ""
 
 #. Default: "Deletion Log"
-#: ../controlpanels/templates/controlpanel.pt:480
+#: ../controlpanels/templates/controlpanel.pt:505
 msgid "heading_deletion_log"
 msgstr ""
 
 #. Default: "Settings"
-#: ../controlpanels/templates/controlpanel.pt:524
+#: ../controlpanels/templates/controlpanel.pt:558
 msgid "heading_deletion_settings"
 msgstr ""
 
 #. Default: "Feature Management"
-#: ../controlpanels/templates/controlpanel.pt:378
+#: ../controlpanels/templates/controlpanel.pt:379
 msgid "heading_feature_management"
 msgstr ""
 
@@ -141,196 +151,206 @@ msgid "heading_gdpr_controlpanel"
 msgstr ""
 
 #. Default: "Current Deletion Requests (Pending)"
-#: ../controlpanels/templates/controlpanel.pt:424
+#: ../controlpanels/templates/controlpanel.pt:449
 msgid "heading_pending_deletions"
 msgstr ""
 
 #. Default: "Configure the retention and display settings for the deletion feature."
-#: ../controlpanels/templates/controlpanel.pt:525
+#: ../controlpanels/templates/controlpanel.pt:559
 msgid "info_deletion_settings"
 msgstr ""
 
 #. Default: "Enable or disable GDPR features for this site."
-#: ../controlpanels/templates/controlpanel.pt:379
+#: ../controlpanels/templates/controlpanel.pt:380
 msgid "info_feature_management"
 msgstr ""
 
 #. Default: "Shows entries from the last ${days} days. Older entries are still stored in the registry."
-#: ../controlpanels/templates/controlpanel.pt:481
+#: ../controlpanels/templates/controlpanel.pt:515
 msgid "info_log_display_days"
 msgstr ""
 
 #. Default: "days"
-#: ../controlpanels/templates/controlpanel.pt:540
+#: ../controlpanels/templates/controlpanel.pt:574
 msgid "label_days"
 msgstr ""
 
 #. Default: "Original Path:"
-#: ../controlpanels/templates/controlpanel.pt:286
+#: ../controlpanels/templates/controlpanel.pt:287
 msgid "label_original_path"
 msgstr ""
 
 #. Default: "Number of pending deletions:"
-#: ../controlpanels/templates/controlpanel.pt:333
+#: ../controlpanels/templates/controlpanel.pt:334
 msgid "label_pending_count"
 msgstr ""
 
 #. Default: "Title:"
-#: ../controlpanels/templates/controlpanel.pt:285
+#: ../controlpanels/templates/controlpanel.pt:286
 msgid "label_title"
 msgstr ""
 
 #. Default: "Warning:"
-#: ../controlpanels/templates/controlpanel.pt:307
+#: ../controlpanels/templates/controlpanel.pt:308
 msgid "label_warning"
 msgstr ""
 
 #. Default: "Are you sure?"
-#: ../controlpanels/templates/controlpanel.pt:281
+#: ../controlpanels/templates/controlpanel.pt:282
 msgid "modal_are_you_sure"
 msgstr ""
 
 #. Default: "Feature cannot be disabled"
-#: ../controlpanels/templates/controlpanel.pt:326
+#: ../controlpanels/templates/controlpanel.pt:327
 msgid "modal_cannot_disable"
 msgstr ""
 
 #. Default: "Delete permanently?"
-#: ../controlpanels/templates/controlpanel.pt:303
+#: ../controlpanels/templates/controlpanel.pt:304
 msgid "modal_delete_permanently"
 msgstr ""
 
 #. Default: "This action cannot be undone!"
-#: ../controlpanels/templates/controlpanel.pt:307
+#: ../controlpanels/templates/controlpanel.pt:308
 msgid "modal_delete_warning"
 msgstr ""
 
 #. Default: "There are still pending deletions active."
-#: ../controlpanels/templates/controlpanel.pt:330
+#: ../controlpanels/templates/controlpanel.pt:331
 msgid "modal_pending_deletions_active"
 msgstr ""
 
 #. Default: "Resolve these to disable the feature."
-#: ../controlpanels/templates/controlpanel.pt:331
+#: ../controlpanels/templates/controlpanel.pt:332
 msgid "modal_resolve_to_disable"
 msgstr ""
 
 #. Default: "The content will be moved back to its original location."
-#: ../controlpanels/templates/controlpanel.pt:287
+#: ../controlpanels/templates/controlpanel.pt:288
 msgid "modal_withdraw_info"
 msgstr ""
 
 #. Default: "Are you sure you want to withdraw the deletion?"
-#: ../controlpanels/templates/controlpanel.pt:284
+#: ../controlpanels/templates/controlpanel.pt:285
 msgid "modal_withdraw_question"
 msgstr ""
 
+#. Default: "The Deletion Log feature is disabled."
+#: ../controlpanels/templates/controlpanel.pt:507
+msgid "notice_deletion_log_disabled"
+msgstr ""
+
+#. Default: "Enable the feature on the General tab to log and view deletion actions."
+#: ../controlpanels/templates/controlpanel.pt:508
+msgid "notice_enable_deletion_log"
+msgstr ""
+
 #. Default: "Enable the feature on the General tab to manage deletion requests."
-#: ../controlpanels/templates/controlpanel.pt:418
+#: ../controlpanels/templates/controlpanel.pt:443
 msgid "notice_enable_feature"
 msgstr ""
 
 #. Default: "The Marked Deletion feature is disabled."
-#: ../controlpanels/templates/controlpanel.pt:417
+#: ../controlpanels/templates/controlpanel.pt:442
 msgid "notice_feature_disabled"
 msgstr ""
 
 #. Default: "Retention Days"
-#: ../controlpanels/templates/controlpanel.pt:531
+#: ../controlpanels/templates/controlpanel.pt:565
 msgid "setting_retention_days"
 msgstr ""
 
 #. Default: "Number of days before pending deletions are automatically permanently deleted."
-#: ../controlpanels/templates/controlpanel.pt:532
+#: ../controlpanels/templates/controlpanel.pt:566
 msgid "setting_retention_days_description"
 msgstr ""
 
 #. Default: "Deleted"
-#: ../controlpanels/templates/controlpanel.pt:514
+#: ../controlpanels/templates/controlpanel.pt:548
 msgid "status_deleted"
 msgstr ""
 
 #. Default: "Disabled"
-#: ../controlpanels/templates/controlpanel.pt:386
+#: ../controlpanels/templates/controlpanel.pt:387
 msgid "status_disabled"
 msgstr ""
 
 #. Default: "Enabled"
-#: ../controlpanels/templates/controlpanel.pt:385
+#: ../controlpanels/templates/controlpanel.pt:386
 msgid "status_enabled"
 msgstr ""
 
 #. Default: "Pending"
-#: ../controlpanels/templates/controlpanel.pt:513
+#: ../controlpanels/templates/controlpanel.pt:547
 msgid "status_pending"
 msgstr ""
 
 #. Default: "Withdrawn"
-#: ../controlpanels/templates/controlpanel.pt:515
+#: ../controlpanels/templates/controlpanel.pt:549
 msgid "status_withdrawn"
 msgstr ""
 
 #. Default: "General"
-#: ../controlpanels/templates/controlpanel.pt:344
+#: ../controlpanels/templates/controlpanel.pt:345
 msgid "tab_general"
 msgstr ""
 
 #. Default: "Actions"
-#: ../controlpanels/templates/controlpanel.pt:444
+#: ../controlpanels/templates/controlpanel.pt:469
 msgid "table_header_actions"
 msgstr ""
 
 #. Default: "Changed by"
-#: ../controlpanels/templates/controlpanel.pt:499
+#: ../controlpanels/templates/controlpanel.pt:533
 msgid "table_header_changed_by"
 msgstr ""
 
 #. Default: "Deleted at"
-#: ../controlpanels/templates/controlpanel.pt:440
+#: ../controlpanels/templates/controlpanel.pt:465
 msgid "table_header_deleted_at"
 msgstr ""
 
 #. Default: "Deleted by"
-#: ../controlpanels/templates/controlpanel.pt:439
+#: ../controlpanels/templates/controlpanel.pt:464
 msgid "table_header_deleted_by"
 msgstr ""
 
 #. Default: "Original Path"
-#: ../controlpanels/templates/controlpanel.pt:438
+#: ../controlpanels/templates/controlpanel.pt:463
 msgid "table_header_original_path"
 msgstr ""
 
 #. Default: "Portal Type"
-#: ../controlpanels/templates/controlpanel.pt:437
+#: ../controlpanels/templates/controlpanel.pt:462
 msgid "table_header_portal_type"
 msgstr ""
 
 #. Default: "Review State"
-#: ../controlpanels/templates/controlpanel.pt:443
+#: ../controlpanels/templates/controlpanel.pt:468
 msgid "table_header_review_state"
 msgstr ""
 
 #. Default: "Scheduled deletion"
-#: ../controlpanels/templates/controlpanel.pt:441
+#: ../controlpanels/templates/controlpanel.pt:466
 msgid "table_header_scheduled_deletion"
 msgstr ""
 
 #. Default: "Status"
-#: ../controlpanels/templates/controlpanel.pt:500
+#: ../controlpanels/templates/controlpanel.pt:534
 msgid "table_header_status"
 msgstr ""
 
 #. Default: "Status changed"
-#: ../controlpanels/templates/controlpanel.pt:498
+#: ../controlpanels/templates/controlpanel.pt:532
 msgid "table_header_status_changed"
 msgstr ""
 
 #. Default: "Subobjects"
-#: ../controlpanels/templates/controlpanel.pt:442
+#: ../controlpanels/templates/controlpanel.pt:467
 msgid "table_header_subobjects"
 msgstr ""
 
 #. Default: "Title"
-#: ../controlpanels/templates/controlpanel.pt:436
+#: ../controlpanels/templates/controlpanel.pt:461
 msgid "table_header_title"
 msgstr ""
