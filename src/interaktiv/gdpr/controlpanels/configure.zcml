@@ -8,7 +8,7 @@
     <!-- Controlpanel: GDPR -->
     <browser:page
             name="interaktiv-gdpr-controlpanel"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            for="*"
             class="interaktiv.gdpr.controlpanels.controlpanel.ControlpanelView"
             permission="interaktiv.gdpr.ViewControlpanel"
     />

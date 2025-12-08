@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import plone.api as api
+from freezegun import freeze_time
 
 from interaktiv.gdpr.deletion_log import DeletionLog
 from interaktiv.gdpr.testing import (
@@ -219,14 +220,12 @@ class TestDeletionLog(InteraktivGDPRTestCase):
 
     def test_run_scheduled_deletion__deletes_pending_in_container(self):
         # setup
-        document = api.content.create(
-            container=self.container,
-            type="Document",
-            id="test-doc",
-            title="Test Document",
-        )
-        doc_uid = document.UID()
-        DeletionLog.add_entry(document, status="pending")
+        with freeze_time("2000-01-01 12:00:00"):
+            document = api.content.create(
+                container=self.container, type="Document", id="test-doc"
+            )
+            doc_uid = document.UID()
+            DeletionLog.add_entry(document, status="pending")
 
         # precondition
         self.assertIn("test-doc", self.container.objectIds())
