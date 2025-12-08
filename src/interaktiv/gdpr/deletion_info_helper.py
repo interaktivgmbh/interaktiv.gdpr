@@ -115,18 +115,8 @@ class DeletionLogHelper:
     def add_entry(
         cls, obj: DexterityContent, status: str = "pending"
     ) -> TDeletionLogEntry | None:
-        """Add a new entry to the deletion log.
-
-        Returns None if an entry with the same UID already exists.
-        """
+        """Add a new entry to the deletion log."""
         uid = obj.UID()
-
-        # Check if entry with this UID already exists
-        existing_entry = cls.get_entry_by_uid(uid)
-        if existing_entry:
-            logger.debug(f"Entry for UID {uid} already exists, skipping")
-            return None
-
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
         current_user = api.user.get_current()
@@ -177,14 +167,14 @@ class DeletionLogHelper:
 
     @classmethod
     def update_entry_status(cls, uid: str, new_status: str) -> TDeletionLogEntry | None:
-        """Update the status of an existing log entry."""
+        """Update the status of the most recent pending log entry."""
         log = cls.get_deletion_log()
         now = datetime.now().isoformat()
         current_user = api.user.get_current()
         user_id = current_user.getId() if current_user else "system"
 
-        for entry in log:
-            if entry["uid"] == uid:
+        for entry in reversed(log):
+            if entry["uid"] == uid and entry["status"] == "pending":
                 old_status = entry["status"]
                 entry["status"] = new_status
                 entry["status_changed"] = now
@@ -214,9 +204,9 @@ class DeletionLogHelper:
 
     @classmethod
     def get_pending_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
-        """Get the pending log entry for a UID."""
+        """Get the most recent pending log entry for a UID."""
         log = cls.get_deletion_log()
-        for entry in log:
+        for entry in reversed(log):
             if entry["uid"] == uid and entry["status"] == "pending":
                 return entry
         return None
