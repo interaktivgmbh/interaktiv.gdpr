@@ -12,6 +12,15 @@
             layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
     />
 
+    <!-- Override: Plone's fc-delete view (folder contents delete action) -->
+    <browser:page
+            name="fc-delete"
+            for="Products.CMFCore.interfaces._content.IFolderish"
+            class=".fc_delete.GDPRDeleteActionView"
+            permission="cmf.ListFolderContents"
+            layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
+    />
+
     <!-- Restrict traversal into MarkedDeletionContainer contents -->
     <!-- Browser requests (classic Plone) -->
     <adapter
