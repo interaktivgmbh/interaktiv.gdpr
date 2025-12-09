@@ -1,6 +1,6 @@
 {
   "name": "interaktiv.gdpr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": "https://code.interaktiv.de/interaktiv/interaktiv.gdpr",
   "interaktiv_setup": {
     "packages": [
