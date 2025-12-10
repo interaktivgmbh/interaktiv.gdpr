@@ -5,10 +5,7 @@ from interaktiv.gdpr.testing import (
     INTERAKTIV_GDPR_INTEGRATION_TESTING,
     InteraktivGDPRTestCase,
 )
-from interaktiv.gdpr.views.traverser import (
-    MarkedDeletionContainerRESTTraverser,
-    MarkedDeletionContainerTraverser,
-)
+from interaktiv.gdpr.views.traverser import MarkedDeletionContainerTraverser
 
 
 class TestMarkedDeletionContainerTraverser(InteraktivGDPRTestCase):
@@ -50,27 +47,3 @@ class TestMarkedDeletionContainerTraverser(InteraktivGDPRTestCase):
         # do it & postcondition
         with self.assertRaises(Unauthorized):
             traverser.publishTraverse(self.request, "test-doc")
-
-
-class TestMarkedDeletionContainerRESTTraverser(InteraktivGDPRTestCase):
-    layer = INTERAKTIV_GDPR_INTEGRATION_TESTING
-
-    def test_init(self):
-        # do it
-        traverser = MarkedDeletionContainerRESTTraverser(self.container, self.request)
-
-        # postcondition
-        self.assertEqual(traverser.context, self.container)
-        self.assertEqual(traverser.request, self.request)
-
-    def test_browserDefault(self):
-        # setup
-        self.request._rest_service_id = "@content"
-        traverser = MarkedDeletionContainerRESTTraverser(self.container, self.request)
-
-        # do it
-        result = traverser.browserDefault(self.request)
-
-        # postcondition
-        self.assertEqual(result[0], self.container)
-        self.assertEqual(result[1], ("@content",))
