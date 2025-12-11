@@ -27,16 +27,12 @@ test:
     - pip install --upgrade pip setuptools wheel
     - pip install -r requirements.txt
     - echo "Installing test tools..."
-    - pip install pytest pytest-cov
+    - pip install zope.testrunner
     - echo "Installing interaktiv.framework..."
     - pip install git+https://code.interaktiv.de/interaktiv/interaktiv.framework.git@v14.0.2
     - echo "Installing package..."
     - pip install ".[test]"
   script:
     - echo "Running tests..."
-    - python -m pytest src/interaktiv/gdpr/tests/ -v --tb=short --junitxml=report.xml
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
-    expire_in: 1 week
+    - SITE_PACKAGES=$(python -c "import site; print(site.getsitepackages()[0])")
+    - zope-testrunner --test-path=$SITE_PACKAGES -s interaktiv.gdpr -v
