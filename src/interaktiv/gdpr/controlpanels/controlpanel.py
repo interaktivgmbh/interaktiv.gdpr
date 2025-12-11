@@ -37,10 +37,8 @@ class ControlpanelView(BrowserView):
         try:
             dt = datetime.fromisoformat(iso_datetime)
             scheduled_date = dt + timedelta(days=self.get_retention_days())
-            # Get current language
             lang = self.request.get("LANGUAGE", "de")
 
-            # Format based on locale
             if lang == "de":
                 return scheduled_date.strftime("%d.%m.%Y")
             else:

@@ -1,12 +1,8 @@
-from AccessControl import getSecurityManager
 from plone import api
 from plone.dexterity.content import DexterityContent
 from zExceptions import Unauthorized
 
-from interaktiv.gdpr.config import (
-    MARKED_FOR_DELETION_ALLOWED_ROLES,
-    MARKED_FOR_DELETION_CONTAINER_ID,
-)
+from interaktiv.gdpr.config import MARKED_FOR_DELETION_CONTAINER_ID
 
 
 def is_inside_deletion_container(context: DexterityContent) -> bool:
@@ -16,13 +12,5 @@ def is_inside_deletion_container(context: DexterityContent) -> bool:
 
 
 def check_access_allowed(context):
-    sm = getSecurityManager()
-    user = sm.getUser()
-
-    if user is None:
-        raise Unauthorized("Access to deleted content is restricted.")
-
-    user_roles = set(user.getRolesInContext(context))
-
-    if not user_roles & MARKED_FOR_DELETION_ALLOWED_ROLES:
+    if not api.user.has_permission("interaktiv.gdpr: View Controlpanel", obj=context):
         raise Unauthorized("Access to deleted content is restricted.")

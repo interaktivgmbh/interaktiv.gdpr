@@ -97,7 +97,6 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
         _log_direct_deletion(self, ids)
         return _original_manage_delObjects(self, ids, REQUEST)
 
-    # Convert ids to list if it's a string
     if isinstance(ids, str):
         ids = [ids]
 
@@ -110,13 +109,9 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
                 obj = self[obj_id]
                 obj_title = obj.title_or_id()
 
-                # Add entry to deletion log BEFORE moving (to capture original path)
                 DeletionLog.add_entry(obj, status="pending")
 
-                # Cut the object
                 cookie = self.manage_cutObjects([obj_id])
-
-                # Paste into marked deletion container
                 container.manage_pasteObjects(cookie)
 
                 moved_titles.append(obj_title)
@@ -124,18 +119,16 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
 
             except Exception as e:
                 logger.error(f"Error moving object {obj_id}: {e}")
-                # Continue with next object
                 continue
 
-        # Set status message
         if REQUEST is not None:
             if moved_titles:
-                message = (
-                    f"Items moved to deletion container: {', '.join(moved_titles)}"
+                api.portal.show_message(
+                    message=f"Items moved to deletion container: {', '.join(moved_titles)}",
+                    request=REQUEST,
+                    type="info",
                 )
-                api.portal.show_message(message=message, request=REQUEST, type="info")
 
-            # Redirect back
             if hasattr(self, "absolute_url"):
                 REQUEST.RESPONSE.redirect(self.absolute_url())
 

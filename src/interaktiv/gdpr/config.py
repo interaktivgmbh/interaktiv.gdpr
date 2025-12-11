@@ -1,3 +1,2 @@
 MARKED_FOR_DELETION_CONTAINER_ID = "marked-for-deletion"
 MARKED_FOR_DELETION_REQUEST_PARAM_NAME = "mark_for_deletion"
-MARKED_FOR_DELETION_ALLOWED_ROLES = frozenset({"Manager", "Site Administrator"})

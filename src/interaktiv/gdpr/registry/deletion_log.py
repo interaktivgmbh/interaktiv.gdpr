@@ -68,8 +68,7 @@ class IGDPRSettingsSchema(Interface):
 
     deletion_log_enabled = schema.Bool(
         title="Deletion Log Feature Enabled",
-        description="When enabled, all deletion actions are logged "
-        "and can be viewed in the control panel.",
+        description="When enabled, all deletion actions are logged and can be viewed in the control panel.",
         default=False,
         required=True,
     )
@@ -84,7 +83,7 @@ class IGDPRSettingsSchema(Interface):
 
     display_days = schema.Int(
         title="Display Days",
-        description="Number of days to show entries in the dashboard deletion log.",
+        description="Number of days to show entries in the controlpanel deletion log.",
         default=90,
         required=True,
         min=1,

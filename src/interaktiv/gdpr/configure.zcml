@@ -4,7 +4,6 @@
         xmlns:i18n="http://namespaces.zope.org/i18n"
         i18n_domain="interaktiv.gdpr">
 
-    <!-- Include plone.restapi meta.zcml to register plone:service directive -->
     <include package="plone.restapi" file="meta.zcml"/>
 
     <i18n:registerTranslations directory="locales"/>

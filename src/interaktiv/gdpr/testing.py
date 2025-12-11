@@ -13,9 +13,7 @@ class InteraktivGDPRLayer(TestLayer):
 
     def __init__(self):
         super().__init__()
-        self.products_to_import = [
-            "interaktiv.framework",
-        ]
+        self.products_to_import = ["interaktiv.framework"]
         self.product_to_install = "interaktiv.gdpr"
 
     def setUpZope(self, app, configuration_context):

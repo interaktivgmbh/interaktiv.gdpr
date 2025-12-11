@@ -17,6 +17,7 @@ class WithdrawDeletion(Service):
         self.request = request
         self.uid = None
 
+    # noinspection PyUnusedLocal
     def publishTraverse(self, request, name):
         self.uid = name
         return self
@@ -28,7 +29,12 @@ class WithdrawDeletion(Service):
 
         if not self.uid:
             self.request.response.setStatus(400)
-            return {"error": {"type": "BadRequest", "message": translate(_("UID is required"), context=self.request)}}
+            return {
+                "error": {
+                    "type": "BadRequest",
+                    "message": translate(_("UID is required"), context=self.request),
+                }
+            }
 
         # Get the pending log entry
         log_entry = DeletionLog.get_pending_entry_by_uid(self.uid)
@@ -38,7 +44,10 @@ class WithdrawDeletion(Service):
                 "error": {
                     "type": "NotFound",
                     "message": translate(
-                        _("No pending deletion log entry found for UID: ${uid}", mapping={"uid": self.uid}),
+                        _(
+                            "No pending deletion log entry found for UID: ${uid}",
+                            mapping={"uid": self.uid},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -53,7 +62,9 @@ class WithdrawDeletion(Service):
             return {
                 "error": {
                     "type": "InternalError",
-                    "message": translate(_("Marked deletion container not found"), context=self.request),
+                    "message": translate(
+                        _("Marked deletion container not found"), context=self.request
+                    ),
                 }
             }
 
@@ -65,7 +76,10 @@ class WithdrawDeletion(Service):
                 "error": {
                     "type": "NotFound",
                     "message": translate(
-                        _("Object with UID ${uid} not found", mapping={"uid": self.uid}),
+                        _(
+                            "Object with UID ${uid} not found",
+                            mapping={"uid": self.uid},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -81,7 +95,10 @@ class WithdrawDeletion(Service):
                 "error": {
                     "type": "BadRequest",
                     "message": translate(
-                        _("Invalid original path: ${path}", mapping={"path": original_path}),
+                        _(
+                            "Invalid original path: ${path}",
+                            mapping={"path": original_path},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -115,7 +132,10 @@ class WithdrawDeletion(Service):
                 "error": {
                     "type": "NotFound",
                     "message": translate(
-                        _("Original parent container not found: /${path}", mapping={"path": original_parent_path}),
+                        _(
+                            "Original parent container not found: /${path}",
+                            mapping={"path": original_parent_path},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -128,8 +148,10 @@ class WithdrawDeletion(Service):
                 "error": {
                     "type": "Conflict",
                     "message": translate(
-                        _('Name conflict: An object with id "${id}" already exists at /${path}',
-                          mapping={"id": original_id, "path": original_parent_path}),
+                        _(
+                            'Name conflict: An object with id "${id}" already exists at /${path}',
+                            mapping={"id": original_id, "path": original_parent_path},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -162,8 +184,10 @@ class WithdrawDeletion(Service):
             return {
                 "status": "success",
                 "message": translate(
-                    _('Object "${title}" has been restored to its original location',
-                      mapping={"title": log_entry["title"]}),
+                    _(
+                        'Object "${title}" has been restored to its original location',
+                        mapping={"title": log_entry["title"]},
+                    ),
                     context=self.request,
                 ),
                 "restored_path": f"/{original_parent_path}/{original_id}",
@@ -177,7 +201,10 @@ class WithdrawDeletion(Service):
                 "error": {
                     "type": "InternalError",
                     "message": translate(
-                        _("Error restoring object: ${error}", mapping={"error": str(e)}),
+                        _(
+                            "Error restoring object: ${error}",
+                            mapping={"error": str(e)},
+                        ),
                         context=self.request,
                     ),
                 }

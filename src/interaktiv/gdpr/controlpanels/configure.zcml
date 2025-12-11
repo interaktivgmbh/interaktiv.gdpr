@@ -1,7 +1,5 @@
-<configure
-        xmlns="http://namespaces.zope.org/zope"
-        xmlns:browser="http://namespaces.zope.org/browser"
-        i18n_domain="interaktiv.gdpr">
+<configure xmlns="http://namespaces.zope.org/zope" xmlns:browser="http://namespaces.zope.org/browser"
+           i18n_domain="interaktiv.gdpr">
 
     <include package="Products.CMFCore" file="permissions.zcml"/>
 

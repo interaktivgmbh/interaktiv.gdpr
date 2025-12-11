@@ -16,18 +16,23 @@ class PermanentDeletion(Service):
         self.request = request
         self.uid = None
 
+    # noinspection PyUnusedLocal
     def publishTraverse(self, request, name):
         self.uid = name
         return self
 
     def reply(self):
-        # Disable CSRF protection
         if "IDisableCSRFProtection" in dir(plone.protect.interfaces):
             alsoProvides(self.request, plone.protect.interfaces.IDisableCSRFProtection)
 
         if not self.uid:
             self.request.response.setStatus(400)
-            return {"error": {"type": "BadRequest", "message": translate(_("UID is required"), context=self.request)}}
+            return {
+                "error": {
+                    "type": "BadRequest",
+                    "message": translate(_("UID is required"), context=self.request),
+                }
+            }
 
         # Get the pending log entry
         log_entry = DeletionLog.get_pending_entry_by_uid(self.uid)
@@ -37,7 +42,10 @@ class PermanentDeletion(Service):
                 "error": {
                     "type": "NotFound",
                     "message": translate(
-                        _("No pending deletion log entry found for UID: ${uid}", mapping={"uid": self.uid}),
+                        _(
+                            "No pending deletion log entry found for UID: ${uid}",
+                            mapping={"uid": self.uid},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -51,7 +59,10 @@ class PermanentDeletion(Service):
                 "error": {
                     "type": "NotFound",
                     "message": translate(
-                        _("Object with UID ${uid} not found", mapping={"uid": self.uid}),
+                        _(
+                            "Object with UID ${uid} not found",
+                            mapping={"uid": self.uid},
+                        ),
                         context=self.request,
                     ),
                 }
@@ -76,7 +87,10 @@ class PermanentDeletion(Service):
             return {
                 "status": "success",
                 "message": translate(
-                    _('Object "${title}" has been permanently deleted', mapping={"title": title}),
+                    _(
+                        'Object "${title}" has been permanently deleted',
+                        mapping={"title": title},
+                    ),
                     context=self.request,
                 ),
                 "uid": self.uid,

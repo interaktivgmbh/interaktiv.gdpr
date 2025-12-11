@@ -15,7 +15,6 @@ from interaktiv.gdpr.registry.deletion_log import (
 class DeletionLog:
     @staticmethod
     def get_deletion_log() -> list[TDeletionLogEntry]:
-        """Get the complete deletion log from registry."""
         return (
             api.portal.get_registry_record(
                 name="deletion_log", interface=IDeletionLogSchema
@@ -31,7 +30,6 @@ class DeletionLog:
 
     @staticmethod
     def is_deletion_log_enabled() -> bool:
-        """Check if the deletion log feature is enabled."""
         # noinspection PyUnresolvedReferences
         try:
             return api.portal.get_registry_record(
@@ -73,10 +71,10 @@ class DeletionLog:
         filtered_entries = []
         for entry in log:
             try:
-                # Parse the datetime string
                 entry_date = datetime.fromisoformat(entry.get("datetime", ""))
                 if entry_date >= cutoff_date:
                     filtered_entries.append(entry)
+
             except (ValueError, TypeError):
                 # If date parsing fails, include the entry anyway
                 filtered_entries.append(entry)
@@ -87,7 +85,6 @@ class DeletionLog:
     def add_entry(
         cls, obj: DexterityContent, status: str = "pending"
     ) -> TDeletionLogEntry | None:
-        # Only log if deletion log feature is enabled
         if not cls.is_deletion_log_enabled():
             logger.debug("Deletion log feature is disabled, skipping log entry")
             return None
@@ -98,13 +95,14 @@ class DeletionLog:
         current_user = api.user.get_current()
         user_id = current_user.getId() if current_user else "system"
 
-        # Get review state
+        # noinspection PyBroadException
         try:
             review_state = api.content.get_state(obj)
         except Exception:
             review_state = ""
 
         # Count subobjects
+        # noinspection PyBroadException
         try:
             subobject_count = len(obj.objectIds()) if hasattr(obj, "objectIds") else 0
         except Exception:
@@ -143,8 +141,6 @@ class DeletionLog:
 
     @classmethod
     def update_entry_status(cls, uid: str, new_status: str) -> TDeletionLogEntry | None:
-        """Update the status of the most recent pending log entry."""
-        # Only update if deletion log feature is enabled
         if not cls.is_deletion_log_enabled():
             logger.debug("Deletion log feature is disabled, skipping status update")
             return None
@@ -176,34 +172,34 @@ class DeletionLog:
 
     @classmethod
     def get_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
-        """Get a specific log entry by UID."""
         log = cls.get_deletion_log()
+
         for entry in log:
             if entry["uid"] == uid:
                 return entry
+
         return None
 
     @classmethod
     def get_pending_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
-        """Get the most recent pending log entry for a UID."""
         log = cls.get_deletion_log()
+
         for entry in reversed(log):
             if entry["uid"] == uid and entry["status"] == "pending":
                 return entry
+
         return None
 
     @classmethod
     def get_entries_by_status(cls, status: str) -> list[TDeletionLogEntry]:
-        """Get all log entries with a specific status."""
         log = cls.get_deletion_log()
         return [entry for entry in log if entry["status"] == status]
 
     @classmethod
     def get_pending_objects(cls) -> list[DexterityContent]:
-        """Get all objects that are pending deletion from the container."""
         pending_entries = cls.get_entries_by_status("pending")
-        objects = []
 
+        objects = []
         for entry in pending_entries:
             obj = api.content.get(UID=entry["uid"])
             if obj is not None:
@@ -213,7 +209,6 @@ class DeletionLog:
 
     @classmethod
     def get_expired_pending_entries(cls) -> list[TDeletionLogEntry]:
-        """Get all pending entries that have exceeded the retention period."""
         retention_days = cls.get_retention_days()
         cutoff_date = datetime.now() - timedelta(days=retention_days)
         pending_entries = cls.get_entries_by_status("pending")
@@ -225,7 +220,6 @@ class DeletionLog:
                 if entry_date < cutoff_date:
                     expired_entries.append(entry)
             except (ValueError, TypeError):
-                # If date parsing fails, skip this entry
                 logger.warning(f"Could not parse datetime for entry {entry.get('uid')}")
 
         return expired_entries
@@ -300,4 +294,5 @@ class DeletionLog:
                 logger.error(f"Error deleting object {uid}: {e}")
 
         logger.info(f"Scheduled deletion completed: {deleted_count} items deleted")
+
         return deleted_count
