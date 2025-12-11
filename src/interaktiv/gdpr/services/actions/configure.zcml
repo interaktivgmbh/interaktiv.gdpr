@@ -1,11 +1,7 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:plone="http://namespaces.plone.org/plone">
-
-    <!-- Include meta.zcml for plone:service directive -->
+<configure xmlns="http://namespaces.zope.org/zope" xmlns:plone="http://namespaces.plone.org/plone">
     <include package="plone.restapi" file="meta.zcml"/>
 
-    <!-- Override DELETE service for GDPR-aware content deletion -->
+    <!-- Override: Delete -->
     <plone:service
         method="DELETE"
         factory=".delete.GDPRContentDelete"
@@ -14,22 +10,23 @@
         layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
     />
 
+    <!-- Withdraw Deletion -->
     <plone:service
         method="POST"
+        name="@gdpr-withdraw-deletion"
         factory=".withdraw.WithdrawDeletion"
         for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-withdraw-deletion"
+        permission="interaktiv.gdpr.ViewControlpanel"
         layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
     />
 
+    <!-- Permanent Deletion -->
     <plone:service
         method="POST"
+        name="@gdpr-permanent-deletion"
         factory=".permanent_delete.PermanentDeletion"
         for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-permanent-deletion"
+        permission="interaktiv.gdpr.ViewControlpanel"
         layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
     />
-
 </configure>

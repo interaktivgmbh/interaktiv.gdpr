@@ -94,6 +94,7 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
     # If container doesn't exist, fall back to original deletion
     if container is None:
         logger.warning("MarkedDeletionContainer not found, using direct deletion")
+        _log_direct_deletion(self, ids)
         return _original_manage_delObjects(self, ids, REQUEST)
 
     # Convert ids to list if it's a string
@@ -143,6 +144,7 @@ def patched_manage_delObjects(self, ids=None, REQUEST=None):
     except Exception as e:
         logger.error(f"Error in patched_manage_delObjects: {e}")
         # Fall back to original deletion on error
+        _log_direct_deletion(self, ids)
         return _original_manage_delObjects(self, ids, REQUEST)
 
 

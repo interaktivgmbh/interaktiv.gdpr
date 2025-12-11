@@ -1,17 +1,13 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:plone="http://namespaces.plone.org/plone">
-
-    <!-- Include meta.zcml for plone:service directive -->
+<configure xmlns="http://namespaces.zope.org/zope" xmlns:plone="http://namespaces.plone.org/plone">
     <include package="plone.restapi" file="meta.zcml"/>
 
+    <!-- Get Deletion Log -->
     <plone:service
         method="GET"
+        name="@gdpr-deletion-log"
         factory=".get.DeletionLogGet"
         for="Products.CMFCore.interfaces.ISiteRoot"
-        permission="cmf.ManagePortal"
-        name="@gdpr-deletion-log"
+        permission="interaktiv.gdpr.ViewControlpanel"
         layer="interaktiv.gdpr.interfaces.IInteraktivGDPRLayer"
     />
-
 </configure>
