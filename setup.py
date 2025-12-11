@@ -21,7 +21,7 @@ REQUIRED = [
     "plone.testing",
     "plone.app.testing",
     "interaktiv.framework",
-    "freezegun >= 1.5",
+    "freezegun == 1.5.2",
 ]
 EXTRAS = {"test": ["plone.app.testing"]}
 
