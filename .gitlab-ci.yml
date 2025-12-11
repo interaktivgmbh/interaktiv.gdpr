@@ -26,13 +26,15 @@ test:
     - echo "Installing Plone requirements..."
     - pip install --upgrade pip setuptools wheel
     - pip install -r requirements.txt
+    - echo "Installing test tools..."
+    - pip install pytest pytest-cov
     - echo "Installing interaktiv.framework..."
     - pip install git+https://code.interaktiv.de/interaktiv/interaktiv.framework.git@v14.0.2
-    - echo "Installing package in editable mode with test extras..."
-    - pip install -e ".[test]"
+    - echo "Installing package..."
+    - pip install ".[test]"
   script:
     - echo "Running tests..."
-    - pytest src/interaktiv/gdpr/tests/ -v --tb=short --junitxml=report.xml
+    - python -m pytest src/interaktiv/gdpr/tests/ -v --tb=short --junitxml=report.xml
   artifacts:
     when: always
     reports:
