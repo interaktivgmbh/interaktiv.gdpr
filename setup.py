@@ -12,7 +12,7 @@ EMAIL = "info@interaktiv.de"
 AUTHOR = "Interaktiv GmbH"
 REQUIRES_PYTHON = "~=3.11"
 VERSION = "0.0.2"
-REQUIRES_PLONE_VERSION = "6.0.13"
+REQUIRES_PLONE_VERSION = "6"
 
 # Additional package requires
 REQUIRED = [
