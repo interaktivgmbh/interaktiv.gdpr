@@ -19,6 +19,7 @@ REQUIRED = [
     "setuptools >= 20.8.1",
     "Products.CMFPlone>=" + REQUIRES_PLONE_VERSION,
     "plone.testing",
+    "plone.volto",
     "plone.app.testing",
     "interaktiv.framework",
     "freezegun == 1.5.2",
