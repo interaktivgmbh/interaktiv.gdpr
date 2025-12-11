@@ -515,9 +515,8 @@
         <p class="info-text" i18n:translate="info_log_display_days">Shows entries from the last <span i18n:name="days" tal:replace="display_days">90</span> days. Older entries are still stored in the registry.</p>
         <table class="pat-datatables listing table table-striped table-hover"
                data-pat-datatables='{
-                  "columnDefs": [{ "orderable": false, "targets": [8] }],
                   "pageLength": 10,
-                  "order": [[ 4, "desc" ]],
+                  "order": [[ 5, "desc" ]],
                   "language": {
                     "url": "${python: view.get_datatables_language_url()}"
                   }
