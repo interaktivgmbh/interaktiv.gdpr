@@ -2,6 +2,7 @@ image: python:3.11-bookworm
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PYTHONWARNINGS: "ignore::DeprecationWarning"
 
 cache:
   paths:
@@ -9,8 +10,32 @@ cache:
   key: ${CI_JOB_IMAGE}
 
 stages:
+  - lint
   - test
 
+# Linting & Code Quality
+lint:
+  stage: lint
+  before_script:
+    - pip install --upgrade pip
+    - pip install ruff
+  script:
+    - echo "Running ruff linter..."
+    - ruff check src/
+  allow_failure: true
+
+# Translation Check
+translations:
+  stage: lint
+  before_script:
+    - pip install --upgrade pip
+    - pip install zest.pocompile
+  script:
+    - echo "Compiling translations..."
+    - pocompile src/
+  allow_failure: true
+
+# Main Test Job
 test:
   stage: test
   before_script:
