@@ -1,0 +1,40 @@
+image: python:3.11-bookworm
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+  key: ${CI_JOB_IMAGE}
+
+stages:
+  - test
+
+test:
+  stage: test
+  before_script:
+    - echo "Installing system dependencies..."
+    - apt-get update && apt-get install -y --no-install-recommends
+        build-essential
+        libxml2-dev
+        libxslt1-dev
+        libjpeg-dev
+        libopenjp2-7-dev
+        zlib1g-dev
+        git
+    - echo "Installing Plone requirements..."
+    - pip install --upgrade pip setuptools wheel
+    - pip install -r requirements.txt
+    - echo "Installing interaktiv.framework..."
+    - pip install git+https://code.interaktiv.de/interaktiv/interaktiv.framework.git@v14.0.2
+    - echo "Installing package in editable mode with test extras..."
+    - pip install -e ".[test]"
+  script:
+    - echo "Running tests..."
+    - pytest src/interaktiv/gdpr/tests/ -v --tb=short --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+    expire_in: 1 week
