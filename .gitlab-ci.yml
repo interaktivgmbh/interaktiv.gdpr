@@ -18,7 +18,7 @@ stages:
 
 test:
   stage: test
-  image: "python:3.11-buster"
+  image: "python:3.11-bookworm"
   extends:
     - .build-dependencies-plone
     - .run-test-package
