@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2025-12-08 13:37+0000\n"
+"POT-Creation-Date: 2025-12-11 10:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Interaktiv <hello@interaktiv.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,7 +128,7 @@ msgid "button_processing"
 msgstr ""
 
 #. Default: "Save"
-#: ../controlpanels/templates/controlpanel.pt:575
+#: ../controlpanels/templates/controlpanel.pt:576
 msgid "button_save"
 msgstr ""
 
@@ -148,12 +148,12 @@ msgid "deletion_info"
 msgstr ""
 
 #. Default: "Display Days"
-#: ../controlpanels/templates/controlpanel.pt:584
+#: ../controlpanels/templates/controlpanel.pt:585
 msgid "display_days"
 msgstr ""
 
 #. Default: "Number of days to show entries in the deletion log above."
-#: ../controlpanels/templates/controlpanel.pt:585
+#: ../controlpanels/templates/controlpanel.pt:586
 msgid "display_days_description"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgid "heading_deletion_log"
 msgstr ""
 
 #. Default: "Settings"
-#: ../controlpanels/templates/controlpanel.pt:558
+#: ../controlpanels/templates/controlpanel.pt:559
 msgid "heading_deletion_settings"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgid "heading_pending_deletions"
 msgstr ""
 
 #. Default: "Configure the retention and display settings for the deletion feature."
-#: ../controlpanels/templates/controlpanel.pt:559
+#: ../controlpanels/templates/controlpanel.pt:560
 msgid "info_deletion_settings"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgid "info_log_display_days"
 msgstr ""
 
 #. Default: "days"
-#: ../controlpanels/templates/controlpanel.pt:574
+#: ../controlpanels/templates/controlpanel.pt:575
 msgid "label_days"
 msgstr ""
 
@@ -303,17 +303,17 @@ msgid "notice_feature_disabled"
 msgstr ""
 
 #. Default: "Retention Days"
-#: ../controlpanels/templates/controlpanel.pt:565
+#: ../controlpanels/templates/controlpanel.pt:566
 msgid "setting_retention_days"
 msgstr ""
 
 #. Default: "Number of days before pending deletions are automatically permanently deleted."
-#: ../controlpanels/templates/controlpanel.pt:566
+#: ../controlpanels/templates/controlpanel.pt:567
 msgid "setting_retention_days_description"
 msgstr ""
 
 #. Default: "Deleted"
-#: ../controlpanels/templates/controlpanel.pt:548
+#: ../controlpanels/templates/controlpanel.pt:549
 msgid "status_deleted"
 msgstr ""
 
@@ -328,12 +328,12 @@ msgid "status_enabled"
 msgstr ""
 
 #. Default: "Pending"
-#: ../controlpanels/templates/controlpanel.pt:547
+#: ../controlpanels/templates/controlpanel.pt:548
 msgid "status_pending"
 msgstr ""
 
 #. Default: "Withdrawn"
-#: ../controlpanels/templates/controlpanel.pt:549
+#: ../controlpanels/templates/controlpanel.pt:550
 msgid "status_withdrawn"
 msgstr ""
 

@@ -9,14 +9,26 @@ The package implements various mechanisms to support data protection requirement
 including controlled deletion workflows and audit logging.
 
 ## Features
+Features can be enabled or disabled independently through the GDPR control panel.
 
-### 1. Audit Deletion
+### 1. Deletion Log
+
+A comprehensive audit log that tracks all deletion activities on the site:
+
+- **Complete audit trail**: Records all deletion operations including who deleted what and when
+- **Status tracking**: Tracks the lifecycle of deletions (pending, deleted, withdrawn)
+- **Status change history**: Records when and by whom the status was changed
+- **Configurable display period**: Define how many days of log entries to display in the control panel
+- **Sortable and searchable**: The log table supports sorting by date and searching entries
+
+### 2. Marked Deletion
 
 Instead of immediately deleting content, this feature allows marking content for deletion and moving it to a dedicated container. This provides:
 
 - **Grace period before permanent deletion**: Content is moved to a special container instead of being deleted immediately
-- **Review and recovery options**: Administrators can review marked items before final deletion
-- **Audit trail**: All deletion operations are tracked, logged and visible on a Controlpanel
+- **Configurable retention period**: Define how many days content remains in the container before automatic permanent deletion (when Cronjob added)
+- **Review and recovery options**: Administrators can review marked items and withdraw deletions to restore content to its original location
+- **Subobject tracking**: Tracks the number of subobjects affected by each deletion
 
 ## Installation
 
@@ -36,6 +48,13 @@ extras = test
 ```
 
 2. Run Your Buildout or App and install the package through Plone's Add-ons control panel or via Generic Setup profile.
+3. (Optional) Add a Cronjob if you want automatic Deletion for on period of time. e.g.
+gdpr_scheduled_deletion.py
+```python
+from interaktiv.gdpr.deletion_log import DeletionLog
+
+deleted_count = DeletionLog.run_scheduled_deletion()
+```
 
 ## License
 

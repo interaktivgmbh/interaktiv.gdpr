@@ -516,7 +516,7 @@
         <table class="pat-datatables listing table table-striped table-hover"
                data-pat-datatables='{
                   "pageLength": 10,
-                  "order": [[ 5, "desc" ]],
+                  "order": [[ 6, "desc" ]],
                   "language": {
                     "url": "${python: view.get_datatables_language_url()}"
                   }
@@ -528,6 +528,7 @@
               <th i18n:translate="table_header_original_path">Original Path</th>
               <th i18n:translate="table_header_deleted_by">Deleted by</th>
               <th i18n:translate="table_header_deleted_at">Deleted at</th>
+              <th i18n:translate="table_header_subobjects">Subobjects</th>
               <th i18n:translate="table_header_status_changed">Status changed</th>
               <th i18n:translate="table_header_changed_by">Changed by</th>
               <th i18n:translate="table_header_status">Status</th>
@@ -540,6 +541,7 @@
               <td tal:content="entry/original_path">Path</td>
               <td tal:content="entry/user_id">User ID</td>
               <td tal:attributes="data-order entry/datetime" tal:content="python: view.format_datetime(entry.get('datetime'))">Submitted</td>
+              <td tal:content="entry/subobject_count">0</td>
               <td tal:attributes="data-order entry/status_changed" tal:content="python: view.format_datetime(entry.get('status_changed'))">Status changed</td>
               <td tal:content="entry/status_changed_by | nothing">Changed by</td>
               <td>
