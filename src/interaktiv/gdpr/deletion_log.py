@@ -10,9 +10,11 @@ from interaktiv.gdpr.registry.deletion_log import (
     IGDPRSettingsSchema,
     TDeletionLogEntry,
 )
+from interaktiv.gdpr.utils import get_registry_setting
 
 
 class DeletionLog:
+
     @staticmethod
     def get_deletion_log() -> list[TDeletionLogEntry]:
         return (
@@ -30,33 +32,15 @@ class DeletionLog:
 
     @staticmethod
     def is_deletion_log_enabled() -> bool:
-        # noinspection PyUnresolvedReferences
-        try:
-            return api.portal.get_registry_record(
-                name="deletion_log_enabled", interface=IGDPRSettingsSchema
-            )
-        except (KeyError, api.exc.InvalidParameterError):
-            return False
+        return get_registry_setting("deletion_log_enabled", IGDPRSettingsSchema, False)
 
     @staticmethod
     def get_display_days() -> int:
-        # noinspection PyUnresolvedReferences
-        try:
-            return api.portal.get_registry_record(
-                name="display_days", interface=IGDPRSettingsSchema
-            )
-        except (KeyError, api.exc.InvalidParameterError):
-            return 90
+        return get_registry_setting("display_days", IGDPRSettingsSchema, 90)
 
     @staticmethod
     def get_retention_days() -> int:
-        # noinspection PyUnresolvedReferences
-        try:
-            return api.portal.get_registry_record(
-                name="retention_days", interface=IGDPRSettingsSchema
-            )
-        except (KeyError, api.exc.InvalidParameterError):
-            return 30
+        return get_registry_setting("retention_days", IGDPRSettingsSchema, 30)
 
     @classmethod
     def get_deletion_log_for_display(
@@ -74,9 +58,7 @@ class DeletionLog:
                 entry_date = datetime.fromisoformat(entry.get("datetime", ""))
                 if entry_date >= cutoff_date:
                     filtered_entries.append(entry)
-
             except (ValueError, TypeError):
-                # If date parsing fails, include the entry anyway
                 filtered_entries.append(entry)
 
         return filtered_entries
@@ -95,17 +77,14 @@ class DeletionLog:
         current_user = api.user.get_current()
         user_id = current_user.getId() if current_user else "system"
 
-        # noinspection PyBroadException
         try:
             review_state = api.content.get_state(obj)
         except Exception:
             review_state = ""
 
-        # Count subobjects
-        # noinspection PyBroadException
         try:
             subobject_count = len(obj.objectIds()) if hasattr(obj, "objectIds") else 0
-        except Exception:
+        except (AttributeError, TypeError):
             subobject_count = 0
 
         entry: TDeletionLogEntry = {
@@ -173,21 +152,17 @@ class DeletionLog:
     @classmethod
     def get_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
         log = cls.get_deletion_log()
-
         for entry in log:
             if entry["uid"] == uid:
                 return entry
-
         return None
 
     @classmethod
     def get_pending_entry_by_uid(cls, uid: str) -> TDeletionLogEntry | None:
         log = cls.get_deletion_log()
-
         for entry in reversed(log):
             if entry["uid"] == uid and entry["status"] == "pending":
                 return entry
-
         return None
 
     @classmethod
@@ -198,13 +173,11 @@ class DeletionLog:
     @classmethod
     def get_pending_objects(cls) -> list[DexterityContent]:
         pending_entries = cls.get_entries_by_status("pending")
-
         objects = []
         for entry in pending_entries:
             obj = api.content.get(UID=entry["uid"])
             if obj is not None:
                 objects.append(obj)
-
         return objects
 
     @classmethod
@@ -226,14 +199,7 @@ class DeletionLog:
 
     @classmethod
     def run_scheduled_deletion(cls) -> int:
-        """
-        Run scheduled deletion for all pending items that have exceeded
-        the retention period.
-
-        This should be called by a cron job or scheduled task.
-
-        Returns the number of successfully deleted items.
-        """
+        """Run scheduled deletion for expired pending items. Called by cronjob."""
         portal = api.portal.get()
         container = portal.get(MARKED_FOR_DELETION_CONTAINER_ID)
 
@@ -267,7 +233,6 @@ class DeletionLog:
                 deleted_count += 1
                 continue
 
-            # Check if object is in the deletion container
             obj_path = "/".join(obj.getPhysicalPath())
             container_path = "/".join(container.getPhysicalPath())
 
@@ -275,7 +240,6 @@ class DeletionLog:
                 logger.warning(f"Object {uid} is not in deletion container, skipping")
                 continue
 
-            # Perform actual deletion
             try:
                 obj_id = obj.getId()
                 container.manage_delObjects([obj_id])
