@@ -11,7 +11,7 @@ URL = "https://code.interaktiv.de/interaktiv/interaktiv.gdpr"
 EMAIL = "info@interaktiv.de"
 AUTHOR = "Interaktiv GmbH"
 REQUIRES_PYTHON = "~=3.11"
-VERSION = "1.0.0"
+VERSION = '1.0.1'
 REQUIRES_PLONE_VERSION = "6"
 
 # Additional package requires
@@ -22,7 +22,7 @@ REQUIRED = [
     "plone.volto",
     "plone.app.testing",
     "interaktiv.framework",
-    "freezegun == 1.5.2",
+    "freezegun >= 1.5",
 ]
 EXTRAS = {"test": ["plone.app.testing"]}
 

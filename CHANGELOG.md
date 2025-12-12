@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1] - 2025-12-12
+
+### Changed
+- Made freezegun dependency version constraint more flexible to improve compatibility with other packages [@lguziel](https://code.interaktiv.de/lguziel)
+
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
