@@ -3,13 +3,7 @@
 ## [1.0.1] - 2025-12-12
 
 ### Changed
-- Made freezegun dependency version constraint more flexible to improve compatibility with other packages [@lguziel](https://code.interaktiv.de/lguziel)
-
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+- Made freezegun dependency version constraint more flexible to improve compatibility with other packages
 
 ## [1.0.0] - 2025-12-12
 
