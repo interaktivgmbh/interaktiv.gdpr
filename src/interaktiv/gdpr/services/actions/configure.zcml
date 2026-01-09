@@ -1,6 +1,4 @@
 <configure xmlns="http://namespaces.zope.org/zope" xmlns:plone="http://namespaces.plone.org/plone">
-    <include package="plone.restapi" file="meta.zcml"/>
-
     <!-- Override: Delete -->
     <plone:service
         method="DELETE"

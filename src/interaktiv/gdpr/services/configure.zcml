@@ -1,6 +1,4 @@
 <configure xmlns="http://namespaces.zope.org/zope">
-    <include package="plone.restapi" file="meta.zcml"/>
-
     <include package=".actions"/>
     <include package=".settings"/>
     <include package=".log"/>
