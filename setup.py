@@ -3,7 +3,7 @@ from os import path
 
 from packaging.specifiers import SpecifierSet
 from packaging.version import Version
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 # Package metadata
 NAME = "interaktiv.gdpr"
@@ -66,7 +66,7 @@ setup(
     author_email=EMAIL,
     url=URL,
     license="proprietary",
-    packages=find_packages("src"),
+    packages=find_namespace_packages("src"),
     package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,
