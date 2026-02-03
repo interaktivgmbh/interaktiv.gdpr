@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.0] - 2026-02-03
+
+### Breaking Changes
+- switch from explicit to implicit namespaces
+
 ## [1.0.2] - 2026-01-09
 
 ### Fixed

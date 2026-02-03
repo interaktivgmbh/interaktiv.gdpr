@@ -12,7 +12,7 @@ URL = "https://code.interaktiv.de/interaktiv/interaktiv.gdpr"
 EMAIL = "info@interaktiv.de"
 AUTHOR = "Interaktiv GmbH"
 REQUIRES_PYTHON = "~=3.11"
-VERSION = "1.0.2"
+VERSION = "2.0.0"
 REQUIRES_PLONE_VERSION = "6"
 
 # Additional package requires
