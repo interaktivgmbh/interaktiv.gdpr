@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0] - 2026-02-03
+## [2.0.0] - 2026-02-13
 
 ### Breaking Changes
 - switch from explicit to implicit namespaces
